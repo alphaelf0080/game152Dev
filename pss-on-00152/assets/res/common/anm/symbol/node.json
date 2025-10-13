@@ -1,0 +1,27 @@
+{
+"skeleton": { "hash": "8t9yMwfLOZ/yvkQ55qAknwz6Q6w", "spine": "3.7.92", "width": 1, "height": 1 },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "node", "bone": "root", "attachment": "node" }
+],
+"skins": {
+	"default": {
+		"node": {
+			"node": { "x": 0.5, "y": 0.5, "width": 1, "height": 1 }
+		}
+	}
+},
+"animations": {
+	"animation": {
+		"slots": {
+			"node": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	}
+}
+}

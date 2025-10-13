@@ -1,0 +1,993 @@
+{
+"skeleton": { "hash": "BUDgCstBZny++5LhIqOBPw8+i2Q", "spine": "3.7.94", "width": 0, "height": 0 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "spin", "parent": "root", "x": 360, "y": 800 },
+	{ "name": "line", "parent": "spin", "x": -236.07, "y": 102.69 },
+	{ "name": "win_frame_light", "parent": "line", "x": -7.75, "y": 263.03 },
+	{ "name": "win_frame_glow_r", "parent": "spin", "x": -305, "y": 110 },
+	{ "name": "win_frame_light_down", "parent": "win_frame_light", "y": -516.63 },
+	{ "name": "win_frame_glow_l", "parent": "spin", "rotation": 180, "x": -291.5, "y": 105 },
+	{ "name": "shine_star_w", "parent": "line", "x": 4.16, "y": 300.53 },
+	{ "name": "win_frame_downglow", "parent": "spin", "x": -299.79, "y": -122.13 },
+	{ "name": "win_frame_downglow2", "parent": "spin", "rotation": 180, "x": -296.07, "y": 339.15 },
+	{ "name": "star_glow", "parent": "spin", "x": -246.8, "y": -156.26, "scaleX": 0.5, "scaleY": 0.5 },
+	{ "name": "star_glow2", "parent": "spin", "x": -350.24, "y": -158.72, "scaleX": 0.3, "scaleY": 0.3 },
+	{ "name": "star_glow3", "parent": "spin", "x": -255.01, "y": 378.21, "scaleX": 0.4, "scaleY": 0.4 },
+	{ "name": "win_frame_light3", "parent": "line", "rotation": 180, "x": 4.65, "y": -245.31, "scaleX": 0.5 },
+	{ "name": "win_frame_light_down4", "parent": "win_frame_light3", "y": -516.63 },
+	{
+		"name": "screen_particular",
+		"parent": "spin",
+		"rotation": -68.89,
+		"x": -239.94,
+		"y": 358.92,
+		"scaleX": 1.2,
+		"scaleY": 1.2
+	},
+	{
+		"name": "screen_particular2",
+		"parent": "spin",
+		"rotation": -90,
+		"x": -211.07,
+		"y": 200.74,
+		"scaleX": 1.3,
+		"scaleY": 1.3
+	},
+	{
+		"name": "screen_particular3",
+		"parent": "spin",
+		"rotation": -90,
+		"x": -214.02,
+		"y": 20.66,
+		"scaleX": 1.3,
+		"scaleY": 1.3
+	},
+	{
+		"name": "screen_particular4",
+		"parent": "spin",
+		"rotation": -124.22,
+		"x": -233.11,
+		"y": -154.57,
+		"scaleX": 1.2,
+		"scaleY": 1.2
+	},
+	{ "name": "screen_particular5", "parent": "spin", "x": -289.3, "y": -129.89, "scaleX": 1.2, "scaleY": 1.2 },
+	{ "name": "screen_particular6", "parent": "spin", "rotation": 180, "x": -321.77, "y": 355.72 },
+	{ "name": "line2", "parent": "spin", "rotation": 180, "x": -358.36, "y": 102.69 },
+	{ "name": "win_frame_light2", "parent": "line2", "x": -7.75, "y": 263.03 },
+	{ "name": "win_frame_light_down2", "parent": "win_frame_light2", "y": -516.63 },
+	{ "name": "shine_star_w2", "parent": "line2", "x": 4.16, "y": 300.53 },
+	{ "name": "win_frame_light4", "parent": "line2", "rotation": 180, "x": 4.65, "y": -245.31, "scaleX": 0.5 },
+	{ "name": "win_frame_light_down5", "parent": "win_frame_light4", "y": -516.63 },
+	{
+		"name": "screen_particular7",
+		"parent": "spin",
+		"rotation": 90,
+		"x": -360.77,
+		"y": -19.52,
+		"scaleX": 1.3,
+		"scaleY": 1.3
+	},
+	{
+		"name": "screen_particular8",
+		"parent": "spin",
+		"rotation": 90,
+		"x": -357.82,
+		"y": 244.41,
+		"scaleX": 1.3,
+		"scaleY": 1.3
+	}
+],
+"slots": [
+	{ "name": "win_frame_glow2", "bone": "win_frame_glow_l" },
+	{ "name": "win_frame_glow", "bone": "win_frame_glow_r" },
+	{ "name": "win_frame_downglow", "bone": "win_frame_downglow" },
+	{ "name": "win_frame_downglow2", "bone": "win_frame_downglow2" },
+	{ "name": "win_frame_light", "bone": "win_frame_light_down" },
+	{ "name": "win_frame_light2", "bone": "win_frame_light_down2" },
+	{ "name": "win_frame_light3", "bone": "win_frame_light_down4" },
+	{ "name": "win_frame_light4", "bone": "win_frame_light_down5" },
+	{ "name": "shine_star_w", "bone": "shine_star_w" },
+	{ "name": "shine_star_w2", "bone": "shine_star_w2" },
+	{ "name": "star_glow", "bone": "star_glow" },
+	{ "name": "star_glow2", "bone": "star_glow2" },
+	{ "name": "star_glow3", "bone": "star_glow3" },
+	{ "name": "screen_particular", "bone": "screen_particular" },
+	{ "name": "screen_particular2", "bone": "screen_particular2" },
+	{ "name": "screen_particular8", "bone": "screen_particular8" },
+	{ "name": "screen_particular3", "bone": "screen_particular3" },
+	{ "name": "screen_particular7", "bone": "screen_particular7" },
+	{ "name": "screen_particular5", "bone": "screen_particular5" },
+	{ "name": "screen_particular6", "bone": "screen_particular6" },
+	{ "name": "screen_particular4", "bone": "screen_particular4" }
+],
+"skins": {
+	"default": {
+		"screen_particular": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular2": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular3": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular4": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular5": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular6": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular7": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"screen_particular8": {
+			"screen_particular/screen_particular_00": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_02": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_04": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_06": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_08": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_10": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_12": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_14": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_16": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_18": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_20": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_22": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_24": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_26": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_28": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_30": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_32": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_34": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_36": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_38": { "width": 120, "height": 120 },
+			"screen_particular/screen_particular_40": { "width": 120, "height": 120 }
+		},
+		"shine_star_w": {
+			"shine_star_w": { "x": -0.68, "y": -57.56, "scaleX": 0.066, "scaleY": 2.5, "width": 153, "height": 154 }
+		},
+		"shine_star_w2": {
+			"shine_star_w": { "x": -0.68, "y": -57.56, "scaleX": 0.066, "scaleY": 2.5, "width": 153, "height": 154 }
+		},
+		"star_glow": {
+			"star_glow": { "x": 0.5, "width": 150, "height": 150 }
+		},
+		"star_glow2": {
+			"star_glow": { "x": 0.5, "width": 150, "height": 150 }
+		},
+		"star_glow3": {
+			"star_glow": { "x": 0.5, "width": 150, "height": 150 }
+		},
+		"win_frame_downglow": {
+			"win_frame_downglow": { "width": 152, "height": 123 }
+		},
+		"win_frame_downglow2": {
+			"win_frame_downglow": { "width": 152, "height": 123 }
+		},
+		"win_frame_glow": {
+			"win_frame_glow": { "x": 32, "y": -3.5, "width": 98, "height": 583 }
+		},
+		"win_frame_glow2": {
+			"win_frame_glow": { "x": 32, "y": -3.5, "width": 98, "height": 583 }
+		},
+		"win_frame_light": {
+			"win_frame_light": { "x": -0.68, "y": 260.41, "width": 49, "height": 549 }
+		},
+		"win_frame_light2": {
+			"win_frame_light": { "x": -0.68, "y": 260.41, "width": 49, "height": 549 }
+		},
+		"win_frame_light3": {
+			"win_frame_light": { "x": -0.68, "y": 260.41, "width": 49, "height": 549 }
+		},
+		"win_frame_light4": {
+			"win_frame_light": { "x": -0.68, "y": 260.41, "width": 49, "height": 549 }
+		}
+	}
+},
+"events": {
+	"firework1": {},
+	"firework2": {},
+	"firework3": {},
+	"firework4": {}
+},
+"animations": {
+	"begin": {
+		"slots": {
+			"screen_particular": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular2": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular3": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular4": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular5": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular6": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular7": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"screen_particular8": {
+				"color": [
+					{ "time": 0.1667, "color": "ffffff00" },
+					{ "time": 0.3333, "color": "ffffffff", "curve": "stepped" },
+					{ "time": 1.2, "color": "ffffffff" },
+					{ "time": 1.5333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "screen_particular/screen_particular_00" },
+					{ "time": 0.2333, "name": "screen_particular/screen_particular_02" },
+					{ "time": 0.3, "name": "screen_particular/screen_particular_04" },
+					{ "time": 0.3667, "name": "screen_particular/screen_particular_06" },
+					{ "time": 0.4333, "name": "screen_particular/screen_particular_08" },
+					{ "time": 0.5, "name": "screen_particular/screen_particular_10" },
+					{ "time": 0.5667, "name": "screen_particular/screen_particular_12" },
+					{ "time": 0.6333, "name": "screen_particular/screen_particular_14" },
+					{ "time": 0.7, "name": "screen_particular/screen_particular_16" },
+					{ "time": 0.7667, "name": "screen_particular/screen_particular_18" },
+					{ "time": 0.8333, "name": "screen_particular/screen_particular_20" },
+					{ "time": 0.9, "name": "screen_particular/screen_particular_22" },
+					{ "time": 0.9667, "name": "screen_particular/screen_particular_24" },
+					{ "time": 1.0667, "name": "screen_particular/screen_particular_26" },
+					{ "time": 1.1333, "name": "screen_particular/screen_particular_28" },
+					{ "time": 1.2, "name": "screen_particular/screen_particular_30" },
+					{ "time": 1.2667, "name": "screen_particular/screen_particular_32" },
+					{ "time": 1.3333, "name": "screen_particular/screen_particular_34" },
+					{ "time": 1.4, "name": "screen_particular/screen_particular_36" },
+					{ "time": 1.4667, "name": "screen_particular/screen_particular_38" },
+					{ "time": 1.5333, "name": "screen_particular/screen_particular_40" }
+				]
+			},
+			"shine_star_w": {
+				"color": [
+					{
+						"time": 0.1667,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.4,
+						"color": "ffffffff",
+						"curve": [ 0.634, 0, 0.758, 0.92 ]
+					},
+					{ "time": 0.8, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "shine_star_w" }
+				]
+			},
+			"shine_star_w2": {
+				"color": [
+					{
+						"time": 0.1667,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.4,
+						"color": "ffffffff",
+						"curve": [ 0.634, 0, 0.758, 0.92 ]
+					},
+					{ "time": 0.8, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.1667, "name": "shine_star_w" }
+				]
+			},
+			"star_glow": {
+				"color": [
+					{ "time": 0.3333, "color": "ffffff00" },
+					{ "time": 0.7, "color": "ffffffff", "curve": "stepped" },
+					{
+						"time": 0.8333,
+						"color": "ffffffff",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 1.3667, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.3333, "name": "star_glow" }
+				]
+			},
+			"star_glow2": {
+				"color": [
+					{ "time": 0.2667, "color": "ffffff00" },
+					{ "time": 0.5, "color": "ffffffff", "curve": "stepped" },
+					{
+						"time": 0.6667,
+						"color": "ffffffff",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.2667, "name": "star_glow" }
+				]
+			},
+			"star_glow3": {
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1667, "color": "ffffffff", "curve": "stepped" },
+					{
+						"time": 0.2667,
+						"color": "ffffffff",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 0.6333, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "star_glow" }
+				]
+			},
+			"win_frame_downglow": {
+				"color": [
+					{
+						"time": 0,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.8333,
+						"color": "ffffffc7",
+						"curve": [ 0.519, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "win_frame_downglow" }
+				]
+			},
+			"win_frame_downglow2": {
+				"color": [
+					{
+						"time": 0,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.8333,
+						"color": "ffffffc7",
+						"curve": [ 0.519, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "win_frame_downglow" }
+				]
+			},
+			"win_frame_glow": {
+				"color": [
+					{
+						"time": 0,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.9667,
+						"color": "ffffffff",
+						"curve": [ 0.519, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "win_frame_glow" }
+				]
+			},
+			"win_frame_glow2": {
+				"color": [
+					{
+						"time": 0.3,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.9667,
+						"color": "ffffffff",
+						"curve": [ 0.519, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.3, "name": "win_frame_glow" }
+				]
+			},
+			"win_frame_light": {
+				"color": [
+					{
+						"time": 0,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.3,
+						"color": "ffffffff",
+						"curve": [ 0.688, 0, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "color": "ffffff00", "curve": "stepped" },
+					{
+						"time": 1.0333,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 1.3667,
+						"color": "ffffffff",
+						"curve": [ 0.688, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "win_frame_light" },
+					{ "time": 0.9667, "name": null },
+					{ "time": 1.0333, "name": "win_frame_light" },
+					{ "time": 2, "name": null }
+				]
+			},
+			"win_frame_light2": {
+				"color": [
+					{
+						"time": 0,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 0.3,
+						"color": "ffffffff",
+						"curve": [ 0.688, 0, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "color": "ffffff00", "curve": "stepped" },
+					{
+						"time": 1.0333,
+						"color": "ffffff00",
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{
+						"time": 1.3667,
+						"color": "ffffffff",
+						"curve": [ 0.688, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": "win_frame_light" },
+					{ "time": 0.9667, "name": null },
+					{ "time": 1.0333, "name": "win_frame_light" },
+					{ "time": 2, "name": null }
+				]
+			},
+			"win_frame_light3": {
+				"color": [
+					{
+						"time": 0.6667,
+						"color": "ffffff00",
+						"curve": [ 0.142, 0.44, 0.75, 1 ]
+					},
+					{
+						"time": 1.0333,
+						"color": "ffffff95",
+						"curve": [ 0.661, 0.03, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.6667, "name": "win_frame_light" }
+				]
+			},
+			"win_frame_light4": {
+				"color": [
+					{
+						"time": 0.6667,
+						"color": "ffffff00",
+						"curve": [ 0.142, 0.44, 0.75, 1 ]
+					},
+					{
+						"time": 1.0333,
+						"color": "ffffff95",
+						"curve": [ 0.661, 0.03, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "color": "ffffff00" }
+				],
+				"attachment": [
+					{ "time": 0.6667, "name": "win_frame_light" }
+				]
+			}
+		},
+		"bones": {
+			"win_frame_light_down": {
+				"scale": [
+					{
+						"time": 0.4667,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "x": 1, "y": 0 },
+					{ "time": 1.0333, "x": 1, "y": 1, "curve": "stepped" },
+					{
+						"time": 1.5333,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "x": 1, "y": 0 }
+				]
+			},
+			"win_frame_light": {
+				"scale": [
+					{
+						"time": 0,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.119, 0.53, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "x": 1, "y": 1 },
+					{
+						"time": 1.0333,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.242, 0.6, 0.75, 1 ]
+					},
+					{ "time": 2, "x": 1, "y": 1 }
+				]
+			},
+			"shine_star_w": {
+				"scale": [
+					{
+						"time": 0.1667,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.062, 0.47, 0.604, 0.97 ]
+					},
+					{ "time": 0.8, "x": 1, "y": 6 }
+				]
+			},
+			"star_glow": {
+				"translate": [
+					{ "time": 0.3333, "x": 0, "y": 0 },
+					{ "time": 1.1667, "x": 0, "y": 19.57 }
+				]
+			},
+			"win_frame_light_down4": {
+				"scale": [
+					{
+						"time": 0.9333,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "x": 1, "y": 0 }
+				]
+			},
+			"win_frame_light3": {
+				"scale": [
+					{
+						"time": 0.6667,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "x": 1, "y": 1 }
+				]
+			},
+			"win_frame_light_down2": {
+				"scale": [
+					{
+						"time": 0.4667,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "x": 1, "y": 0 },
+					{ "time": 1.0333, "x": 1, "y": 1, "curve": "stepped" },
+					{
+						"time": 1.5333,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 2, "x": 1, "y": 0 }
+				]
+			},
+			"win_frame_light2": {
+				"scale": [
+					{
+						"time": 0,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.119, 0.53, 0.75, 1 ]
+					},
+					{ "time": 0.9667, "x": 1, "y": 1 },
+					{
+						"time": 1.0333,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.242, 0.6, 0.75, 1 ]
+					},
+					{ "time": 2, "x": 1, "y": 1 }
+				]
+			},
+			"shine_star_w2": {
+				"scale": [
+					{
+						"time": 0.1667,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.062, 0.47, 0.604, 0.97 ]
+					},
+					{ "time": 0.8, "x": 1, "y": 6 }
+				]
+			},
+			"win_frame_light_down5": {
+				"scale": [
+					{
+						"time": 0.9333,
+						"x": 1,
+						"y": 1,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "x": 1, "y": 0 }
+				]
+			},
+			"win_frame_light4": {
+				"scale": [
+					{
+						"time": 0.6667,
+						"x": 1,
+						"y": 0,
+						"curve": [ 0.25, 0, 0.75, 1 ]
+					},
+					{ "time": 1.5667, "x": 1, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}

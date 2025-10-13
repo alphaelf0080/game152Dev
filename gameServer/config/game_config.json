@@ -1,0 +1,50 @@
+{
+    "game_id": "pss-on-00152",
+    "game_name": "好運咚咚",
+    "reel_config": {
+        "reel_count": 5,
+        "reel_height": 3,
+        "ways": 243
+    },
+    "base_bet": 50,
+    "bet_multipliers": [1, 2, 3, 4, 5, 10, 20, 50, 100],
+    "line_multipliers": [1],
+    "rate_multipliers": [1, 2, 3, 4, 5],
+    "symbols": {
+        "P5": {"id": 0, "name": "P5", "type": "premium", "rarity": "high"},
+        "P4": {"id": 1, "name": "P4", "type": "premium", "rarity": "medium-high"},
+        "P3": {"id": 2, "name": "P3", "type": "premium", "rarity": "medium"},
+        "P2": {"id": 3, "name": "P2", "type": "premium", "rarity": "medium-low"},
+        "P1": {"id": 4, "name": "P1", "type": "premium", "rarity": "low"},
+        "K": {"id": 5, "name": "K", "type": "card", "rarity": "common"},
+        "Q": {"id": 6, "name": "Q", "type": "card", "rarity": "common"},
+        "J": {"id": 7, "name": "J", "type": "card", "rarity": "common"},
+        "T": {"id": 8, "name": "T", "type": "card", "rarity": "common"},
+        "BONUS": {"id": 9, "name": "BONUS", "type": "scatter", "rarity": "special"},
+        "WILD": {"id": 10, "name": "WILD", "type": "wild", "rarity": "special"}
+    },
+    "feature_buy": {
+        "option_1": {"cost": 60, "drums": 1, "name": "P3-X3"},
+        "option_2": {"cost": 80, "drums": 2, "name": "P3-X4"},
+        "option_3": {"cost": 100, "drums": 3, "name": "P3-X5"}
+    },
+    "free_spins": {
+        "trigger_symbols": 3,
+        "trigger_symbol": "BONUS",
+        "trigger_reels": [1, 2, 3],
+        "initial_spins": 7,
+        "max_spins": 70,
+        "retrigger_symbols": 3
+    },
+    "war_drums": {
+        "multiplier_range": [1, 10],
+        "special_effects": {
+            "震波": {"range": [5, 9]},
+            "華麗": {"range": [10, 10]}
+        }
+    },
+    "big_win_thresholds": {
+        "normal": [15, 30, 50, 100, 200],
+        "newbie": [8, 15, 30, 50, 100]
+    }
+}

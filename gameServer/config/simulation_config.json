@@ -1,0 +1,49 @@
+{
+    "general": {
+        "description": "通用模擬設定",
+        "default_spins": 50000,
+        "default_bet": 10
+    },
+    "basic_simulation": {
+        "description": "基礎遊戲模擬設定",
+        "total_spins": 100000,
+        "report_interval": 10000
+    },
+    "feature_buy_analysis": {
+        "description": "購買功能分析設定",
+        "spins_per_option": 10000,
+        "analyze_all_options": true
+    },
+    "volatility_analysis": {
+        "description": "波動性分析設定",
+        "num_sessions": 200,
+        "spins_per_session": 10000,
+        "calculate_percentiles": [1, 5, 10, 25, 50, 75, 90, 95, 99]
+    },
+    "feature_specific": {
+        "free_spins": {
+            "description": "免費旋轉模擬設定",
+            "num_simulations": 5000
+        },
+        "war_drums": {
+            "description": "戰鼓模擬設定", 
+            "num_simulations": 20000
+        },
+        "feature_buy": {
+            "description": "購買功能模擬設定",
+            "num_simulations": 5000
+        }
+    },
+    "performance": {
+        "description": "效能設定",
+        "max_memory_mb": 512,
+        "progress_reporting": true,
+        "detailed_logging": false
+    },
+    "output": {
+        "description": "輸出設定",
+        "save_detailed_results": false,
+        "export_csv": false,
+        "chart_generation": false
+    }
+}
