@@ -127,3 +127,41 @@ build-templates/
 # OS
 .DS_Store
 Thumbs.db
+
+# Large design files
+*.psd
+*.ai
+*.eps
+*.sketch
+
+# Font files
+*.ttf
+*.otf
+*.ttc
+*.woff
+*.woff2
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+
+# Large images
+*.tiff
+*.tif
+docs/svn/*/loading/*.jpg
+docs/原始檔/
+docs/svn/
+
+# Design documents
+*.pptx
+*.docx
+*.xlsx
+
+# Project library files
+pss-on-00152/library/
+pss-on-00152/build-templates/
+pss-on-00152/preview-template/
