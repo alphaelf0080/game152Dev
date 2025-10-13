@@ -247,6 +247,18 @@ export namespace Data {
         static REEL_CONFIG = new REEL_CONFIG_Class();
         static LuckyStrikeMaxBetting: number = 3;
         static AutoBoardColor = new Color(255,255,255,255);
+        
+        /**
+         * 模擬器配置：是否使用本地 JSON 檔案
+         * 可通過 URL 參數 sim_mode=local_json 啟用
+         */
+        static USE_LOCAL_JSON: boolean = false;
+        
+        /**
+         * 本地 JSON 檔案路徑
+         * 可通過 URL 參數 sim_json=<url> 指定
+         */
+        static LOCAL_JSON_PATH: string = "http://localhost:9000/batch_results.json";
         /**
         * StateConsole作靜態儲存,並於StateConsole檢查有無重複掛載
         */

@@ -7,9 +7,9 @@ import { LoadingScene } from '../LibCreator/libLoadingInit/LoadingScene';
 import { Data, Mode } from '../DataController';
 import { UCoin } from '../LibCreator/libScript/JackpotScript/UCoin/UCoin';
 import { AllNode } from '../LibCreator/libScript/CommonLibScript';
-
 import { FontMapController } from '../FontMapController';
 import { AutoPages } from '../LibCreator/libUIController/AutoBtn';
+import { initializeSimulator } from '../config/SimulatedResultHandler';
 
 const { ccclass, property } = _decorator;
 let MessageConsole: Node = null;
@@ -547,7 +547,10 @@ export class StateConsole extends Component {
         EVENTController.HandleBroadcast(type, data);
     }
 
-    NetInitReady() {
+    async NetInitReady() {
+        // 初始化模擬器（如果需要）
+        await initializeSimulator();
+        
         let type = "All";
         let data = {
             EnventID: Data.Library.EVENTID[Mode.EVENTTYPE.COMMON].eNETREADY

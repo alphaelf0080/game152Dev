@@ -11,6 +11,7 @@ import { UCoin } from "../LibCreator/libScript/JackpotScript/UCoin/UCoin";
 import { AutoPages } from "../LibCreator/libUIController/AutoBtn";
 import { JackPot } from "../../Jackpot/script/JackPot";
 import { EventController } from "./EventController";
+import { shouldUseSimulatedResult, getSimulatedResult } from "../config/SimulatedResultHandler";
 
 
 const { ccclass, property } = _decorator;
@@ -460,6 +461,23 @@ let ResultCall = function (buy) {
     };
     let module = ProtoModule.encodeSpinIndexCommand(moudle);
     msg.module_command.push(module);
+
+    // 檢查是否使用模擬結果
+    if (shouldUseSimulatedResult()) {
+        console.log("[ProtoConsole] 使用本地 JSON 模擬結果");
+        // 異步獲取模擬結果並直接觸發 ResultRecall 處理
+        setTimeout(() => {
+            const simulatedResult = getSimulatedResult();
+            if (simulatedResult) {
+                // 模擬伺服器回應事件，創建與真實 WebSocket 事件相同的結構
+                const mockEvent = { data: simulatedResult };
+                ResultRecall(mockEvent);
+            } else {
+                console.error("[ProtoConsole] 無法獲取模擬結果，可能 JSON 已用完且未啟用循環模式");
+            }
+        }, 100); // 模擬 100ms 網絡延遲
+        return;
+    }
 
     console.log("ResultCall");
     const message = Proto.encodeResultCall(msg);
