@@ -22,9 +22,7 @@ import { AllNode, Logger } from 'db://assets/script/LibCreator/libScript/CommonL
 import { UCoin } from 'db://assets/script/LibCreator/libScript/JackpotScript/UCoin/UCoin';
 import { AutoPages } from 'db://assets/script/LibCreator/libUIController/AutoBtn';
 import { StateConsole } from 'db://assets/script/MessageController/StateConsole';
-import { LocalServerMode } from 'db://assets/script/LocalServer/LocalServerMode';
-import { GameResult } from 'db://assets/script/LocalServer/LocalResultProvider';
-
+//import { LocalServerMode } from 'db://assets/script/LocalServer/LocalServerMode';
 /**
  * 滾輪陣列介面 - 定義各類型滾輪的節點陣列
  */
@@ -239,20 +237,6 @@ export class UIController extends Component {
     voiceBtn: Node | null = null;
 
     // =================================
-    // 🎮 LocalServerMode 整合
-    // =================================
-
-    /** 本地伺服器模式節點 */
-    @property({ type: Node, tooltip: '本地伺服器模式節點（用於離線測試）' })
-    public localServerNode: Node = null;
-
-    /** 本地伺服器模式組件 */
-    private localServerMode: LocalServerMode | null = null;
-
-    /** 是否使用本地伺服器 */
-    private isUsingLocalServer: boolean = false;
-
-    // =================================
     // 🚀 生命週期方法
     // =================================
 
@@ -400,71 +384,7 @@ export class UIController extends Component {
         })
         this.getNode("ScrollUpT")?.setPosition(250, 153);
         this.getNode("ScrollDownT")?.setPosition(250, -167);
-        
-        // 初始化 LocalServerMode
-        this.initializeLocalServerMode();
     }
-
-    /**
-     * 初始化本地伺服器模式
-     * 檢測 URL 參數並設置本地模式
-     */
-    private initializeLocalServerMode(): void {
-        // 查找 LocalServerMode 節點
-        if (!this.localServerNode) {
-            this.localServerNode = find('LocalServerMode');
-        }
-        
-        if (this.localServerNode) {
-            this.localServerMode = this.localServerNode.getComponent(LocalServerMode);
-            
-            if (this.localServerMode && this.localServerMode.isLocalMode()) {
-                this.isUsingLocalServer = true;
-                console.log('[UIController] 🎮 使用本地伺服器模式');
-                console.log('[UIController] 📦 本地結果數:', this.localServerMode.getInfo().provider?.totalResults || 0);
-                
-                // 監聽本地伺服器事件
-                this.localServerNode.on('local-server-ready', this.onLocalServerReady, this);
-                this.localServerNode.on('result-index-changed', this.onResultIndexChanged, this);
-                this.localServerNode.on('results-cycled', this.onResultsCycled, this);
-                
-            } else {
-                console.log('[UIController] 🌐 使用正常伺服器模式');
-            }
-        } else {
-            console.log('[UIController] ℹ️ 未找到 LocalServerMode 節點，使用正常模式');
-        }
-    }
-
-    /**
-     * 本地伺服器就緒回調
-     */
-    private onLocalServerReady(data: any): void {
-        console.log('[UIController] ✅ 本地伺服器已就緒');
-        console.log('[UIController] 📊 總結果數:', data.totalResults);
-        console.log('[UIController] 📂 JSON 路徑:', data.jsonPath);
-        
-        // 可以在這裡顯示本地模式指示器
-        // this.showLocalModeIndicator();
-    }
-
-    /**
-     * 結果索引變化回調
-     */
-    private onResultIndexChanged(data: { index: number, total: number }): void {
-        // 可以在調試 UI 中顯示進度
-        if (this.isUsingLocalServer) {
-            console.log(`[UIController] 📍 本地結果: ${data.index}/${data.total}`);
-        }
-    }
-
-    /**
-     * 結果循環回調
-     */
-    private onResultsCycled(): void {
-        console.log('[UIController] 🔄 本地結果已循環到開頭');
-    }
-
 
     safeSetNode<T extends Component>(node: Node | null, names: (string)[],
         compType: new () => T, Setter: (Comp: T) => void) {
@@ -1710,14 +1630,7 @@ export class UIController extends Component {
                 this.getNode("SpinLoop").getComponent(AudioSource).play();
             }
 
-            // ========== LocalServerMode 整合 ==========
-            if (this.isUsingLocalServer) {
-                console.log('[UIController] 🎲 使用本地結果進行 Spin');
-                this.handleLocalSpin();
-            } else {
-                this.stateConsole.Spin(false);
-            }
-            // =========================================
+            this.stateConsole.Spin(false);
         } else {
             if ((Data.Library as any)?.isNewAudio) {
                 Data.Library.AudioController.playSfx('Btnclick');
@@ -1896,124 +1809,6 @@ export class UIController extends Component {
     public TestTeachPlayOnClick() {
         this.getNode("Teacher").active = true;
         this.getNode("VideoPlayer").getComponent(VideoPlayer).play();
-    }
-
-    // =================================
-    // 🎮 LocalServerMode 整合方法
-    // =================================
-
-    /**
-     * 處理本地模式 Spin
-     * 從本地 JSON 獲取結果並套用到遊戲
-     */
-    private handleLocalSpin(): void {
-        if (!this.localServerMode) {
-            console.error('[UIController] ❌ LocalServerMode 未初始化');
-            return;
-        }
-        
-        // 從本地獲取下一個結果
-        const result: GameResult = this.localServerMode.getNextResult();
-        
-        if (!result) {
-            console.warn('[UIController] ⚠️ 沒有更多本地結果');
-            return;
-        }
-        
-        console.log('[UIController] 📦 獲取本地結果:');
-        console.log('  - 滾輪:', result.reels);
-        console.log('  - 贏分:', result.totalWin);
-        console.log('  - 倍率:', result.multiplier);
-        console.log('  - 贏線數:', result.winLines.length);
-        if (result.freeSpins) {
-            console.log('  - 免費旋轉:', result.freeSpins.count, '次');
-        }
-        if (result.warDrums) {
-            console.log('  - 戰鼓特性:', result.warDrums);
-        }
-        
-        // 將結果傳遞給 StateConsole 進行處理
-        if (this.stateConsole) {
-            // 方案 1: 如果 StateConsole 有接收本地結果的方法
-            if (typeof (this.stateConsole as any).applyLocalResult === 'function') {
-                console.log('[UIController] 使用 applyLocalResult 套用結果');
-                (this.stateConsole as any).applyLocalResult(result);
-            } 
-            // 方案 2: 暫存結果並調用正常 Spin（需要在 StateConsole 中檢測）
-            else if (typeof (this.stateConsole as any).setLocalResult === 'function') {
-                console.log('[UIController] 使用 setLocalResult 暫存結果');
-                (this.stateConsole as any).setLocalResult(result);
-                this.stateConsole.Spin(false);
-            }
-            // 方案 3: 直接調用 Spin，StateConsole 會自動檢測本地模式
-            else {
-                console.log('[UIController] 使用標準 Spin 方法（StateConsole 應自動檢測本地模式）');
-                this.stateConsole.Spin(false);
-            }
-        } else {
-            console.error('[UIController] ❌ StateConsole 未初始化');
-        }
-    }
-
-    /**
-     * 切換測試場景
-     * @param scenarioName 場景名稱（如 'big_win', 'free_spins' 等）
-     * 
-     * @example
-     * // 在按鈕點擊事件中調用
-     * this.uiController.switchTestScenario('big_win');
-     */
-    public switchTestScenario(scenarioName: string): void {
-        if (!this.isUsingLocalServer || !this.localServerMode) {
-            console.warn('[UIController] ⚠️ 不在本地模式或 LocalServerMode 未初始化');
-            return;
-        }
-        
-        console.log(`[UIController] 🔄 切換測試場景: ${scenarioName}`);
-        
-        this.localServerMode.switchScenario(scenarioName)
-            .then(() => {
-                console.log(`[UIController] ✅ 場景切換成功: ${scenarioName}`);
-                // 可以在這裡顯示切換成功的 UI 提示
-            })
-            .catch((error) => {
-                console.error(`[UIController] ❌ 場景切換失敗:`, error);
-                // 可以在這裡顯示錯誤提示
-            });
-    }
-
-    /**
-     * 獲取本地模式狀態資訊（用於調試）
-     */
-    public getLocalServerInfo(): any {
-        if (!this.localServerMode) {
-            return { error: 'LocalServerMode 未初始化' };
-        }
-        
-        return {
-            isEnabled: this.isUsingLocalServer,
-            ...this.localServerMode.getInfo()
-        };
-    }
-
-    /**
-     * 手動啟用/停用本地模式（用於調試）
-     */
-    public toggleLocalMode(enable: boolean): void {
-        if (!this.localServerMode) {
-            console.warn('[UIController] LocalServerMode 未初始化');
-            return;
-        }
-        
-        if (enable) {
-            this.localServerMode.enable();
-            this.isUsingLocalServer = true;
-            console.log('[UIController] ✅ 本地模式已啟用');
-        } else {
-            this.localServerMode.disable();
-            this.isUsingLocalServer = false;
-            console.log('[UIController] ❌ 本地模式已停用');
-        }
     }
 }
 

@@ -10,8 +10,6 @@ import { AllNode } from '../LibCreator/libScript/CommonLibScript';
 import { FontMapController } from '../FontMapController';
 import { AutoPages } from '../LibCreator/libUIController/AutoBtn';
 import { initializeSimulator } from '../config/SimulatedResultHandler';
-import { LocalServerMode } from '../LocalServer/LocalServerMode';
-import { GameResult } from '../LocalServer/LocalResultProvider';
 
 const { ccclass, property } = _decorator;
 let MessageConsole: Node = null;
@@ -888,21 +886,6 @@ export class StateConsole extends Component {
 
     resultCall() {
         if (this.CurState == Mode.FSM.K_SPIN || this.CurState == Mode.FSM.K_FEATURE_SPIN) {
-            // Check if using LocalServerMode
-            const localServerNode = find('LocalServerMode');
-            if (localServerNode) {
-                const localMode = localServerNode.getComponent(LocalServerMode);
-                if (localMode && localMode.isLocalMode()) {
-                    console.log('[StateConsole] Using local mode, skipping SendMsg');
-                    // In local mode, result is already set by UIController.handleLocalSpin()
-                    // Just trigger NetReceiveResult after a short delay
-                    this.scheduleOnce(() => {
-                        this.NetReceiveResult();
-                    }, 0.1);
-                    return;
-                }
-            }
-
             if (this.CurState == Mode.FSM.K_FEATURE_SPIN && this.ServerRecoverData != null && this.ServerRecoverData != undefined) {
                 this.ChangeBackGround('fs');
                 find("Canvas/BaseGame/Layer/Shake/UI/InfoController").setPosition(360, 32);

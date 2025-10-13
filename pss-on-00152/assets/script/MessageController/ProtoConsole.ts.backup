@@ -12,7 +12,6 @@ import { AutoPages } from "../LibCreator/libUIController/AutoBtn";
 import { JackPot } from "../../Jackpot/script/JackPot";
 import { EventController } from "./EventController";
 import { shouldUseSimulatedResult, getSimulatedResult } from "../config/SimulatedResultHandler";
-import { LocalServerMode } from "../LocalServer/LocalServerMode";
 
 
 const { ccclass, property } = _decorator;
@@ -54,44 +53,6 @@ export class ProtoConsole extends Component {
             UcoinConsole = find("Canvas/Ucoin").getComponent(UCoin);
         }
 
-        // ========== LocalServerMode 整合 ==========
-        // 檢查是否使用本地伺服器模式
-        console.log('[ProtoConsole] 🔍 開始檢查本地伺服器模式...');
-        
-        // 方法 1: 直接檢查 URL 參數（最可靠）
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasLocalParam = urlParams.has('localServer') || urlParams.has('localserver');
-        console.log('[ProtoConsole] URL 參數檢查:', window.location.search);
-        console.log('[ProtoConsole] localServer 參數:', hasLocalParam ? '✅ 存在' : '❌ 不存在');
-        
-        if (hasLocalParam) {
-            console.log('[ProtoConsole] 🎮 檢測到 localServer URL 參數，跳過 WebSocket 連接');
-            console.log('[ProtoConsole] ⚠️ 請確保場景中已創建 LocalServerMode 節點並添加組件');
-            return;
-        }
-        
-        // 方法 2: 檢查 LocalServerMode 節點（備用）
-        const localServerNode = find('LocalServerMode');
-        console.log('[ProtoConsole] LocalServerMode node:', localServerNode ? '✅ 找到' : '❌ 未找到');
-        
-        if (localServerNode) {
-            const localServerMode = localServerNode.getComponent(LocalServerMode);
-            console.log('[ProtoConsole] LocalServerMode component:', localServerMode ? '✅ 找到' : '❌ 未找到');
-            
-            if (localServerMode) {
-                const isLocal = localServerMode.isLocalMode();
-                console.log('[ProtoConsole] isLocalMode():', isLocal ? '✅ TRUE (本地模式)' : '❌ FALSE (伺服器模式)');
-                
-                if (isLocal) {
-                    console.log('[ProtoConsole] 🎮 檢測到本地伺服器模式，跳過 WebSocket 連接');
-                    console.log('[ProtoConsole] 本地模式啟用，所有網路請求將被繞過');
-                    return;
-                }
-            }
-        }
-        // =========================================
-
-        console.log('[ProtoConsole] 🌐 正常模式，創建 WebSocket 連接');
         CreateSocket();
     }
 
