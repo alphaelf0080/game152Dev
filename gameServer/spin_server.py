@@ -22,13 +22,18 @@ import os
 from typing import Dict, Any, Optional
 from datetime import datetime
 import json
+import logging
 from contextlib import asynccontextmanager
+
+# 設定日誌
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # 添加專案根目錄到路徑
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uvicorn
@@ -361,6 +366,144 @@ def _convert_win_lines(win_lines: list) -> list:
             "multiplier": 1  # 可根據需要調整
         })
     return converted
+
+
+# ==================== WebSocket 端點 ====================
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    """
+    WebSocket 端點 - 提供持久連接給前端
+    
+    支援的訊息類型:
+    - login: 登入請求
+    - state: 狀態變更請求（包含 spin）
+    - disconnect: 斷開連接
+    
+    訊息格式:
+    {
+        "msgid": "eStateCall",
+        "token": "...",
+        "stateid": "K_SPIN",
+        "bet": 50
+    }
+    """
+    await websocket.accept()
+    logger.info(f"🔌 WebSocket 連接建立: {websocket.client}")
+    
+    try:
+        while True:
+            # 接收訊息
+            data = await websocket.receive_text()
+            
+            try:
+                message = json.loads(data)
+                msgid = message.get("msgid", "")
+                
+                logger.info(f"📨 收到 WebSocket 訊息: {msgid}")
+                
+                # 處理不同的訊息類型
+                if msgid == "eLoginCall":
+                    # 登入請求
+                    response = {
+                        "msgid": "eLoginRecall",
+                        "status_code": "kSuccess",
+                        "timestamp": datetime.now().isoformat()
+                    }
+                    await websocket.send_json(response)
+                    logger.info("✅ 登入成功")
+                
+                elif msgid == "eStateCall":
+                    # 狀態請求（包含 spin）
+                    stateid = message.get("stateid", "")
+                    
+                    if stateid == "K_SPIN":
+                        # 執行 spin
+                        bet = message.get("bet", 50)
+                        spin_type = message.get("spin_type", "normal")
+                        
+                        logger.info(f"🎰 執行 Spin: bet={bet}, type={spin_type}")
+                        
+                        # 執行遊戲邏輯
+                        if game_engine is None:
+                            error_response = {
+                                "msgid": "eStateRecall",
+                                "status_code": "kError",
+                                "error": "遊戲引擎未初始化"
+                            }
+                            await websocket.send_json(error_response)
+                            continue
+                        
+                        # 執行旋轉
+                        try:
+                            spin_type_enum = SpinType.NORMAL
+                            if spin_type == "feature_60x":
+                                spin_type_enum = SpinType.FEATURE_60X
+                            elif spin_type == "feature_80x":
+                                spin_type_enum = SpinType.FEATURE_80X
+                            elif spin_type == "feature_100x":
+                                spin_type_enum = SpinType.FEATURE_100X
+                            
+                            result = game_engine.execute_spin(bet, spin_type_enum)
+                            
+                            # 轉換結果為簡化格式
+                            result_data = simple_exporter.export_spin_result(result)
+                            
+                            # 更新統計
+                            server_stats['total_spins'] += 1
+                            if result_data.get('win', 0) > 0:
+                                server_stats['total_wins'] += 1
+                            
+                            # 發送結果
+                            response = {
+                                "msgid": "eStateRecall",
+                                "status_code": "kSuccess",
+                                "result": result_data,
+                                "timestamp": datetime.now().isoformat()
+                            }
+                            await websocket.send_json(response)
+                            logger.info(f"✅ Spin 完成 - Win: {result_data.get('win', 0)}")
+                            
+                        except Exception as e:
+                            logger.error(f"❌ Spin 執行失敗: {str(e)}")
+                            error_response = {
+                                "msgid": "eStateRecall",
+                                "status_code": "kError",
+                                "error": str(e)
+                            }
+                            await websocket.send_json(error_response)
+                    
+                    else:
+                        # 其他狀態，直接回覆成功
+                        response = {
+                            "msgid": "eStateRecall",
+                            "status_code": "kSuccess",
+                            "stateid": stateid
+                        }
+                        await websocket.send_json(response)
+                
+                else:
+                    # 未知訊息類型
+                    logger.warning(f"⚠️ 未知的訊息類型: {msgid}")
+                    error_response = {
+                        "msgid": "error",
+                        "error": f"未知的訊息類型: {msgid}"
+                    }
+                    await websocket.send_json(error_response)
+            
+            except json.JSONDecodeError:
+                logger.error("❌ JSON 解析失敗")
+                await websocket.send_json({"error": "Invalid JSON"})
+            except Exception as e:
+                logger.error(f"❌ 處理訊息時發生錯誤: {str(e)}")
+                await websocket.send_json({"error": str(e)})
+    
+    except WebSocketDisconnect:
+        logger.info(f"🔌 WebSocket 連接斷開: {websocket.client}")
+    except Exception as e:
+        logger.error(f"❌ WebSocket 錯誤: {str(e)}")
+    finally:
+        logger.info("🔌 清理 WebSocket 連接")
 
 
 # ==================== 主程式 ====================

@@ -71,8 +71,13 @@ export class ProtoConsole extends Component {
             (Data.Library as any).localServerMode = true;
             console.log('[DEBUG] Set Data.Library.localServerMode to:', (Data.Library as any).localServerMode);
             
-            // LocalServer 模式不使用 WebSocket，直接觸發初始化流程
-            console.log('[DEBUG] LocalServer mode - directly triggering initialization');
+            // LocalServer 模式：創建 WebSocket 連接到本地 Spin Server
+            console.log('[DEBUG] LocalServer mode - creating WebSocket to local Spin Server');
+            
+            // 設定 WebSocket URL 為本地 Spin Server
+            socketUrl = "ws://localhost:8000/ws";
+            console.log('[DEBUG] WebSocket URL:', socketUrl);
+            
             // 使用 setTimeout 確保 Data.Library 完全初始化
             setTimeout(() => {
                 console.log('[DEBUG] Timeout callback - initializing data structures');
@@ -151,13 +156,10 @@ export class ProtoConsole extends Component {
                     console.error('[ERROR] MathConsole not initialized');
                 }
                 
-                // 調用 NetInitReady
-                if (Data.Library.StateConsole) {
-                    console.log('[DEBUG] StateConsole exists, calling NetInitReady()');
-                    Data.Library.StateConsole.NetInitReady();
-                } else {
-                    console.error('[ERROR] StateConsole not initialized in LocalServer mode');
-                }
+                // 創建 WebSocket 連接
+                console.log('[DEBUG] Creating WebSocket connection to Spin Server');
+                CreateSocket();
+                
             }, 100);
         } else {
             console.log('[ProtoConsole] 🌐 正常模式：使用 WebSocket');
@@ -731,11 +733,42 @@ let StateCall = function () {
         reserved: 0
     };
     netlog("STATEConsole.CurState : " + Mode.FSM[Data.Library.StateConsole.CurState]);
-    const message = Proto.encodeStateCall(msg);
-    bksend(message);
+    
+    // LocalServer 模式下發送 JSON 文字，否則使用 Protobuf
+    if ((Data.Library as any).localServerMode) {
+        console.log('[DEBUG] LocalServer mode - sending JSON:', msg);
+        // 計算當前下注金額
+        const betIndex = Data.Library.StateConsole.BetIndex || 0;
+        const rateIndex = Data.Library.StateConsole.RateIndex || 0;
+        const betArray = Data.Library.StateConsole.BetArray || [1, 2, 5, 10, 20, 50, 100];
+        const rateArray = Data.Library.StateConsole.RateArray || [1];
+        const lineArray = Data.Library.StateConsole.LineArray || [25];
+        const bet = betArray[betIndex] * rateArray[rateIndex] * lineArray[0];
+        
+        const jsonMsg = {
+            msgid: msg.msgid,
+            stateid: msg.stateid,
+            bet: bet,
+            spin_type: "normal"
+        };
+        console.log('[DEBUG] Sending bet:', bet, '(betIndex:', betIndex, ', rateIndex:', rateIndex, ')');
+        bksend(JSON.stringify(jsonMsg));
+    } else {
+        const message = Proto.encodeStateCall(msg);
+        bksend(message);
+    }
 };
 
 let StateRecall = function (evt) {
+    // LocalServer 模式下直接返回成功（實際處理在 dispatch_msg 中）
+    if ((Data.Library as any).localServerMode) {
+        console.log('[DEBUG] StateRecall in LocalServer mode');
+        // 在 LocalServer 模式下，結果已經由 dispatch_msg 處理並存儲
+        // 這裡只需要確認狀態成功即可
+        return;
+    }
+    
+    // 正常模式使用 Protobuf
     let uint8 = RecombineBuffer(evt.data);
     const message = Proto.decodeStateRecall(uint8);
     let StatusCode = Proto.encodeStatusCode[message.status_code];
@@ -995,6 +1028,15 @@ let g_getDigimode = function () {
 
 let bksend = function (msg) {
     if (socket.readyState == WebSocket.OPEN) {
+        // 添加調試日誌
+        const msgType = typeof msg;
+        const isString = typeof msg === 'string';
+        console.log('[DEBUG] bksend - msg type:', msgType, ', isString:', isString);
+        if (isString) {
+            console.log('[DEBUG] bksend - sending JSON string, length:', msg.length);
+        } else {
+            console.log('[DEBUG] bksend - sending binary data, byteLength:', msg.byteLength);
+        }
         socket.send(msg);
     }
     else {
@@ -1003,9 +1045,42 @@ let bksend = function (msg) {
 };
 
 let dispatch_msg = function (evt) {
-    let uint8 = RecombineBuffer(evt.data);
-    const message = Proto.decodeHeader(uint8);
-    action_dispatch(Proto.encodeEMSGID[message.msgid], evt);
+    // LocalServer 模式下處理 JSON 回應
+    if ((Data.Library as any).localServerMode) {
+        try {
+            const message = JSON.parse(evt.data);
+            console.log('[DEBUG] Received JSON message:', message.msgid);
+            
+            // 根據 msgid 分發到對應的處理函數
+            if (message.msgid === "eLoginRecall") {
+                console.log('[DEBUG] Login successful');
+                // 模擬 LoginRecall 事件
+                const mockEvt = { data: evt.data, jsonMessage: message };
+                action_dispatch(Proto.encodeEMSGID.eLoginRecall, mockEvt);
+            } else if (message.msgid === "eStateRecall") {
+                console.log('[DEBUG] State recall received, status:', message.status_code);
+                // 模擬 StateRecall 事件
+                const mockEvt = { data: evt.data, jsonMessage: message };
+                
+                // 如果有結果數據，處理它
+                if (message.status_code === "kSuccess" && message.result) {
+                    console.log('[DEBUG] Processing spin result');
+                    // 將 LocalServer 格式的結果存儲到 Data.Library 中
+                    (Data.Library as any).localServerSpinResult = message.result;
+                }
+                
+                // 調用原有的 StateRecall 處理（但會跳過 Protobuf 解析）
+                action_dispatch(Proto.encodeEMSGID.eStateRecall, mockEvt);
+            }
+        } catch (e) {
+            console.error('[ERROR] Failed to parse JSON message:', e);
+        }
+    } else {
+        // 正常模式使用 Protobuf
+        let uint8 = RecombineBuffer(evt.data);
+        const message = Proto.decodeHeader(uint8);
+        action_dispatch(Proto.encodeEMSGID[message.msgid], evt);
+    }
 };
 
 let netlog = function (str) {

@@ -2,17 +2,46 @@
 
 ## 🔧 最新更新 (2025-10-14)
 
-### 🆕 Spin Server - 遊戲後端伺服器 v1.0
+### 🆕 LocalServer 初始盤面功能完整實現 v3.0
+**檔案**: `docs/LocalServer-InitialBoard-Complete-Report.md`  
+**完成功能**:
+- ✅ Spin Server `/api/init` 端點（返回初始盤面）
+- ✅ SpinServerClient.getInitialBoard() 方法
+- ✅ LocalServer 模式獨立初始化路徑
+- ✅ 完整資料結構模擬（StateConsole、MathConsole）
+- ✅ 測試通過，遊戲正常顯示
+
+**問題解決**:
+- NetInitReady 未被調用 → 直接在 ProtoConsole.start() 調用
+- Striptables 為空 → 預先初始化結構
+- strips 資料缺失 → 創建假資料（5滾輪×100符號）
+- TotalArray 未初始化 → 模擬 ConfigRecall 流程
+
+**關鍵檔案**:
+- `gameServer/spin_server.py` - 新增 `/api/init` 端點
+- `ProtoConsole.ts` - LocalServer 初始化重構
+- `StateConsole.ts` - NetInitReady LocalServer 支援
+- `SpinServerClient.ts` - getInitialBoard() 方法
+
+**使用方式**:
+```
+http://localhost:7456/?localServer=true
+```
+
+---
+
+### Spin Server - 遊戲後端伺服器 v1.0
 **檔案**: `docs/Spin-Server-Summary.md`  
 **新增功能**:
 - ✅ FastAPI 後端伺服器
 - ✅ POST /api/spin 端點（接收前端 spin 請求）
-- ✅ 回傳簡化的遊戲結果資料
+- ✅ GET /api/init 端點（返回初始盤面）
+- ✅ GET /api/health 端點（健康檢查）
 - ✅ CORS 跨域支援
 - ✅ 完整的測試工具（Python + HTML）
 
 **新增檔案**:
-- `spin_server.py` - 主伺服器程式 (335 行)
+- `spin_server.py` - 主伺服器程式 (400+ 行)
 - `test_spin_server.py` - 測試腳本 (246 行)
 - `test_spin_client.html` - 網頁測試介面 (540 行)
 - `start_spin_server.py` - 快速啟動腳本 (108 行)
@@ -44,6 +73,7 @@ python spin_server.py
 | 您的角色 | 推薦文檔 | 路徑 |
 |---------|---------|------|
 | **新手開發者** | 快速開始指南 ⭐ | `docs/Simulator-Quick-Start.md` |
+| **LocalServer 開發** | 初始盤面完整報告 🆕 | `docs/LocalServer-InitialBoard-Complete-Report.md` |
 | **經驗豐富的開發者** | 系統總結 | `docs/Simulator-System-Summary.md` |
 | **測試/QA 人員** | 使用指南 | `pss-on-00152/assets/script/config/SIMULATOR_GUIDE.md` |
 | **技術主管** | 整合報告 | `docs/Simulator-Integration-Report.md` |

@@ -59,6 +59,74 @@
 
 ## 專案記錄 (新 → 舊)
 
+## 9. LocalServer 初始盤面功能實現 [2025-10-14]
+
+### 請求
+"在執行 localserver mode 連線到 spin game server，更新網頁時候，先由 spin game server 回送一個初始化盤面"
+
+### 問題分析
+1. **初始問題**: 前端沒有發送請求到 Spin Server
+2. **根本原因**: NetInitReady() 依賴 WebSocket 的 StripsRecall 流程，但 LocalServer 模式不創建 WebSocket
+3. **連鎖問題**: 
+   - Striptables 陣列為空
+   - TotalArray 未初始化
+   - PlayerCent 等配置缺失
+
+### 實作內容
+
+#### 後端實現
+- **檔案**: `gameServer/spin_server.py`
+- **新增端點**: `GET /api/init`
+  - 返回固定的 3x5 初始盤面
+  - 包含 module_id, rng, win 等資料
+  - 支援可選的 session_id 參數
+
+#### 前端實現
+1. **SpinServerClient** (`LocalServer/SpinServerClient.ts`)
+   - 新增 `getInitialBoard()` 方法
+   - 調用 `/api/init` API
+   - 完整的錯誤處理和超時機制
+
+2. **ProtoConsole** (`MessageController/ProtoConsole.ts`)
+   - 重構 LocalServer 模式初始化流程
+   - 模擬 ConfigRecall 設定 BetArray、TotalArray 等
+   - 創建假的 Striptables 資料（5個滾輪 × 100個符號）
+   - 直接調用 NetInitReady() 而非依賴 WebSocket
+
+3. **StateConsole** (`MessageController/StateConsole.ts`)
+   - 修改 NetInitReady() 支援 LocalServer 模式
+   - 實現健康檢查 → 獲取初始盤面 → 應用盤面流程
+   - 新增 applyInitialBoard() 方法
+
+### 解決的問題
+1. ✅ NetInitReady 未被調用 → 在 ProtoConsole.start() 直接調用
+2. ✅ Striptables[0]._id undefined → 預先初始化 Striptables 結構
+3. ✅ strips[i].length undefined → 創建假的 strips 資料
+4. ✅ TotalArray[0] undefined → 模擬 ConfigRecall 初始化配置
+
+### 技術亮點
+- **獨立初始化路徑**: 不依賴 WebSocket 訊息流程
+- **完整資料結構模擬**: 提供遊戲運行所需的最小資料集
+- **向後兼容**: 不影響正常 WebSocket 模式
+- **詳細調試日誌**: 完整的執行流程追蹤
+
+### 測試驗證
+- ✅ Spin Server 成功返回初始盤面
+- ✅ 前端成功請求並接收資料
+- ✅ 所有資料結構正確初始化
+- ✅ 遊戲畫面正常顯示
+- ✅ 無任何錯誤或警告
+
+### 相關文件
+- `docs/LocalServer-InitialBoard-Complete-Report.md`: 完整實現報告
+  - 詳細的問題分析和解決歷程
+  - 完整的程式碼實現
+  - 測試驗證結果
+  - 資料結構對比
+  - 使用說明和未來擴展方向
+
+---
+
 ## 8. Debug JSON Loader 功能開發 [2025-10-13]
 
 ### 請求
