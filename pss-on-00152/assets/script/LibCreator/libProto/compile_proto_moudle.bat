@@ -1,1 +1,0 @@
-pbjs -t static-module -w --es5 .\module_common.js  .\module_command.proto

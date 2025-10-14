@@ -1,3 +1,0 @@
-include:
-    - project: 'bu01/frontend/bu01_front-end/slotgame/cicd_templete'
-      file: '/CICD_pipeline.yml'

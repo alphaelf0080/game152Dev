@@ -1,1 +1,0 @@
-pbjs -t static-module -w --es5 .\gap.js  .\game.proto
