@@ -19,6 +19,8 @@ from features.free_spins import FreeSpinsFeature
 from features.war_drums import WarDrumsFeature
 from features.feature_buy import FeatureBuyController, PurchaseOption
 from protocol.json_exporter import ProtoJSONExporter, export_simulation_results_to_json
+from protocol.event_log_exporter import export_simulation_to_event_log
+from protocol.simple_data_exporter import export_simulation_to_simple_data
 
 @dataclass
 class SimulationConfig:
@@ -540,16 +542,44 @@ class GameSimulator:
         json_files = None
         if export_json and detailed_results:
             try:
-                json_files = export_simulation_results_to_json(
+                # 1. 簡化數據格式輸出（主要格式）✨
+                simple_data_path = os.path.join(output_dir, "game_results.json")
+                simple_data_file = export_simulation_to_simple_data(
+                    results=detailed_results,
+                    output_path=simple_data_path
+                )
+                json_files = {"game_results": simple_data_file}
+                print(f"✅ 遊戲結果已保存 (簡化格式):")
+                print(f"   game_results: {simple_data_file}")
+                
+                # 2. 原有格式輸出（備用）
+                original_files = export_simulation_results_to_json(
                     results=detailed_results,
                     bet_amounts=bet_amounts,
                     output_dir=output_dir,
                     include_summary=True
                 )
-                print(f"✅ JSON 檔案已保存:")
-                for file_type, file_path in json_files.items():
+                json_files.update(original_files)
+                print(f"✅ 原格式檔案已保存:")
+                for file_type, file_path in original_files.items():
                     print(f"   {file_type}: {file_path}")
+                
+                # 3. 事件日誌格式輸出（可選）
+                event_log_path = os.path.join(output_dir, "event_log_results.json")
+                event_log_file = export_simulation_to_event_log(
+                    results=detailed_results,
+                    output_path=event_log_path,
+                    game_id="PSS-ON-00152",
+                    add_connection_events=True,
+                    reconnect_interval=50  # 每50個spin模擬一次斷線重連
+                )
+                json_files["event_log"] = event_log_file
+                print(f"✅ 事件日誌格式已保存:")
+                print(f"   event_log: {event_log_file}")
+                
             except Exception as e:
                 print(f"❌ JSON 輸出失敗: {e}")
+                import traceback
+                traceback.print_exc()
         
         return simulation_result, json_files

@@ -7,11 +7,10 @@ import { LoadingScene } from '../LibCreator/libLoadingInit/LoadingScene';
 import { Data, Mode } from '../DataController';
 import { UCoin } from '../LibCreator/libScript/JackpotScript/UCoin/UCoin';
 import { AllNode } from '../LibCreator/libScript/CommonLibScript';
+
 import { FontMapController } from '../FontMapController';
 import { AutoPages } from '../LibCreator/libUIController/AutoBtn';
-import { initializeSimulator } from '../config/SimulatedResultHandler';
-import { LocalServerMode } from '../LocalServer/LocalServerMode';
-import { GameResult } from '../LocalServer/LocalResultProvider';
+import { getSpinServerClient } from '../LocalServer/SpinServerClient';
 
 const { ccclass, property } = _decorator;
 let MessageConsole: Node = null;
@@ -549,10 +548,73 @@ export class StateConsole extends Component {
         EVENTController.HandleBroadcast(type, data);
     }
 
-    async NetInitReady() {
-        // 初始化模擬器（如果需要）
-        await initializeSimulator();
+    NetInitReady() {
+        console.log('[DEBUG] NetInitReady called');
+        console.log('[DEBUG] localServerMode:', (Data.Library as any).localServerMode);
         
+        // ========== LocalServer 模式：檢查 Spin Server 連線 ==========
+        if ((Data.Library as any).localServerMode === true) {
+            console.log('[StateConsole] 🌐 LocalServer 模式：檢查 Spin Server 連線');
+            console.log('[DEBUG] About to create SpinServerClient');
+            
+            try {
+                const spinClient = getSpinServerClient();
+                console.log('[DEBUG] SpinServerClient created successfully');
+                
+                // 執行健康檢查
+                console.log('[DEBUG] Calling checkHealth()');
+                spinClient.checkHealth().then(isHealthy => {
+                    console.log('[DEBUG] checkHealth completed, result:', isHealthy);
+                    
+                    if (isHealthy) {
+                        console.log('[StateConsole] ✅ Spin Server 連線正常');
+                        
+                        // 獲取初始盤面
+                        console.log('[DEBUG] Calling getInitialBoard()');
+                        return spinClient.getInitialBoard();
+                    } else {
+                        console.error('[StateConsole] ❌ Spin Server 連線失敗');
+                        throw new Error('無法連接到 Spin Server');
+                    }
+                }).then(initialBoard => {
+                    console.log('[StateConsole] 📋 收到初始盤面:', initialBoard);
+                    
+                    // 設定初始盤面到遊戲中
+                    this.applyInitialBoard(initialBoard);
+                    
+                    // 觸發網路就緒事件
+                    let type = "All";
+                    let data = {
+                        EnventID: Data.Library.EVENTID[Mode.EVENTTYPE.COMMON].eNETREADY
+                    }
+                    this.SendEvent(type, data);
+                    
+                    // 初始化遊戲狀態
+                    if (this.ServerRecoverData != null && this.ServerRecoverData != undefined) {
+                        this.Recover();
+                    } else {
+                        if (find("APIConsole")) {
+                            Data.Library.yieldLess(1);
+                            console.log("enter NetInitReady (LocalServer mode)")
+                        }
+                    }
+                }).catch(error => {
+                    console.error('[DEBUG] Promise chain error:', error);
+                    console.error('[StateConsole] ❌ Spin Server 錯誤:', error);
+                    Mode.ErrorInLoading('Spin Server 錯誤: ' + error.message);
+                });
+            } catch (error) {
+                console.error('[DEBUG] Exception in NetInitReady:', error);
+                Mode.ErrorInLoading('SpinServerClient 初始化失敗: ' + error.message);
+            }
+            
+            return; // 不執行原有 WebSocket 邏輯
+        }
+        // ==========================================================
+        
+        console.log('[DEBUG] Using normal WebSocket mode');
+        
+        // 原有邏輯
         let type = "All";
         let data = {
             EnventID: Data.Library.EVENTID[Mode.EVENTTYPE.COMMON].eNETREADY
@@ -566,6 +628,42 @@ export class StateConsole extends Component {
                 Data.Library.yieldLess(1);
                 console.log("enter NetInitReady")
             }
+        }
+    }
+    
+    /**
+     * 應用初始盤面資料到遊戲
+     * @param boardData 初始盤面資料
+     */
+    applyInitialBoard(boardData: any) {
+        console.log('[StateConsole] 🎮 設定初始盤面');
+        
+        try {
+            // 獲取 ReelController
+            const reelNode = find("Canvas/BaseGame/Layer/Shake/Reel");
+            if (reelNode) {
+                const reelController = reelNode.getComponent(ReelController);
+                if (reelController && typeof reelController['SetInitBoard'] === 'function') {
+                    // 調用 ReelController 的初始盤面設定方法
+                    reelController['SetInitBoard'](boardData.rng);
+                    console.log('[StateConsole] ✅ 初始盤面設定完成');
+                } else {
+                    console.warn('[StateConsole] ⚠️ ReelController 沒有 SetInitBoard 方法，使用備用方案');
+                    // 備用方案：將資料存儲到 Data.Library 供後續使用
+                    (Data.Library as any).initialBoardData = boardData;
+                    console.log('[StateConsole] ✅ 初始盤面資料已暫存');
+                }
+            } else {
+                console.warn('[StateConsole] ⚠️ 找不到 Reel 節點');
+            }
+            
+            // 設定模組ID
+            if (Data.Library.MathConsole) {
+                Data.Library.MathConsole.CurModuleid = boardData.module_id;
+            }
+            
+        } catch (error) {
+            console.error('[StateConsole] ❌ 設定初始盤面失敗:', error);
         }
     }
 
@@ -888,21 +986,6 @@ export class StateConsole extends Component {
 
     resultCall() {
         if (this.CurState == Mode.FSM.K_SPIN || this.CurState == Mode.FSM.K_FEATURE_SPIN) {
-            // Check if using LocalServerMode
-            const localServerNode = find('LocalServerMode');
-            if (localServerNode) {
-                const localMode = localServerNode.getComponent(LocalServerMode);
-                if (localMode && localMode.isLocalMode()) {
-                    console.log('[StateConsole] Using local mode, skipping SendMsg');
-                    // In local mode, result is already set by UIController.handleLocalSpin()
-                    // Just trigger NetReceiveResult after a short delay
-                    this.scheduleOnce(() => {
-                        this.NetReceiveResult();
-                    }, 0.1);
-                    return;
-                }
-            }
-
             if (this.CurState == Mode.FSM.K_FEATURE_SPIN && this.ServerRecoverData != null && this.ServerRecoverData != undefined) {
                 this.ChangeBackGround('fs');
                 find("Canvas/BaseGame/Layer/Shake/UI/InfoController").setPosition(360, 32);

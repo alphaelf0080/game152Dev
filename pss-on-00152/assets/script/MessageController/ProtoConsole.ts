@@ -11,8 +11,7 @@ import { UCoin } from "../LibCreator/libScript/JackpotScript/UCoin/UCoin";
 import { AutoPages } from "../LibCreator/libUIController/AutoBtn";
 import { JackPot } from "../../Jackpot/script/JackPot";
 import { EventController } from "./EventController";
-import { shouldUseSimulatedResult, getSimulatedResult } from "../config/SimulatedResultHandler";
-import { LocalServerMode } from "../LocalServer/LocalServerMode";
+import { SpinServerClient, getSpinServerClient } from "../LocalServer/SpinServerClient";
 
 
 const { ccclass, property } = _decorator;
@@ -54,45 +53,118 @@ export class ProtoConsole extends Component {
             UcoinConsole = find("Canvas/Ucoin").getComponent(UCoin);
         }
 
-        // ========== LocalServerMode 整合 ==========
-        // 檢查是否使用本地伺服器模式
-        console.log('[ProtoConsole] 🔍 開始檢查本地伺服器模式...');
-        
-        // 方法 1: 直接檢查 URL 參數（最可靠）
+        // ========== 檢查 LocalServer 模式 ==========
         const urlParams = new URLSearchParams(window.location.search);
-        const hasLocalParam = urlParams.has('localServer') || urlParams.has('localserver');
-        console.log('[ProtoConsole] URL 參數檢查:', window.location.search);
-        console.log('[ProtoConsole] localServer 參數:', hasLocalParam ? '✅ 存在' : '❌ 不存在');
+        console.log('[DEBUG] URL Search Params:', window.location.search);
+        console.log('[DEBUG] Has localServer:', urlParams.has('localServer'));
+        console.log('[DEBUG] Has localserver:', urlParams.has('localserver'));
+        console.log('[DEBUG] Has local:', urlParams.has('local'));
         
-        if (hasLocalParam) {
-            console.log('[ProtoConsole] 🎮 檢測到 localServer URL 參數，跳過 WebSocket 連接');
-            console.log('[ProtoConsole] ⚠️ 請確保場景中已創建 LocalServerMode 節點並添加組件');
-            return;
-        }
+        const isLocalServerMode = urlParams.has('localServer') || 
+                                   urlParams.has('localserver') || 
+                                   urlParams.has('local');
         
-        // 方法 2: 檢查 LocalServerMode 節點（備用）
-        const localServerNode = find('LocalServerMode');
-        console.log('[ProtoConsole] LocalServerMode node:', localServerNode ? '✅ 找到' : '❌ 未找到');
+        console.log('[DEBUG] isLocalServerMode:', isLocalServerMode);
         
-        if (localServerNode) {
-            const localServerMode = localServerNode.getComponent(LocalServerMode);
-            console.log('[ProtoConsole] LocalServerMode component:', localServerMode ? '✅ 找到' : '❌ 未找到');
+        if (isLocalServerMode) {
+            console.log('[ProtoConsole] 🌐 LocalServer 模式：使用 Spin Server API');
+            (Data.Library as any).localServerMode = true;
+            console.log('[DEBUG] Set Data.Library.localServerMode to:', (Data.Library as any).localServerMode);
             
-            if (localServerMode) {
-                const isLocal = localServerMode.isLocalMode();
-                console.log('[ProtoConsole] isLocalMode():', isLocal ? '✅ TRUE (本地模式)' : '❌ FALSE (伺服器模式)');
+            // LocalServer 模式不使用 WebSocket，直接觸發初始化流程
+            console.log('[DEBUG] LocalServer mode - directly triggering initialization');
+            // 使用 setTimeout 確保 Data.Library 完全初始化
+            setTimeout(() => {
+                console.log('[DEBUG] Timeout callback - initializing data structures');
                 
-                if (isLocal) {
-                    console.log('[ProtoConsole] 🎮 檢測到本地伺服器模式，跳過 WebSocket 連接');
-                    console.log('[ProtoConsole] 本地模式啟用，所有網路請求將被繞過');
-                    return;
+                // 初始化 StateConsole 的基本配置（模擬 ConfigRecall 的行為）
+                if (Data.Library.StateConsole) {
+                    console.log('[DEBUG] Initializing StateConsole basic config');
+                    
+                    // 設定基本的下注配置
+                    Data.Library.StateConsole.BetArray = [1, 2, 5, 10, 20, 50, 100];
+                    Data.Library.StateConsole.LineArray = [25]; // 25線遊戲
+                    Data.Library.StateConsole.RateArray = [1, 2, 5, 10];
+                    Data.Library.StateConsole.RateIndex = 0;
+                    Data.Library.StateConsole.PlayerCent = 1000000; // 初始金額
+                    
+                    // 計算 TotalArray（總下注選項）
+                    for (let i = 0; i < Data.Library.StateConsole.BetArray.length; i++) {
+                        for (let j = 0; j < Data.Library.StateConsole.RateArray.length; j++) {
+                            let total = Data.Library.StateConsole.BetArray[i] * 
+                                       Data.Library.StateConsole.RateArray[j] * 
+                                       Data.Library.StateConsole.LineArray[0];
+                            if (!Data.Library.StateConsole.TotalArray.includes(total)) {
+                                Data.Library.StateConsole.TotalArray.push(total);
+                                Data.Library.StateConsole.TotalArrayX.push([i, j]);
+                            }
+                        }
+                    }
+                    
+                    Data.Library.StateConsole.TotalArray.sort((a, b) => a - b);
+                    Data.Library.StateConsole.TotalIndex = 0; // 預設使用第一個下注選項
+                    Data.Library.StateConsole.MaxBet = Data.Library.StateConsole.BetArray[Data.Library.StateConsole.BetArray.length - 1] * 
+                                                       Data.Library.StateConsole.RateArray[Data.Library.StateConsole.RateArray.length - 1] * 
+                                                       Data.Library.StateConsole.LineArray[0];
+                    
+                    console.log('[DEBUG] StateConsole config initialized:', {
+                        BetArray: Data.Library.StateConsole.BetArray,
+                        TotalArray: Data.Library.StateConsole.TotalArray,
+                        PlayerCent: Data.Library.StateConsole.PlayerCent
+                    });
                 }
-            }
+                
+                // 初始化 MathConsole 必要的資料結構（模擬 StripsRecall 的行為）
+                if (Data.Library.MathConsole) {
+                    // 初始化 Striptables 陣列
+                    Data.Library.MathConsole.Striptables = [];
+                    Data.Library.MathConsole.Paytables = [];
+                    
+                    // 創建一個基本的 Striptable（使用 BS 模組）
+                    const striptable = instantiate(Data.Library.MathConsole.StripTable);
+                    striptable._id = "BS"; // 基本遊戲模組ID
+                    
+                    // 創建假的 strips 資料（5個滾輪，每個滾輪有足夠的符號）
+                    // 這些 strips 將被初始盤面的 RNG 資料使用
+                    const dummyStrips = [];
+                    const reelCount = 5;
+                    const symbolsPerReel = 100; // 每個滾輪足夠的符號數量
+                    
+                    for (let i = 0; i < reelCount; i++) {
+                        const strip = [];
+                        for (let j = 0; j < symbolsPerReel; j++) {
+                            // 使用 1-10 之間的符號ID（根據遊戲的符號定義）
+                            strip.push((j % 10) + 1);
+                        }
+                        dummyStrips.push(strip);
+                    }
+                    
+                    striptable.setStrips(dummyStrips);
+                    
+                    Data.Library.MathConsole.Striptables.push(striptable);
+                    Data.Library.MathConsole.Paytables.push({_id: "BS"});
+                    Data.Library.MathConsole.CurModuleid = "BS";
+                    
+                    console.log('[DEBUG] MathConsole initialized with module:', Data.Library.MathConsole.CurModuleid);
+                    console.log('[DEBUG] Striptables[0]._strips length:', striptable._strips.length);
+                } else {
+                    console.error('[ERROR] MathConsole not initialized');
+                }
+                
+                // 調用 NetInitReady
+                if (Data.Library.StateConsole) {
+                    console.log('[DEBUG] StateConsole exists, calling NetInitReady()');
+                    Data.Library.StateConsole.NetInitReady();
+                } else {
+                    console.error('[ERROR] StateConsole not initialized in LocalServer mode');
+                }
+            }, 100);
+        } else {
+            console.log('[ProtoConsole] 🌐 正常模式：使用 WebSocket');
+            (Data.Library as any).localServerMode = false;
+            CreateSocket();
         }
         // =========================================
-
-        console.log('[ProtoConsole] 🌐 正常模式，創建 WebSocket 連接');
-        CreateSocket();
     }
 
     protected onLoad(): void {
@@ -470,6 +542,40 @@ let StripsRecall = function (evt) {
 };
 
 let ResultCall = function (buy) {
+    // ========== LocalServer 模式：使用 HTTP API ==========
+    if ((Data.Library as any).localServerMode === true) {
+        console.log('[ResultCall] 🌐 使用 Spin Server API');
+        
+        const spinClient = getSpinServerClient();
+        const betAmount = Data.Library.StateConsole.BetIndex;
+        const spinType = buy ? 'buy' : 'normal';
+        
+        spinClient.executeSpin(betAmount, spinType).then(resultData => {
+            console.log('[ResultCall] ✅ API 返回結果:', resultData);
+            
+            // 轉換 API 結果為遊戲格式並處理
+            // TODO: 將 resultData 轉換為 Proto 格式並觸發 ResultRecall 邏輯
+            // 暫時使用原有邏輯處理結果
+            
+            // 模擬 WebSocket 事件格式
+            const mockEvent = {
+                data: resultData
+            };
+            
+            // 直接處理結果（跳過 WebSocket）
+            console.log('[ResultCall] 🎮 處理遊戲結果');
+            
+        }).catch(error => {
+            console.error('[ResultCall] ❌ API 錯誤:', error);
+            // 錯誤處理
+            Mode.ErrorInLoading('Spin Server 連接失敗: ' + error.message);
+        });
+        
+        return; // 不執行 WebSocket 邏輯
+    }
+    // ==================================================
+    
+    // 原有 WebSocket 邏輯
     Data.Library.StateConsole.BuyFs = false;
     gToken = Data.Library.CommonLibScript.GetURLParameter('access_token');
     let msg = {
@@ -500,23 +606,6 @@ let ResultCall = function (buy) {
     };
     let module = ProtoModule.encodeSpinIndexCommand(moudle);
     msg.module_command.push(module);
-
-    // 檢查是否使用模擬結果
-    if (shouldUseSimulatedResult()) {
-        console.log("[ProtoConsole] 使用本地 JSON 模擬結果");
-        // 異步獲取模擬結果並直接觸發 ResultRecall 處理
-        setTimeout(() => {
-            const simulatedResult = getSimulatedResult();
-            if (simulatedResult) {
-                // 模擬伺服器回應事件，創建與真實 WebSocket 事件相同的結構
-                const mockEvent = { data: simulatedResult };
-                ResultRecall(mockEvent);
-            } else {
-                console.error("[ProtoConsole] 無法獲取模擬結果，可能 JSON 已用完且未啟用循環模式");
-            }
-        }, 100); // 模擬 100ms 網絡延遲
-        return;
-    }
 
     console.log("ResultCall");
     const message = Proto.encodeResultCall(msg);

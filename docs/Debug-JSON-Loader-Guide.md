@@ -62,7 +62,10 @@
 ```bash
 # 1. 產生測試 JSON（在 gameServer 目錄）
 cd gameServer
-python3 main.py --simulate 100 --json --json-dir ../pss-on-00152/assets/resources/local_results
+#python3 main.py --simulate 100 --json --json-dir ../pss-on-00152/assets/resources/local_results
+
+
+python main.py --simulate 100 --json --json-dir ../pss-on-00152/assets/resources/local_results
 
 # 2. 整合 LocalServerMode 到遊戲（一次性設置）
 

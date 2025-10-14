@@ -1,5 +1,42 @@
 # 📚 遊戲模擬器系統 - 文檔索引
 
+## 🔧 最新更新 (2025-10-14)
+
+### 🆕 Spin Server - 遊戲後端伺服器 v1.0
+**檔案**: `docs/Spin-Server-Summary.md`  
+**新增功能**:
+- ✅ FastAPI 後端伺服器
+- ✅ POST /api/spin 端點（接收前端 spin 請求）
+- ✅ 回傳簡化的遊戲結果資料
+- ✅ CORS 跨域支援
+- ✅ 完整的測試工具（Python + HTML）
+
+**新增檔案**:
+- `spin_server.py` - 主伺服器程式 (335 行)
+- `test_spin_server.py` - 測試腳本 (246 行)
+- `test_spin_client.html` - 網頁測試介面 (540 行)
+- `start_spin_server.py` - 快速啟動腳本 (108 行)
+
+**快速啟動**:
+```bash
+python spin_server.py
+```
+
+---
+
+### LocalServer & 初始盤面修復 v2.1
+**檔案**: `docs/LocalServer-InitialBoard-Fix.md`  
+**修復內容**:
+- ✅ LocalServer 模式正確跳過 WebSocket 連接
+- ✅ 初始盤面正確顯示在遊戲中
+- ✅ LastRng 數據轉換優化
+
+**影響範圍**:
+- `ProtoConsole.ts` - 新增 USE_LOCAL_JSON 標記設定
+- `StateConsole.ts` - 初始盤面數據應用到 LastRng
+
+---
+
 ## 快速導航
 
 ### 🚀 我該從哪裡開始？
@@ -12,10 +49,90 @@
 | **技術主管** | 整合報告 | `docs/Simulator-Integration-Report.md` |
 | **專案經理** | 最終報告 | `docs/Simulator-Final-Report.md` |
 | **部署人員** | 實施檢查清單 | `docs/Simulator-Implementation-Checklist.md` |
+| **調試/修復** | 問題修復報告 | `docs/LocalServer-InitialBoard-Fix.md` |
+| **後端開發者** | Spin Server 🆕 | `docs/Spin-Server-Guide.md` |
 
 ---
 
 ## 📖 文檔列表
+
+### 🎯 後端伺服器文檔
+
+#### Spin-Server-Guide.md 🆕
+**路徑**: `docs/Spin-Server-Guide.md`  
+**類型**: 完整使用指南  
+**適合**: 後端開發者、前端整合者  
+**內容**:
+- 概述與功能特點
+- 快速開始（3 步驟）
+- 完整 API 文檔（POST /api/spin, GET /api/health, GET /api/status）
+- 測試方法（Python、HTML、curl、Postman）
+- 前端整合範例（TypeScript、Cocos Creator）
+- 故障排除
+- 進階設定（生產環境部署）
+
+**何時閱讀**: 需要建立或整合後端 Spin API 時
+
+**預計閱讀時間**: 30 分鐘
+
+---
+
+#### Spin-Server-Quick-Start.md 🆕
+**路徑**: `docs/Spin-Server-Quick-Start.md`  
+**類型**: 快速開始  
+**適合**: 所有開發者  
+**內容**:
+- 3 步驟快速啟動
+- API 端點說明
+- 前端整合範例
+- 測試結果範例
+- 常見問題解答
+
+**何時閱讀**: 想快速啟動 Spin Server 時
+
+**預計閱讀時間**: 5 分鐘
+
+---
+
+#### Spin-Server-Summary.md 🆕
+**路徑**: `docs/Spin-Server-Summary.md`  
+**類型**: 實現總結  
+**適合**: 專案經理、技術主管  
+**內容**:
+- 完成項目清單
+- 新建檔案說明
+- 核心功能介紹
+- 技術架構圖
+- 測試驗證結果
+- 前端整合方案
+- 與 LocalServer 模式對比
+
+**何時閱讀**: 需要了解 Spin Server 全貌時
+
+**預計閱讀時間**: 15 分鐘
+
+---
+
+### 🔧 問題修復文檔
+
+#### LocalServer-InitialBoard-Fix.md
+**路徑**: `docs/LocalServer-InitialBoard-Fix.md`  
+**類型**: 問題修復報告  
+**適合**: 開發者、調試人員  
+**內容**:
+- 問題總結（WebSocket 跳過、初始盤面顯示）
+- 解決方案詳解
+- 代碼修改說明
+- ReelController 工作流程
+- 完整測試步驟
+- 調試技巧
+- 驗證清單
+
+**何時閱讀**: 遇到 LocalServer 或初始盤面問題時
+
+**預計閱讀時間**: 25 分鐘
+
+---
 
 ### 核心文檔
 
@@ -144,9 +261,111 @@
 
 ---
 
+### 初始盤面系統文檔
+
+#### 8. Initial-Board-5min-Start.md ⭐
+**路徑**: `docs/Initial-Board-5min-Start.md`  
+**類型**: 5分鐘快速開始  
+**適合**: 所有人  
+**內容**:
+- 編輯器配置步驟
+- 符號 ID 速查表
+- 常用盤面範例
+- 驗證方法
+
+**何時閱讀**: 想快速配置初始盤面時
+
+**預計閱讀時間**: 5 分鐘
+
+---
+
+#### 9. Initial-Board-Editor-Config-Guide.md
+**路徑**: `docs/Initial-Board-Editor-Config-Guide.md`  
+**類型**: 編輯器配置詳細指南  
+**適合**: 開發者  
+**內容**:
+- 三種配置方式詳解
+- 編輯器直接配置
+- 從 Resources 載入
+- 從 URL 載入
+- 完整範例
+- 進階配置
+- 工作流程
+- 故障排除
+
+**何時閱讀**: 需要深入了解編輯器配置時
+
+**預計閱讀時間**: 20 分鐘
+
+---
+
+#### 10. Initial-Board-Guide.md
+**路徑**: `docs/Initial-Board-Guide.md`  
+**類型**: 完整系統指南  
+**適合**: 開發者  
+**內容**:
+- 系統架構
+- 完整功能說明
+- URL 載入方式
+- JSON 格式
+- 整合指南
+
+**何時閱讀**: 需要了解整體系統時
+
+**預計閱讀時間**: 25 分鐘
+
+---
+
+#### 11. Initial-Board-Quick-Reference.md
+**路徑**: `docs/Initial-Board-Quick-Reference.md`  
+**類型**: 快速參考  
+**適合**: 所有人  
+**內容**:
+- 快速操作指令
+- 常用 URL 範例
+- 故障排除
+- 常見問題
+
+**何時閱讀**: 需要快速查詢時
+
+**預計閱讀時間**: 10 分鐘
+
+---
+
+#### 12. Initial-Board-Implementation-Summary.md
+**路徑**: `docs/Initial-Board-Implementation-Summary.md`  
+**類型**: 實施總結  
+**適合**: 技術主管、專案經理  
+**內容**:
+- 完成內容總覽
+- 系統架構
+- 使用方法
+- 核心特性
+- 驗證方法
+- 技術細節
+
+**何時閱讀**: 需要整體評估時
+
+**預計閱讀時間**: 15 分鐘
+
+---
+
 ### 工具腳本
 
-#### 8. quick_start.py
+#### 13. generate_initial_boards.py
+**路徑**: `gameServer/generate_initial_boards.py`  
+**類型**: Python 工具腳本  
+**適合**: 開發者  
+**用途**: 自動生成 10 種預設初始盤面 JSON 檔案
+**使用方法**:
+```powershell
+cd gameServer
+python generate_initial_boards.py
+```
+
+---
+
+#### 14. quick_start.py
 **路徑**: `gameServer/quick_start.py`  
 **類型**: Python 腳本  
 **功能**:

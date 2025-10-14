@@ -6,6 +6,7 @@
 
 ## ✨ 主要特性
 
+### 遊戲模擬器
 - 🔄 **無縫切換**: URL 參數控制，一鍵切換模式
 - 🎯 **非侵入式**: 不修改核心遊戲邏輯
 - 📊 **數據驅動**: 使用 JSON 檔案進行測試
@@ -13,16 +14,49 @@
 - 📝 **詳細日誌**: 完整的調試資訊輸出
 - 🛠️ **開發工具**: 包含完整的輔助工具集
 
+### Spin Server 🆕
+- 🚀 **即時生成**: 動態生成遊戲結果，不依賴預先生成的 JSON
+- 🌐 **RESTful API**: 標準 HTTP API，易於整合
+- 🔌 **CORS 支援**: 跨域請求無障礙
+- 🧪 **完整測試**: Python + HTML 測試工具
+- 📖 **詳盡文檔**: 從快速開始到完整指南
+
 ## 🚀 5 分鐘快速開始
 
-### 1️⃣ 生成測試數據
+### 選項 A: 使用 Spin Server（推薦用於開發） 🆕
+
+```bash
+# 1. 啟動 Spin Server
+cd gameServer
+python spin_server.py
+
+# 2. 測試 API
+python test_spin_server.py
+
+# 或使用網頁測試介面
+# 開啟 test_spin_client.html
+```
+
+**API 端點**: `http://localhost:8000/api/spin`
+
+**特點**: 
+- ✅ 即時生成遊戲結果
+- ✅ 支援動態參數調整
+- ✅ 標準 RESTful API
+- ✅ 完整的測試工具
+
+---
+
+### 選項 B: 使用模擬器（推薦用於測試）
+
+#### 1️⃣ 生成測試數據
 
 ```bash
 cd gameServer
 python main.py --json --spins 100
 ```
 
-### 2️⃣ 啟動 JSON 伺服器
+#### 2️⃣ 啟動 JSON 伺服器
 
 ```bash
 python test_simulator_config.py
@@ -45,6 +79,9 @@ http://localhost:7456/?sim_mode=local_json
 ```
 game152Dev/
 ├── gameServer/                          # Python 後端
+│   ├── spin_server.py                   # 🆕 Spin API 伺服器
+│   ├── test_spin_server.py              # 🆕 API 測試腳本
+│   ├── test_spin_client.html            # 🆕 網頁測試介面
 │   ├── serve_json.py                    # JSON 檔案伺服器
 │   ├── test_simulator_config.py         # 測試工具
 │   └── game_output/                     # 生成的 JSON 檔案
@@ -60,7 +97,10 @@ game152Dev/
 │           └── StateConsole.ts          # [已修改] 初始化
 │
 └── docs/                                # 文檔
-    ├── Simulator-Quick-Start.md         # ⭐ 快速開始
+    ├── Spin-Server-Quick-Start.md       # 🆕 Spin Server 快速開始
+    ├── Spin-Server-Guide.md             # 🆕 Spin Server 完整指南
+    ├── Spin-Server-Summary.md           # 🆕 Spin Server 實現總結
+    ├── Simulator-Quick-Start.md         # ⭐ 模擬器快速開始
     ├── Simulator-System-Summary.md      # 系統總結
     ├── Simulator-Integration-Report.md  # 整合報告
     └── Simulator-Implementation-Checklist.md # 檢查清單
@@ -363,11 +403,21 @@ python main.py --json --spins 100
 
 ---
 
-**版本**: 1.0.0  
-**最後更新**: 2025-01-13  
+**版本**: 1.1.0  
+**最後更新**: 2025-10-14  
 **狀態**: ✅ 生產就緒
 
 **快速連結**:
-- [快速開始](./docs/Simulator-Quick-Start.md) 👈 從這裡開始！
+- [Spin Server 快速開始](./docs/Spin-Server-Quick-Start.md) 🆕 後端 API！
+- [Spin Server 完整指南](./docs/Spin-Server-Guide.md) 🆕
+- [模擬器快速開始](./docs/Simulator-Quick-Start.md) 👈 從這裡開始！
 - [完整指南](./pss-on-00152/assets/script/config/SIMULATOR_GUIDE.md)
 - [系統總結](./docs/Simulator-System-Summary.md)
+- [文檔索引](./docs/DOCUMENTATION_INDEX.md) 📚 查找所有文檔
+
+**新增功能 (v1.1.0)**:
+- 🆕 Spin Server - FastAPI 後端伺服器
+- 🆕 POST /api/spin - 即時生成遊戲結果
+- 🆕 完整測試工具（Python + HTML）
+- 🆕 前端整合範例（TypeScript + Cocos Creator）
+- 🆕 5 份完整文檔
