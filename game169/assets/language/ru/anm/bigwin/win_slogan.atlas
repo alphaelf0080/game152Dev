@@ -1,0 +1,48 @@
+
+win_slogan.png
+size: 1812,136
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+mega win_2_eng
+  rotate: false
+  xy: 1325, 70
+  size: 485, 63
+  orig: 722, 548
+  offset: 119, 21
+  index: -1
+new_01_eng
+  rotate: false
+  xy: 936, 66
+  size: 387, 67
+  orig: 722, 548
+  offset: 168, 18
+  index: -1
+new_02_eng
+  rotate: false
+  xy: 2, 13
+  size: 525, 120
+  orig: 722, 636
+  offset: 100, 2
+  index: -1
+super win_2_eng
+  rotate: false
+  xy: 529, 2
+  size: 501, 62
+  orig: 722, 548
+  offset: 110, 25
+  index: -1
+ultimate win_2_eng
+  rotate: false
+  xy: 1032, 6
+  size: 506, 58
+  orig: 722, 548
+  offset: 115, 25
+  index: -1
+ultra win_2_eng
+  rotate: false
+  xy: 529, 66
+  size: 405, 67
+  orig: 722, 548
+  offset: 159, 15
+  index: -1

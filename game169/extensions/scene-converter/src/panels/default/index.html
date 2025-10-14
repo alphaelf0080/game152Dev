@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scene Converter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #2b2b2b;
+            color: #cccccc;
+        }
+
+        .container {
+            max-width: 100%;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background-color: #3c3c3c;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .section h2 {
+            font-size: 14px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4fc3f7;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #29b6f6;
+        }
+
+        button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        .info-box {
+            background-color: #424242;
+            padding: 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #4caf50;
+        }
+
+        .error {
+            color: #f44336;
+        }
+
+        .warning {
+            color: #ff9800;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label.file-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #666;
+            color: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        label.file-label:hover {
+            background-color: #777;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .log-box {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .instructions {
+            background-color: #424242;
+            padding: 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Scene Converter - 場景轉換工具</h1>
+
+        <!-- Export Section -->
+        <div class="section">
+            <h2>📤 步驟 1: 導出當前場景（在 2D 項目中）</h2>
+            <div class="button-group">
+                <button id="testApiBtn" style="background-color: #ff9800;">🔍 測試 API</button>
+                <button id="exportBtn">導出場景結構</button>
+                <button id="openExportFolderBtn">打開導出資料夾</button>
+            </div>
+            <div class="info-box">
+                <p>將當前場景的節點結構、組件和屬性導出為 JSON 檔案。</p>
+                <p class="warning">⚠️ 注意：會自動標記 2D Sprite，以便在 3D 項目中正確處理。</p>
+            </div>
+            <div id="exportLog" class="log-box" style="display: none;"></div>
+        </div>
+
+        <!-- Import Section -->
+        <div class="section">
+            <h2>📥 步驟 2: 導入到新項目（在 3D 項目中）</h2>
+            <div class="button-group">
+                <label for="importFile" class="file-label">選擇 JSON 檔案</label>
+                <input type="file" id="importFile" accept=".json">
+                <button id="importBtn" disabled>導入場景結構</button>
+            </div>
+            <div id="fileInfo" class="file-info"></div>
+            <div class="info-box">
+                <p>從 JSON 檔案重建場景結構。</p>
+                <p class="warning">⚠️ 自動處理：</p>
+                <ul style="margin: 5px 0; padding-left: 20px; font-size: 11px;">
+                    <li>✓ 2D Sprite → 保持為 Sprite（3D 項目也支援）</li>
+                    <li>✓ Widget 組件 → 自動適配</li>
+                    <li>✓ UITransform → 自動添加</li>
+                    <li>✓ 材質和紋理引用保留（需手動重新連接資源）</li>
+                </ul>
+            </div>
+            <div id="importLog" class="log-box" style="display: none;"></div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="section">
+            <h2>📖 使用說明</h2>
+            <div class="instructions">
+                <h3 style="margin-top: 0;">完整流程：</h3>
+                <ol>
+                    <li><strong>在 2D 項目中</strong>：
+                        <ul>
+                            <li>打開要轉換的場景</li>
+                            <li>點擊「導出場景結構」</li>
+                            <li>JSON 檔案會保存到 <code>scene-exports/</code> 資料夾</li>
+                        </ul>
+                    </li>
+                    <li><strong>複製 JSON 檔案</strong> 到 3D 項目資料夾</li>
+                    <li><strong>在 3D 項目中</strong>：
+                        <ul>
+                            <li>創建新場景或打開現有場景</li>
+                            <li>打開此擴展面板</li>
+                            <li>點擊「選擇 JSON 檔案」載入導出的檔案</li>
+                            <li>點擊「導入場景結構」</li>
+                        </ul>
+                    </li>
+                    <li><strong>手動調整</strong>：
+                        <ul>
+                            <li>重新連接 Sprite 的 SpriteFrame 資源</li>
+                            <li>重新連接材質資源</li>
+                            <li>檢查並調整節點位置（2D 和 3D 座標系可能不同）</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>重要提示：</h3>
+                <ul>
+                    <li>✅ <strong>Sprite 組件</strong>：3D 項目也可以使用 2D Sprite，無需轉換</li>
+                    <li>✅ <strong>Widget 組件</strong>：會自動導入並保持功能</li>
+                    <li>⚠️ <strong>資源引用</strong>：UUID 可能不同，需要手動重新連接</li>
+                    <li>⚠️ <strong>自定義組件</strong>：確保 3D 項目中有相同的腳本</li>
+                    <li>⚠️ <strong>座標系統</strong>：2D 和 3D 的座標可能需要調整</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

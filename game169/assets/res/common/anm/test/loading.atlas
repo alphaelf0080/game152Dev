@@ -1,0 +1,13 @@
+
+loading.png
+size: 52,56
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+icon
+  rotate: false
+  xy: 2, 2
+  size: 45, 50
+  orig: 45, 50
+  offset: 0, 0
+  index: -1

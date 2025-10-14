@@ -1,0 +1,20 @@
+
+pickone.png
+size: 684,64
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+bar
+  rotate: false
+  xy: 2, 2
+  size: 557, 60
+  orig: 559, 62
+  offset: 1, 1
+  index: -1
+m_pickone_eng
+  rotate: false
+  xy: 561, 39
+  size: 118, 23
+  orig: 120, 25
+  offset: 1, 1
+  index: -1

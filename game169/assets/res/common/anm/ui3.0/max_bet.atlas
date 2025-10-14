@@ -1,0 +1,167 @@
+
+max_bet.png
+size: 1452,268
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+btn
+  rotate: false
+  xy: 285, 58
+  size: 220, 86
+  orig: 220, 86
+  offset: 0, 0
+  index: -1
+btn_h
+  rotate: false
+  xy: 581, 180
+  size: 220, 86
+  orig: 220, 86
+  offset: 0, 0
+  index: -1
+flash
+  rotate: false
+  xy: 367, 9
+  size: 47, 47
+  orig: 49, 49
+  offset: 1, 1
+  index: -1
+glow
+  rotate: false
+  xy: 2, 22
+  size: 256, 34
+  orig: 278, 54
+  offset: 10, 2
+  index: -1
+gon
+  rotate: false
+  xy: 1342, 14
+  size: 89, 97
+  orig: 128, 128
+  offset: 20, 14
+  index: -1
+line/line_00
+  rotate: false
+  xy: 53, 6
+  size: 28, 14
+  orig: 195, 155
+  offset: 7, 10
+  index: -1
+line/line_01
+  rotate: false
+  xy: 260, 22
+  size: 105, 34
+  orig: 195, 155
+  offset: 7, 14
+  index: -1
+line/line_02
+  rotate: false
+  xy: 650, 7
+  size: 154, 83
+  orig: 195, 155
+  offset: 7, 13
+  index: -1
+line/line_03
+  rotate: true
+  xy: 1343, 113
+  size: 153, 106
+  orig: 195, 155
+  offset: 18, 14
+  index: -1
+line/line_04
+  rotate: true
+  xy: 954, 34
+  size: 144, 124
+  orig: 195, 155
+  offset: 29, 15
+  index: -1
+line/line_05
+  rotate: false
+  xy: 1080, 3
+  size: 140, 127
+  orig: 195, 155
+  offset: 34, 17
+  index: -1
+line/line_06
+  rotate: false
+  xy: 1080, 132
+  size: 133, 134
+  orig: 195, 155
+  offset: 43, 20
+  index: -1
+line/line_07
+  rotate: false
+  xy: 1215, 134
+  size: 126, 132
+  orig: 195, 155
+  offset: 48, 22
+  index: -1
+line/line_08
+  rotate: false
+  xy: 1222, 4
+  size: 118, 128
+  orig: 195, 155
+  offset: 52, 23
+  index: -1
+line/line_09
+  rotate: true
+  xy: 2, 8
+  size: 12, 49
+  orig: 195, 155
+  offset: 151, 98
+  index: -1
+particle2
+  rotate: true
+  xy: 507, 2
+  size: 142, 141
+  orig: 144, 143
+  offset: 1, 1
+  index: -1
+shine
+  rotate: false
+  xy: 2, 146
+  size: 577, 120
+  orig: 577, 120
+  offset: 0, 0
+  index: -1
+sweep_light/sweep_light_01
+  rotate: true
+  xy: 83, 5
+  size: 15, 26
+  orig: 281, 86
+  offset: 266, 0
+  index: -1
+sweep_light/sweep_light_02
+  rotate: false
+  xy: 865, 92
+  size: 80, 86
+  orig: 281, 86
+  offset: 201, 0
+  index: -1
+sweep_light/sweep_light_03
+  rotate: false
+  xy: 806, 4
+  size: 146, 86
+  orig: 281, 86
+  offset: 135, 0
+  index: -1
+sweep_light/sweep_light_04
+  rotate: false
+  xy: 650, 92
+  size: 213, 86
+  orig: 281, 86
+  offset: 68, 0
+  index: -1
+sweep_light/sweep_light_05
+  rotate: false
+  xy: 2, 58
+  size: 281, 86
+  orig: 281, 86
+  offset: 0, 0
+  index: -1
+sweep_light/sweep_light_06
+  rotate: false
+  xy: 803, 180
+  size: 181, 86
+  orig: 281, 86
+  offset: 0, 0
+  index: -1
