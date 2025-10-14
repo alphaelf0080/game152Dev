@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端重新編譯指引</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .status {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .status h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+        .status ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .status li {
+            padding: 8px 0;
+            font-size: 1.1em;
+        }
+        .status li:before {
+            content: "✅ ";
+            color: #4caf50;
+        }
+        .steps {
+            counter-reset: step;
+        }
+        .step {
+            background: #f5f5f5;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            position: relative;
+            padding-left: 80px;
+        }
+        .step:before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 25px;
+            top: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .step h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .step p {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .step code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            display: block;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+        }
+        .step .methods {
+            margin-top: 15px;
+        }
+        .step .method {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+        }
+        .step .method strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .warning strong {
+            color: #e65100;
+        }
+        .success {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .test-section {
+            background: #e3f2fd;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .test-section h2 {
+            color: #1565c0;
+            margin-bottom: 20px;
+        }
+        .test-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 前端重新編譯指引</h1>
+            <p>Cocos Creator 專案編譯步驟</p>
+        </div>
+        
+        <div class="content">
+            <div class="status">
+                <h2>✅ 準備工作已完成</h2>
+                <ul>
+                    <li>Cocos Creator 已關閉</li>
+                    <li>快取目錄已清除</li>
+                    <li>前端代碼已修改（統一使用 Protobuf）</li>
+                    <li>後端已實現（完整 Protobuf 支援）</li>
+                </ul>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <h3>開啟 Cocos Creator</h3>
+                    <div class="methods">
+                        <div class="method">
+                            <strong>方法 A: 從桌面或開始選單</strong>
+                            <p>尋找並雙擊 "Cocos Creator" 圖示</p>
+                        </div>
+                        <div class="method">
+                            <strong>方法 B: 從專案資料夾</strong>
+                            <p>1. 開啟檔案總管<br>
+                            2. 導航到: <code style="display:inline;background:#f0f0f0;padding:2px 5px;border-radius:3px;">C:\projects\game152Dev\pss-on-00152</code><br>
+                            3. 找到專案檔案並開啟</p>
+                        </div>
+                        <div class="method">
+                            <strong>方法 C: 從 Cocos Dashboard</strong>
+                            <p>開啟 Cocos Dashboard 並選擇 "pss-on-00152" 專案</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>等待專案載入</h3>
+                    <div class="warning">
+                        <strong>⏳ 重要！請耐心等待 5-10 分鐘</strong>
+                    </div>
+                    <p>載入過程中會看到：</p>
+                    <ul style="list-style:none;padding-left:20px;">
+                        <li>📊 右下角顯示進度條</li>
+                        <li>📝 Console 輸出載入訊息</li>
+                        <li>🔄 "Compiling..." 或 "Indexing..." 文字</li>
+                    </ul>
+                    <div class="success" style="margin-top:15px;">
+                        <strong>等到以下狀態才算完成：</strong><br>
+                        ✅ 右下角進度條消失<br>
+                        ✅ Assets 面板顯示所有資源<br>
+                        ✅ Console 沒有紅色錯誤<br>
+                        ✅ 可以點擊 Scene 中的物件
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>開啟 Build 視窗</h3>
+                    <p><strong>方法 A: 使用選單</strong></p>
+                    <p style="padding-left:20px;">點擊頂部選單: <code style="display:inline;background:#667eea;color:white;padding:2px 8px;border-radius:3px;">Project</code> → <code style="display:inline;background:#667eea;color:white;padding:2px 8px;border-radius:3px;">Build...</code></p>
+                    <p style="margin-top:10px;"><strong>方法 B: 使用快捷鍵</strong></p>
+                    <p style="padding-left:20px;">按下: <code style="display:inline;background:#2d2d2d;color:#f8f8f2;padding:2px 8px;border-radius:3px;">Ctrl + Shift + B</code></p>
+                </div>
+
+                <div class="step">
+                    <h3>設定編譯選項</h3>
+                    <div style="background:white;padding:20px;border-radius:5px;margin-top:10px;">
+                        <p><strong>1. Platform (平台)</strong></p>
+                        <p style="padding-left:20px;color:#666;">選擇: <span style="color:#4caf50;font-weight:bold;">Web Desktop</span></p>
+                        
+                        <p style="margin-top:15px;"><strong>2. Build Path (輸出路徑)</strong></p>
+                        <p style="padding-left:20px;color:#666;">保持預設值 (build/web-desktop)</p>
+                        
+                        <p style="margin-top:15px;"><strong>3. Debug (調試模式)</strong></p>
+                        <p style="padding-left:20px;color:#666;">取消勾選（正式版執行較快）</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>開始編譯</h3>
+                    <p>點擊視窗底部的 <strong style="color:#4caf50;">"Build"</strong> 按鈕</p>
+                    <div class="warning">
+                        <strong>⏳ 預計編譯時間: 3-5 分鐘</strong>
+                    </div>
+                    <p style="margin-top:15px;">編譯過程中 Console 會顯示：</p>
+                    <code style="font-size:0.9em;">Building...
+Compiling scripts...
+Generating assets...
+Packing...
+Build succeeded!</code>
+                </div>
+
+                <div class="step">
+                    <h3>驗證編譯成功</h3>
+                    <div class="success">
+                        <strong>✅ 編譯成功的標誌：</strong><br>
+                        • Build 視窗顯示 "Build succeeded!"<br>
+                        • build/web-desktop 目錄有新檔案<br>
+                        • Console 無紅色錯誤訊息
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-section">
+                <h2>🧪 測試編譯結果</h2>
+                
+                <div class="test-item">
+                    <strong>1. 啟動 Spin Server</strong>
+                    <code>cd C:\projects\game152Dev\gameServer
+python spin_server.py</code>
+                </div>
+
+                <div class="test-item">
+                    <strong>2. 開啟遊戲</strong>
+                    <p style="margin-top:10px;">
+                        <a href="http://localhost:7456/?localServer=true" class="button" target="_blank">
+                            🎮 開啟遊戲測試
+                        </a>
+                    </p>
+                </div>
+
+                <div class="test-item">
+                    <strong>3. 檢查 Console 日誌</strong>
+                    <p style="color:#4caf50;margin-top:10px;">✅ 正確的日誌：</p>
+                    <code style="font-size:0.85em;">[DEBUG] bksend - sending binary data, byteLength: 29
+[DEBUG] LoginRecall (LocalServer) status: kSuccess
+[DEBUG] StateRecall - status_code: kSuccess
+✅ Reel 初始化成功！</code>
+                    
+                    <p style="color:#f44336;margin-top:15px;">❌ 如果看到這個就是錯的：</p>
+                    <code style="font-size:0.85em;background:#ffebee;">[DEBUG] bksend - sending JSON string, length: 97</code>
+                    
+                    <div class="warning" style="margin-top:15px;">
+                        <strong>如果還是看到 JSON，請：</strong><br>
+                        1. 確認編譯已完成<br>
+                        2. 清除瀏覽器快取 (Ctrl + Shift + Delete)<br>
+                        3. 強制重新整理 (Ctrl + F5)
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-top:40px;padding:30px;background:#f5f5f5;border-radius:10px;">
+                <h3 style="margin-bottom:20px;">📚 詳細文檔</h3>
+                <p style="margin-bottom:20px;color:#666;">更多資訊請參考完整的編譯手冊</p>
+                <a href="file:///C:/projects/game152Dev/docs/COMPILE-MANUAL.md" class="button">
+                    📖 查看完整編譯手冊
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
