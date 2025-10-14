@@ -42,7 +42,7 @@ from core.game_engine import GameEngine, SpinType
 from protocol.simple_data_exporter import SimpleDataExporter
 from protocol.simple_proto import (
     EMSGID, StatusCode, ESTATEID,
-    LoginRecall, StateRecall, ResultRecall, SlotResult,
+    LoginRecall, StateRecall, ResultRecall, SlotResult, ConfigRecall, StripsRecall,
     parse_protobuf_message
 )
 
@@ -427,6 +427,32 @@ async def websocket_endpoint(websocket: WebSocket):
                     await websocket.send_bytes(response_data)
                     logger.info(f"✅ 登入成功 - 發送 {len(response_data)} bytes")
                 
+                elif msgid == EMSGID.eConfigCall:
+                    # 配置請求
+                    logger.info("⚙️ 處理配置請求")
+                    config_recall = ConfigRecall(
+                        msgid=EMSGID.eConfigRecall,
+                        status_code=StatusCode.kSuccess,
+                        bet_5_arr=[1, 2, 5, 10, 20],
+                        line_5_arr=[30, 30, 30, 30, 30],
+                        rate_arr=[1, 10, 25, 50, 100],
+                        player_cent=1000000
+                    )
+                    response_data = config_recall.SerializeToString()
+                    await websocket.send_bytes(response_data)
+                    logger.info(f"✅ 配置發送 - {len(response_data)} bytes")
+                
+                elif msgid == EMSGID.eStripsCall:
+                    # 滾輪條帶請求
+                    logger.info("🎰 處理滾輪條帶請求")
+                    strips_recall = StripsRecall(
+                        msgid=EMSGID.eStripsRecall,
+                        status_code=StatusCode.kSuccess
+                    )
+                    response_data = strips_recall.SerializeToString()
+                    await websocket.send_bytes(response_data)
+                    logger.info(f"✅ 滾輪條帶發送 - {len(response_data)} bytes")
+                
                 elif msgid == EMSGID.eStateCall:
                     # 狀態請求（包含 spin）
                     stateid = message.get("stateid", 0)
@@ -459,23 +485,80 @@ async def websocket_endpoint(websocket: WebSocket):
                             elif spin_type == "feature_100x":
                                 spin_type_enum = SpinType.FEATURE_100X
                             
+                            # 使用 GameEngine 執行 Spin，計算連線中獎
+                            result = game_engine.spin(spin_type_enum)
                             
-                            result = game_engine.execute_spin(bet, spin_type_enum)
+                            # 將 GameEngine 的 5x3 符號結果轉換為停止位置
+                            # result.reel_result 是 [[sym, sym, sym], ...] 5 個滾輪
+                            reel_stop_positions = []
                             
-                            # 轉換結果為簡化格式
-                            result_data = simple_exporter.export_spin_result(result)
+                            # 獲取滾輪條帶（與前端的 strips 相同）
+                            strips_recall = StripsRecall()
+                            strips = strips_recall.strips
+                            
+                            for reel_idx, reel_symbols in enumerate(result.reel_result):
+                                # reel_symbols 是 [sym1, sym2, sym3] (從上到下)
+                                # 我們需要找到 strips[reel_idx] 中哪個位置可以顯示這 3 個符號
+                                
+                                # 前端會從 stop_position 開始，取 3 個符號（考慮循環）
+                                # 所以我們需要找到 strips 中的起始位置
+                                
+                                target_symbol = reel_symbols[0]  # 使用第一個符號來定位
+                                strip = strips[reel_idx]
+                                
+                                # 在 strip 中找到這個符號的位置（簡化版：找第一個匹配）
+                                # 注意：真實遊戲中應該從 paytable 計算正確的位置
+                                try:
+                                    stop_pos = strip.index(target_symbol)
+                                except ValueError:
+                                    # 如果找不到，使用隨機位置
+                                    import random
+                                    stop_pos = random.randint(0, len(strip) - 1)
+                                
+                                reel_stop_positions.append(stop_pos)
+                            
+                            logger.info(f"🎲 計算停止位置: {reel_stop_positions}")
+                            logger.info(f"🎰 對應符號 (5x3): {result.reel_result}")
+                            
+                            # 轉換 WinLine 格式（從 GameEngine 的 WinLine 到 Protobuf 的 WinLine）
+                            from protocol.simple_proto import WinLine as ProtoWinLine
+                            proto_win_lines = []
+                            
+                            for idx, win_line in enumerate(result.win_lines):
+                                proto_win_line = ProtoWinLine(
+                                    win_line_type=0,  # kCommon (243 ways 都是普通贏線)
+                                    line_no=win_line.line_no,
+                                    symbol_id=win_line.symbol_id,
+                                    pos=win_line.positions,  # 中獎位置
+                                    credit=win_line.credit,
+                                    multiplier=win_line.multiplier,
+                                    credit_long=win_line.credit
+                                )
+                                proto_win_lines.append(proto_win_line)
+                            
+                            # 日誌輸出中獎信息
+                            if proto_win_lines:
+                                logger.info(f"💰 中獎線數量: {len(proto_win_lines)}")
+                                for wl in proto_win_lines:
+                                    logger.info(f"   - Line {wl.line_no}: Symbol {wl.symbol_id}, Pos {wl.pos}, Win {wl.credit}")
+                            else:
+                                logger.info(f"❌ 沒有中獎")
                             
                             # 存儲結果供 ResultCall 使用
                             last_spin_result = {
-                                'reel_results': result_data.get('reel_results', []),
-                                'total_win': result_data.get('win', 0),
+                                'reel_results': reel_stop_positions,  # 5 個停止位置
+                                'symbols': result.reel_result,        # 5x3 符號
+                                'total_win': result.total_credit,     # GameEngine 計算的贏分
+                                'win_lines': proto_win_lines,         # 中獎線數據
                                 'player_credit': 1000000  # 暫時固定
                             }
                             
                             # 更新統計
                             server_stats['total_spins'] += 1
-                            if result_data.get('win', 0) > 0:
+                            if result.total_credit > 0:
                                 server_stats['total_wins'] += 1
+                            
+                            logger.info(f"✅ Spin 完成 - Win: {result.total_credit}, Stop Positions: {reel_stop_positions}")
                             
                             # 發送 StateRecall (Protobuf)
                             state_recall = StateRecall(
@@ -484,7 +567,7 @@ async def websocket_endpoint(websocket: WebSocket):
                             )
                             response_data = state_recall.SerializeToString()
                             await websocket.send_bytes(response_data)
-                            logger.info(f"✅ Spin 完成 - Win: {result_data.get('win', 0)}, 發送 {len(response_data)} bytes")
+                            logger.info(f"✅ StateRecall 發送 - {len(response_data)} bytes")
                             
                         except Exception as e:
                             logger.error(f"❌ Spin 執行失敗: {str(e)}")
@@ -510,30 +593,46 @@ async def websocket_endpoint(websocket: WebSocket):
                     if last_spin_result is None:
                         logger.error("❌ 沒有可用的 Spin 結果")
                         # 發送錯誤回應
-                        slot_result = SlotResult(rng=[], credit=0)
+                        slot_result = SlotResult(
+                            module_id="BS",
+                            credit=0,
+                            rng=[],
+                            win_line_group=[]
+                        )
                         result_recall = ResultRecall(
                             msgid=EMSGID.eResultRecall,
                             status_code=StatusCode.kInvalid,
                             result=slot_result,
-                            player_cent=0
+                            player_cent=0,
+                            next_module="BS"
                         )
                     else:
-                        # 使用存儲的 Spin 結果
-                        logger.info(f"📊 Spin 結果: reel={last_spin_result['reel_results']}, win={last_spin_result['total_win']}")
+                        # 使用存儲的 Spin 結果（包含中獎線）
+                        win_lines = last_spin_result.get('win_lines', [])
+                        logger.info(f"📊 Spin 結果: reel={last_spin_result['reel_results']}, win={last_spin_result['total_win']}, win_lines={len(win_lines)}")
+                        
                         slot_result = SlotResult(
+                            module_id="BS",
+                            credit=last_spin_result['total_win'],
                             rng=last_spin_result['reel_results'],
-                            credit=last_spin_result['total_win']
+                            win_line_group=win_lines  # 添加中獎線
                         )
+                        
+                        logger.info(f"🔍 SlotResult - module_id: {slot_result.module_id}, credit: {slot_result.credit}, rng length: {len(slot_result.rng)}, win_lines: {len(slot_result.win_line_group)}")
+                        
                         result_recall = ResultRecall(
                             msgid=EMSGID.eResultRecall,
                             status_code=StatusCode.kSuccess,
                             result=slot_result,
-                            player_cent=last_spin_result.get('player_credit', 1000000)
+                            player_cent=last_spin_result.get('player_credit', 1000000),
+                            next_module="BS"  # 明確設置 next_module
                         )
+                        logger.info(f"🔍 ResultRecall - next_module: {result_recall.next_module}")
                     
                     response_data = result_recall.SerializeToString()
+                    logger.info(f"📦 序列化後: {len(response_data)} bytes - {response_data.hex()[:100]}...")
                     await websocket.send_bytes(response_data)
-                    logger.info(f"✅ ResultRecall 發送 - {len(response_data)} bytes, rng count: {len(last_spin_result.get('reel_results', []))}")
+                    logger.info(f"✅ ResultRecall 發送 - {len(response_data)} bytes, rng count: {len(last_spin_result.get('reel_results', []))}, win_lines: {len(win_lines)}")
                 
                 else:
                     # 未知訊息類型
