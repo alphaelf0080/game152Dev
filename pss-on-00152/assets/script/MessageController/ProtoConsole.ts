@@ -308,14 +308,21 @@ let LoginCall = function () {
             token: gToken
         };
     }
+    // LocalServer 模式也使用 Protobuf
     const message = Proto.encodeLoginCall(msg);
     bksend(message);
 };
 
 let LoginRecall = function (evt) {
+    // LocalServer 模式也使用 Protobuf 解析
     let uint8 = RecombineBuffer(evt.data);
     const message = Proto.decodeLoginRecall(uint8);
     let StatusCode = Proto.encodeStatusCode[message.status_code];
+    
+    if ((Data.Library as any).localServerMode) {
+        console.log('[DEBUG] LoginRecall (LocalServer) status:', StatusCode);
+    }
+    
     netlog("[@LoginRecall] status_code " + StatusCode);
     if (StatusCode == Proto.encodeStatusCode.kSuccess) {
         g_getCreditmode();
@@ -544,40 +551,7 @@ let StripsRecall = function (evt) {
 };
 
 let ResultCall = function (buy) {
-    // ========== LocalServer 模式：使用 HTTP API ==========
-    if ((Data.Library as any).localServerMode === true) {
-        console.log('[ResultCall] 🌐 使用 Spin Server API');
-        
-        const spinClient = getSpinServerClient();
-        const betAmount = Data.Library.StateConsole.BetIndex;
-        const spinType = buy ? 'buy' : 'normal';
-        
-        spinClient.executeSpin(betAmount, spinType).then(resultData => {
-            console.log('[ResultCall] ✅ API 返回結果:', resultData);
-            
-            // 轉換 API 結果為遊戲格式並處理
-            // TODO: 將 resultData 轉換為 Proto 格式並觸發 ResultRecall 邏輯
-            // 暫時使用原有邏輯處理結果
-            
-            // 模擬 WebSocket 事件格式
-            const mockEvent = {
-                data: resultData
-            };
-            
-            // 直接處理結果（跳過 WebSocket）
-            console.log('[ResultCall] 🎮 處理遊戲結果');
-            
-        }).catch(error => {
-            console.error('[ResultCall] ❌ API 錯誤:', error);
-            // 錯誤處理
-            Mode.ErrorInLoading('Spin Server 連接失敗: ' + error.message);
-        });
-        
-        return; // 不執行 WebSocket 邏輯
-    }
-    // ==================================================
-    
-    // 原有 WebSocket 邏輯
+    // LocalServer 模式和正常模式都使用 WebSocket + Protobuf
     Data.Library.StateConsole.BuyFs = false;
     gToken = Data.Library.CommonLibScript.GetURLParameter('access_token');
     let msg = {
@@ -609,6 +583,9 @@ let ResultCall = function (buy) {
     let module = ProtoModule.encodeSpinIndexCommand(moudle);
     msg.module_command.push(module);
 
+    if ((Data.Library as any).localServerMode) {
+        console.log('[DEBUG] ResultCall - sending via WebSocket');
+    }
     console.log("ResultCall");
     const message = Proto.encodeResultCall(msg);
     bksend(message);
@@ -734,44 +711,21 @@ let StateCall = function () {
     };
     netlog("STATEConsole.CurState : " + Mode.FSM[Data.Library.StateConsole.CurState]);
     
-    // LocalServer 模式下發送 JSON 文字，否則使用 Protobuf
-    if ((Data.Library as any).localServerMode) {
-        console.log('[DEBUG] LocalServer mode - sending JSON:', msg);
-        // 計算當前下注金額
-        const betIndex = Data.Library.StateConsole.BetIndex || 0;
-        const rateIndex = Data.Library.StateConsole.RateIndex || 0;
-        const betArray = Data.Library.StateConsole.BetArray || [1, 2, 5, 10, 20, 50, 100];
-        const rateArray = Data.Library.StateConsole.RateArray || [1];
-        const lineArray = Data.Library.StateConsole.LineArray || [25];
-        const bet = betArray[betIndex] * rateArray[rateIndex] * lineArray[0];
-        
-        const jsonMsg = {
-            msgid: msg.msgid,
-            stateid: msg.stateid,
-            bet: bet,
-            spin_type: "normal"
-        };
-        console.log('[DEBUG] Sending bet:', bet, '(betIndex:', betIndex, ', rateIndex:', rateIndex, ')');
-        bksend(JSON.stringify(jsonMsg));
-    } else {
-        const message = Proto.encodeStateCall(msg);
-        bksend(message);
-    }
+    // LocalServer 模式和正常模式都使用 Protobuf
+    const message = Proto.encodeStateCall(msg);
+    bksend(message);
 };
 
 let StateRecall = function (evt) {
-    // LocalServer 模式下直接返回成功（實際處理在 dispatch_msg 中）
-    if ((Data.Library as any).localServerMode) {
-        console.log('[DEBUG] StateRecall in LocalServer mode');
-        // 在 LocalServer 模式下，結果已經由 dispatch_msg 處理並存儲
-        // 這裡只需要確認狀態成功即可
-        return;
-    }
-    
-    // 正常模式使用 Protobuf
+    // LocalServer 模式和正常模式都使用 Protobuf
     let uint8 = RecombineBuffer(evt.data);
     const message = Proto.decodeStateRecall(uint8);
     let StatusCode = Proto.encodeStatusCode[message.status_code];
+    
+    if ((Data.Library as any).localServerMode) {
+        console.log('[DEBUG] StateRecall - status_code:', StatusCode);
+    }
+    
     netlog("[@StateRecall] status_code " + StatusCode);
     if (StatusCode != Proto.encodeStatusCode.kSuccess) {
         Data.Library.ErrorData.bklog(Data.Library.ErrorData.Code.SetStateError, Data.Library.ErrorData.Type.ALARM);
@@ -1045,42 +999,21 @@ let bksend = function (msg) {
 };
 
 let dispatch_msg = function (evt) {
-    // LocalServer 模式下處理 JSON 回應
+    // LocalServer 模式和正常模式都使用 Protobuf
+    let uint8 = RecombineBuffer(evt.data);
+    const message = Proto.decodeHeader(uint8);
+    
+    // 添加 LocalServer 模式的調試日誌
     if ((Data.Library as any).localServerMode) {
-        try {
-            const message = JSON.parse(evt.data);
-            console.log('[DEBUG] Received JSON message:', message.msgid);
-            
-            // 根據 msgid 分發到對應的處理函數
-            if (message.msgid === "eLoginRecall") {
-                console.log('[DEBUG] Login successful');
-                // 模擬 LoginRecall 事件
-                const mockEvt = { data: evt.data, jsonMessage: message };
-                action_dispatch(Proto.encodeEMSGID.eLoginRecall, mockEvt);
-            } else if (message.msgid === "eStateRecall") {
-                console.log('[DEBUG] State recall received, status:', message.status_code);
-                // 模擬 StateRecall 事件
-                const mockEvt = { data: evt.data, jsonMessage: message };
-                
-                // 如果有結果數據，處理它
-                if (message.status_code === "kSuccess" && message.result) {
-                    console.log('[DEBUG] Processing spin result');
-                    // 將 LocalServer 格式的結果存儲到 Data.Library 中
-                    (Data.Library as any).localServerSpinResult = message.result;
-                }
-                
-                // 調用原有的 StateRecall 處理（但會跳過 Protobuf 解析）
-                action_dispatch(Proto.encodeEMSGID.eStateRecall, mockEvt);
-            }
-        } catch (e) {
-            console.error('[ERROR] Failed to parse JSON message:', e);
+        console.log('[DEBUG] LocalServer - Received Protobuf message:', message.msgid);
+        if (message.msgid === Proto.encodeEMSGID.eLoginRecall) {
+            console.log('[DEBUG] Login successful');
+        } else if (message.msgid === Proto.encodeEMSGID.eStateRecall) {
+            console.log('[DEBUG] State recall received');
         }
-    } else {
-        // 正常模式使用 Protobuf
-        let uint8 = RecombineBuffer(evt.data);
-        const message = Proto.decodeHeader(uint8);
-        action_dispatch(Proto.encodeEMSGID[message.msgid], evt);
     }
+    
+    action_dispatch(Proto.encodeEMSGID[message.msgid], evt);
 };
 
 let netlog = function (str) {

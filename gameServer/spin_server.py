@@ -40,6 +40,11 @@ import uvicorn
 
 from core.game_engine import GameEngine, SpinType
 from protocol.simple_data_exporter import SimpleDataExporter
+from protocol.simple_proto import (
+    EMSGID, StatusCode, ESTATEID,
+    LoginRecall, StateRecall, ResultRecall, SlotResult,
+    parse_protobuf_message
+)
 
 
 # ==================== 資料模型 ====================
@@ -373,51 +378,61 @@ def _convert_win_lines(win_lines: list) -> list:
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """
-    WebSocket 端點 - 提供持久連接給前端
+    WebSocket 端點 - 使用 Protobuf 格式通訊
     
-    支援的訊息類型:
-    - login: 登入請求
-    - state: 狀態變更請求（包含 spin）
-    - disconnect: 斷開連接
-    
-    訊息格式:
-    {
-        "msgid": "eStateCall",
-        "token": "...",
-        "stateid": "K_SPIN",
-        "bet": 50
-    }
+    接收: Protobuf 二進制訊息 (LoginCall, StateCall)
+    發送: Protobuf 二進制訊息 (LoginRecall, StateRecall)
     """
     await websocket.accept()
     logger.info(f"🔌 WebSocket 連接建立: {websocket.client}")
     
+    # 存儲最後一次 Spin 結果（用於 ResultCall）
+    last_spin_result = None
+    
     try:
         while True:
-            # 接收訊息
-            data = await websocket.receive_text()
+            # 接收訊息（可能是 bytes 或 text）
+            message_data = await websocket.receive()
+            
+            # 檢查訊息類型
+            if "bytes" in message_data:
+                data = message_data["bytes"]
+                logger.info(f"📨 收到 Protobuf 訊息 ({len(data)} bytes)")
+            elif "text" in message_data:
+                # 如果收到 text，記錄並跳過
+                text_data = message_data["text"]
+                logger.warning(f"⚠️ 收到文字訊息: {text_data[:100] if len(text_data) > 100 else text_data}")
+                continue
+            else:
+                logger.error("❌ 未知的訊息類型")
+                continue
             
             try:
-                message = json.loads(data)
-                msgid = message.get("msgid", "")
+                # 解析 Protobuf 訊息
+                message = parse_protobuf_message(data)
+                msgid = message.get("msgid", 0)
                 
-                logger.info(f"📨 收到 WebSocket 訊息: {msgid}")
+                logger.info(f"🔍 解析訊息: msgid={msgid}, data={message}")
                 
                 # 處理不同的訊息類型
-                if msgid == "eLoginCall":
+                if msgid == EMSGID.eLoginCall:
                     # 登入請求
-                    response = {
-                        "msgid": "eLoginRecall",
-                        "status_code": "kSuccess",
-                        "timestamp": datetime.now().isoformat()
-                    }
-                    await websocket.send_json(response)
-                    logger.info("✅ 登入成功")
+                    logger.info("🔐 處理登入請求")
+                    login_recall = LoginRecall(
+                        msgid=EMSGID.eLoginRecall,
+                        status_code=StatusCode.kSuccess,
+                        token=message.get("token", "")
+                    )
+                    response_data = login_recall.SerializeToString()
+                    await websocket.send_bytes(response_data)
+                    logger.info(f"✅ 登入成功 - 發送 {len(response_data)} bytes")
                 
-                elif msgid == "eStateCall":
+                elif msgid == EMSGID.eStateCall:
                     # 狀態請求（包含 spin）
-                    stateid = message.get("stateid", "")
+                    stateid = message.get("stateid", 0)
+                    logger.info(f"🎮 StateCall - stateid={stateid}")
                     
-                    if stateid == "K_SPIN":
+                    if stateid == ESTATEID.K_SPIN:
                         # 執行 spin
                         bet = message.get("bet", 50)
                         spin_type = message.get("spin_type", "normal")
@@ -426,12 +441,12 @@ async def websocket_endpoint(websocket: WebSocket):
                         
                         # 執行遊戲邏輯
                         if game_engine is None:
-                            error_response = {
-                                "msgid": "eStateRecall",
-                                "status_code": "kError",
-                                "error": "遊戲引擎未初始化"
-                            }
-                            await websocket.send_json(error_response)
+                            logger.error("❌ 遊戲引擎未初始化")
+                            state_recall = StateRecall(
+                                msgid=EMSGID.eStateRecall,
+                                status_code=StatusCode.kInvalid
+                            )
+                            await websocket.send_bytes(state_recall.SerializeToString())
                             continue
                         
                         # 執行旋轉
@@ -444,64 +459,106 @@ async def websocket_endpoint(websocket: WebSocket):
                             elif spin_type == "feature_100x":
                                 spin_type_enum = SpinType.FEATURE_100X
                             
+                            
                             result = game_engine.execute_spin(bet, spin_type_enum)
                             
                             # 轉換結果為簡化格式
                             result_data = simple_exporter.export_spin_result(result)
+                            
+                            # 存儲結果供 ResultCall 使用
+                            last_spin_result = {
+                                'reel_results': result_data.get('reel_results', []),
+                                'total_win': result_data.get('win', 0),
+                                'player_credit': 1000000  # 暫時固定
+                            }
                             
                             # 更新統計
                             server_stats['total_spins'] += 1
                             if result_data.get('win', 0) > 0:
                                 server_stats['total_wins'] += 1
                             
-                            # 發送結果
-                            response = {
-                                "msgid": "eStateRecall",
-                                "status_code": "kSuccess",
-                                "result": result_data,
-                                "timestamp": datetime.now().isoformat()
-                            }
-                            await websocket.send_json(response)
-                            logger.info(f"✅ Spin 完成 - Win: {result_data.get('win', 0)}")
+                            # 發送 StateRecall (Protobuf)
+                            state_recall = StateRecall(
+                                msgid=EMSGID.eStateRecall,
+                                status_code=StatusCode.kSuccess
+                            )
+                            response_data = state_recall.SerializeToString()
+                            await websocket.send_bytes(response_data)
+                            logger.info(f"✅ Spin 完成 - Win: {result_data.get('win', 0)}, 發送 {len(response_data)} bytes")
                             
                         except Exception as e:
                             logger.error(f"❌ Spin 執行失敗: {str(e)}")
-                            error_response = {
-                                "msgid": "eStateRecall",
-                                "status_code": "kError",
-                                "error": str(e)
-                            }
-                            await websocket.send_json(error_response)
+                            state_recall = StateRecall(
+                                msgid=EMSGID.eStateRecall,
+                                status_code=StatusCode.kInvalid
+                            )
+                            await websocket.send_bytes(state_recall.SerializeToString())
                     
                     else:
                         # 其他狀態，直接回覆成功
-                        response = {
-                            "msgid": "eStateRecall",
-                            "status_code": "kSuccess",
-                            "stateid": stateid
-                        }
-                        await websocket.send_json(response)
+                        logger.info(f"📋 其他狀態: {stateid}")
+                        state_recall = StateRecall(
+                            msgid=EMSGID.eStateRecall,
+                            status_code=StatusCode.kSuccess
+                        )
+                        await websocket.send_bytes(state_recall.SerializeToString())
+                
+                # 處理 ResultCall
+                elif msgid == EMSGID.eResultCall:
+                    logger.info("🎮 處理 ResultCall")
+                    
+                    if last_spin_result is None:
+                        logger.error("❌ 沒有可用的 Spin 結果")
+                        # 發送錯誤回應
+                        slot_result = SlotResult(rng=[], credit=0)
+                        result_recall = ResultRecall(
+                            msgid=EMSGID.eResultRecall,
+                            status_code=StatusCode.kInvalid,
+                            result=slot_result,
+                            player_cent=0
+                        )
+                    else:
+                        # 使用存儲的 Spin 結果
+                        logger.info(f"📊 Spin 結果: reel={last_spin_result['reel_results']}, win={last_spin_result['total_win']}")
+                        slot_result = SlotResult(
+                            rng=last_spin_result['reel_results'],
+                            credit=last_spin_result['total_win']
+                        )
+                        result_recall = ResultRecall(
+                            msgid=EMSGID.eResultRecall,
+                            status_code=StatusCode.kSuccess,
+                            result=slot_result,
+                            player_cent=last_spin_result.get('player_credit', 1000000)
+                        )
+                    
+                    response_data = result_recall.SerializeToString()
+                    await websocket.send_bytes(response_data)
+                    logger.info(f"✅ ResultRecall 發送 - {len(response_data)} bytes, rng count: {len(last_spin_result.get('reel_results', []))}")
                 
                 else:
                     # 未知訊息類型
                     logger.warning(f"⚠️ 未知的訊息類型: {msgid}")
-                    error_response = {
-                        "msgid": "error",
-                        "error": f"未知的訊息類型: {msgid}"
-                    }
-                    await websocket.send_json(error_response)
+                    state_recall = StateRecall(
+                        msgid=EMSGID.eStateRecall,
+                        status_code=StatusCode.kInvalid
+                    )
+                    await websocket.send_bytes(state_recall.SerializeToString())
             
-            except json.JSONDecodeError:
-                logger.error("❌ JSON 解析失敗")
-                await websocket.send_json({"error": "Invalid JSON"})
             except Exception as e:
-                logger.error(f"❌ 處理訊息時發生錯誤: {str(e)}")
-                await websocket.send_json({"error": str(e)})
+                logger.error(f"❌ 解析訊息失敗: {str(e)}")
+                logger.error(f"原始資料: {data.hex()}")
+                state_recall = StateRecall(
+                    msgid=EMSGID.eStateRecall,
+                    status_code=StatusCode.kInvalid
+                )
+                await websocket.send_bytes(state_recall.SerializeToString())
     
     except WebSocketDisconnect:
         logger.info(f"🔌 WebSocket 連接斷開: {websocket.client}")
     except Exception as e:
         logger.error(f"❌ WebSocket 錯誤: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
     finally:
         logger.info("🔌 清理 WebSocket 連接")
 
