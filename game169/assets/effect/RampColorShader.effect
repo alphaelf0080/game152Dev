@@ -29,7 +29,14 @@ CCEffect %{
         colorEnd: { value: [1.0, 1.0, 1.0, 1.0], editor: { type: color, displayName: '結束顏色' } }
         
         # Ramp 方向和範圍控制
-        rampDirection: { value: 0, editor: { type: enum, enumList: ['水平', '垂直', '圓形', '徑向'], displayName: 'Ramp 方向' } }
+        rampDirection: { 
+          value: 0, 
+          editor: { 
+            displayName: 'Ramp 方向',
+            type: enum,
+            enumList: ['水平', '垂直', '圓形', '徑向']
+          }
+        }
         rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
         rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'UV 縮放' } }
         rampUVOffset: { value: [0.0, 0.0], editor: { displayName: 'UV 偏移' } }
@@ -41,7 +48,31 @@ CCEffect %{
         saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
         
         # 混合模式和強度
-        blendMode: { value: 0, editor: { type: enum, enumList: ['正常', '正片疊底', '濾色', '疊加', '變暗', '變亮', '顏色減淡', '顏色加深', '強光', '柔光', '差值', '排除', '色相', '飽和度', '顏色', '明度'], displayName: '混合模式' } }
+        blendMode: { 
+          value: 0, 
+          editor: { 
+            displayName: '混合模式',
+            type: enum,
+            enumList: [
+              '正常',
+              '正片疊底',
+              '濾色',
+              '疊加',
+              '變暗',
+              '變亮',
+              '顏色減淡',
+              '顏色加深',
+              '強光',
+              '柔光',
+              '差值',
+              '排除',
+              '色相',
+              '飽和度',
+              '顏色',
+              '明度'
+            ]
+          }
+        }
         rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
         
         # 進階控制
