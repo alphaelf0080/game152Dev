@@ -1,0 +1,277 @@
+// Cocos Creator Displacement Distortion Effect with Procedural Radio Wave
+// 包含程序化生成的動態 Radio Wave 圖形
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        
+        # 原有的位移貼圖選項
+        displacementMap: { value: white, editor: { displayName: '位移貼圖' } }
+        displacementStrength: { value: 0.1, target: displacementParams.x, editor: { displayName: '位移強度', range: [0.0, 1.0], slide: true } }
+        displacementScale: { value: 1.0, target: displacementParams.y, editor: { displayName: '位移縮放' } }
+        timeSpeed: { value: 1.0, target: displacementParams.z, editor: { displayName: '動畫速度' } }
+        distortionType: { value: 0.0, target: displacementParams.w, editor: { displayName: '扭曲類型', tooltip: '0=XY, 1=X, 2=Y, 3=Radial, 4=Procedural Wave' } }
+        
+        # Procedural Radio Wave 參數
+        useProceduralWave: { value: 0.0, target: waveParams1.x, editor: { displayName: '使用程序波形', tooltip: '1=啟用程序生成的 Radio Wave' } }
+        waveInnerRadius: { value: 0.2, target: waveParams1.y, editor: { displayName: '內半徑', range: [0.0, 1.0], slide: true } }
+        waveWidth: { value: 0.3, target: waveParams1.z, editor: { displayName: '波形寬度', range: [0.01, 1.0], slide: true } }
+        waveSpeed: { value: 1.0, target: waveParams1.w, editor: { displayName: '波形速度' } }
+        
+        waveFrequency: { value: 5.0, target: waveParams2.x, editor: { displayName: '波形頻率', range: [1.0, 20.0], slide: true } }
+        waveAmplitude: { value: 0.5, target: waveParams2.y, editor: { displayName: '波形振幅', range: [0.0, 2.0], slide: true } }
+        waveDistortion: { value: 0.5, target: waveParams2.z, editor: { displayName: '波形扭曲度', range: [0.0, 2.0], slide: true } }
+        waveTurbulence: { value: 0.0, target: waveParams2.w, editor: { displayName: '波形湍流', range: [0.0, 1.0], slide: true } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  
+  in vec4 color;
+  in vec2 uv0;
+  
+  #pragma builtin(local)
+  layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
+  
+  uniform sampler2D displacementMap;
+  
+  uniform DisplacementParams {
+    vec4 displacementParams;
+  };
+  
+  uniform WaveParams1 {
+    vec4 waveParams1; // x: useProceduralWave, y: innerRadius, z: width, w: speed
+  };
+  
+  uniform WaveParams2 {
+    vec4 waveParams2; // x: frequency, y: amplitude, z: distortion, w: turbulence
+  };
+  
+  // ==================== 程序化噪聲函數 ====================
+  
+  // 2D 噪聲函數 (Simplex-like)
+  vec2 hash2(vec2 p) {
+    p = vec2(dot(p, vec2(127.1, 311.7)),
+             dot(p, vec2(269.5, 183.3)));
+    return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+  }
+  
+  float noise2D(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    
+    return mix(mix(dot(hash2(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
+                   dot(hash2(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
+               mix(dot(hash2(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
+                   dot(hash2(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x), u.y);
+  }
+  
+  // 分形布朗運動 (FBM) - 用於湍流效果
+  float fbm(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    
+    for (int i = 0; i < 4; i++) {
+      value += amplitude * noise2D(p * frequency);
+      frequency *= 2.0;
+      amplitude *= 0.5;
+    }
+    
+    return value;
+  }
+  
+  // ==================== 程序化 Radio Wave 生成 ====================
+  
+  vec2 generateProceduralWave(vec2 uv, float time) {
+    // 計算到中心的距離和角度
+    vec2 center = vec2(0.5, 0.5);
+    vec2 toCenter = uv - center;
+    float dist = length(toCenter);
+    float angle = atan(toCenter.y, toCenter.x);
+    
+    // 波形參數
+    float innerRadius = waveParams1.y;
+    float waveWidth = waveParams1.z;
+    float speed = waveParams1.w;
+    float frequency = waveParams2.x;
+    float amplitude = waveParams2.y;
+    float distortion = waveParams2.z;
+    float turbulence = waveParams2.w;
+    
+    // 動態外擴的波形
+    float wavePhase = time * speed;
+    float outerRadius = innerRadius + waveWidth;
+    
+    // 波形區域判定（帶動畫）
+    float animatedInner = innerRadius + sin(wavePhase) * 0.05;
+    float animatedOuter = outerRadius + sin(wavePhase) * 0.05;
+    
+    // 計算在波形區域內的位置 (0-1)
+    float wavePosition = smoothstep(animatedInner, animatedOuter, dist);
+    wavePosition *= 1.0 - smoothstep(animatedOuter, animatedOuter + 0.1, dist);
+    
+    // 基礎波形（正弦波）
+    float angleFreq = angle * frequency + wavePhase * 2.0;
+    float baseWave = sin(angleFreq) * amplitude;
+    
+    // 扭曲效果 - 根據距離變化
+    float distortionFactor = sin(dist * 10.0 - wavePhase * 3.0) * distortion;
+    baseWave += distortionFactor * cos(angleFreq * 2.0);
+    
+    // 徑向波形 - 從內向外擴散
+    float radialWave = sin(dist * 20.0 - wavePhase * 5.0) * 0.3;
+    baseWave += radialWave;
+    
+    // 湍流效果（如果啟用）
+    if (turbulence > 0.01) {
+      vec2 noiseUV = uv * 5.0 + vec2(wavePhase * 0.2, wavePhase * 0.3);
+      float turbNoise = fbm(noiseUV) * turbulence;
+      baseWave += turbNoise * wavePosition;
+    }
+    
+    // 波形變形 - 橢圓形扭曲
+    float ellipseDistort = sin(angle * 3.0 + wavePhase) * distortion * 0.2;
+    baseWave += ellipseDistort * wavePosition;
+    
+    // 計算位移向量（徑向和切向分量）
+    float radialDisplacement = baseWave * wavePosition;
+    float tangentialDisplacement = cos(angleFreq + wavePhase) * amplitude * 0.3 * wavePosition;
+    
+    // 將極坐標位移轉換為笛卡爾坐標
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    
+    vec2 displacement = vec2(
+      cosAngle * radialDisplacement - sinAngle * tangentialDisplacement,
+      sinAngle * radialDisplacement + cosAngle * tangentialDisplacement
+    );
+    
+    return displacement;
+  }
+  
+  // ==================== 主片段著色器 ====================
+  
+  vec4 frag () {
+    vec2 displacement = vec2(0.0);
+    float time = cc_time.x;
+    
+    // 判斷是否使用程序化波形
+    bool useProcedural = waveParams1.x > 0.5;
+    
+    if (useProcedural) {
+      // 使用程序化生成的 Radio Wave
+      displacement = generateProceduralWave(uv0, time);
+      
+      // 應用位移強度
+      displacement *= displacementParams.x;
+      
+    } else {
+      // 使用傳統的位移貼圖
+      vec2 displacementUV = uv0 * displacementParams.y;
+      
+      // 加入時間動畫
+      float timeOffset = time * displacementParams.z;
+      displacementUV += vec2(timeOffset * 0.1, timeOffset * 0.05);
+      
+      vec4 displacementColor = texture(displacementMap, displacementUV);
+      
+      // 將灰階值轉換為位移向量
+      displacement = (displacementColor.rg - 0.5) * 2.0;
+      
+      // 根據扭曲類型調整位移
+      int type = int(displacementParams.w);
+      if (type == 1) {
+        displacement.y = 0.0;
+      } else if (type == 2) {
+        displacement.x = 0.0;
+      } else if (type == 3) {
+        // 徑向扭曲
+        vec2 centerOffset = uv0 - 0.5;
+        float dist = length(centerOffset);
+        float angle = atan(centerOffset.y, centerOffset.x);
+        float radialDisplacement = (displacementColor.r - 0.5) * 2.0;
+        displacement = vec2(cos(angle), sin(angle)) * radialDisplacement * dist;
+      }
+      
+      // 應用位移強度
+      displacement *= displacementParams.x;
+    }
+    
+    // 從主紋理採樣位移後的 UV
+    vec2 distortedUV = uv0 + displacement;
+    
+    // 確保 UV 在有效範圍內
+    distortedUV = clamp(distortedUV, 0.0, 1.0);
+    
+    vec4 o = texture(cc_spriteTexture, distortedUV);
+    
+    // 應用頂點顏色
+    o *= color;
+    
+    ALPHA_TEST(o);
+    
+    return o;
+  }
+}%
