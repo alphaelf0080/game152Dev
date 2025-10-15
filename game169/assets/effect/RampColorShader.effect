@@ -41,7 +41,7 @@ CCEffect %{
         saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
         
         # 混合模式和強度
-        blendMode: { value: 0, editor: { type: enum, enumList: ['Normal', 'Multiply', 'Screen', 'Overlay', 'Darken', 'Lighten', 'ColorDodge', 'ColorBurn', 'HardLight', 'SoftLight', 'Difference', 'Exclusion', 'Hue', 'Saturation', 'Color', 'Luminosity'], displayName: '混合模式' } }
+        blendMode: { value: 0, editor: { type: enum, enumList: ['正常', '正片疊底', '濾色', '疊加', '變暗', '變亮', '顏色減淡', '顏色加深', '強光', '柔光', '差值', '排除', '色相', '飽和度', '顏色', '明度'], displayName: '混合模式' } }
         rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
         
         # 進階控制
