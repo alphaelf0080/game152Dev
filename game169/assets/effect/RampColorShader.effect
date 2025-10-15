@@ -23,16 +23,10 @@ CCEffect %{
         # 主紋理 UV 控制
         mainTexture: { 
           value: white, 
-          editor: { displayName: '主紋理' },
-          sampler: {
-            minFilter: linear,
-            magFilter: linear,
-            mipFilter: none,
-            addressU: repeat,
-            addressV: repeat
-          }
+          editor: { displayName: '主紋理' }
         }
         tilingOffset: { value: [1.0, 1.0, 0.0, 0.0], editor: { displayName: 'Tiling & Offset', tooltip: 'XY=Tiling(重複), ZW=Offset(偏移)' } }
+        useMainTexture: { value: 0.0, editor: { displayName: '使用主紋理', tooltip: '1=使用主紋理, 0=不使用' } }
         
         # Ramp 紋理和顏色控制
         rampTexture: { 
@@ -142,6 +136,7 @@ CCProgram sprite-fs %{
     vec2 rampUVOffset;
     vec2 rampRange;
     float useRampTexture;
+    float useMainTexture;
     float brightness;
     float contrast;
     float saturation;
@@ -364,18 +359,23 @@ CCProgram sprite-fs %{
     vec4 o = vec4(1, 1, 1, 1);
     
     // 應用 UV Tiling 和 Offset（使用 fract 確保重複）
-    vec2 mainUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
+    vec2 tiledUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
     
     #if USE_TEXTURE
-      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+      // Sprite 紋理也使用 tiled UV
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, tiledUV);
       #if IS_GRAY
         float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
         o.r = o.g = o.b = gray;
       #endif
     #endif
     
-    // 採樣主紋理（使用 tiling UV）
-    vec4 mainTexColor = texture(mainTexture, mainUV);
+    // 如果啟用主紋理，採樣並混合
+    if (useMainTexture > 0.5) {
+      vec4 mainTexColor = texture(mainTexture, tiledUV);
+      o.rgb *= mainTexColor.rgb;
+      o.a *= mainTexColor.a;
+    }
     
     // 計算 Ramp 座標（使用原始 UV）
     float rampCoord = calculateRampCoord(uv0);
@@ -383,11 +383,7 @@ CCProgram sprite-fs %{
     // 獲取 Ramp 顏色
     vec3 rampColor = getRampColor(rampCoord);
     
-    // 先將主紋理和 sprite 紋理混合
-    o.rgb *= mainTexColor.rgb;
-    o.a *= mainTexColor.a;
-    
-    // 再應用 Ramp 混合模式（base=原始紋理, blend=rampColor）
+    // 應用 Ramp 混合模式（base=原始紋理, blend=rampColor）
     o.rgb = applyBlendMode(o.rgb, rampColor, rampIntensity);
     
     // 應用頂點顏色
