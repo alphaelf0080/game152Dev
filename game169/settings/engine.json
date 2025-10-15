@@ -1,0 +1,31 @@
+{
+  "camera": {
+    "zoomRatio": {
+      "default": 1,
+      "min": 0.1,
+      "max": 5
+    }
+  },
+  "physics": {
+    "allowSleep": true,
+    "autoSimulation": true,
+    "collision": {
+      "collisionGroups": [],
+      "collisionMatrix": []
+    },
+    "defaultMaterial": {
+      "friction": 0.5,
+      "rollingFriction": 0.1,
+      "spinningFriction": 0.1,
+      "restitution": 0
+    },
+    "fixedTimeStep": 0.016666666666666666,
+    "gravity": {
+      "x": 0,
+      "y": -10,
+      "z": 0
+    },
+    "maxSubSteps": 1,
+    "sleepThreshold": 0.1
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "game169",
+  "version": "1.0.0",
+  "description": "Lucky Drums Slot Game - Cocos Creator 3.8.x",
+  "author": "Game152 Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Please use Cocos Creator to build the project'",
+    "start": "echo 'Please use Cocos Creator to preview the project'"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "creator": {
+    "version": "3.8.4"
+  },
+  "uuid": "a5877983-5ca6-48e0-95a3-c9fb503690c0"
+}
