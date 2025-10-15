@@ -183,8 +183,11 @@ CCProgram sprite-fs %{
   
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
-    // 應用 UV 變換
-    vec2 transformedUV = (uv - rampUVOffset) / rampUVScale;
+    // 先應用 tilingOffset 來實現 UV repeat
+    vec2 tiledUV = fract(uv * tilingOffset.xy) + tilingOffset.zw;
+    
+    // 應用 Ramp UV 變換
+    vec2 transformedUV = (tiledUV - rampUVOffset) / rampUVScale;
     
     float rampCoord = 0.0;
     
@@ -358,12 +361,9 @@ CCProgram sprite-fs %{
   vec4 frag () {
     vec4 o = vec4(1, 1, 1, 1);
     
-    // 應用 UV Tiling 和 Offset（使用 fract 確保重複）
-    vec2 tiledUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
-    
     #if USE_TEXTURE
-      // Sprite 紋理也使用 tiled UV
-      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, tiledUV);
+      // Sprite 紋理使用原始 UV（不受 tilingOffset 影響）
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
       #if IS_GRAY
         float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
         o.r = o.g = o.b = gray;
@@ -372,12 +372,13 @@ CCProgram sprite-fs %{
     
     // 如果啟用主紋理，採樣並混合
     if (useMainTexture > 0.5) {
-      vec4 mainTexColor = texture(mainTexture, tiledUV);
+      vec2 mainUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
+      vec4 mainTexColor = texture(mainTexture, mainUV);
       o.rgb *= mainTexColor.rgb;
       o.a *= mainTexColor.a;
     }
     
-    // 計算 Ramp 座標（使用原始 UV）
+    // 計算 Ramp 座標（tilingOffset 在 calculateRampCoord 內部應用）
     float rampCoord = calculateRampCoord(uv0);
     
     // 獲取 Ramp 顏色

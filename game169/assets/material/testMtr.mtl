@@ -10,7 +10,9 @@
   },
   "_techIdx": 0,
   "_defines": [
-    {}
+    {
+      "BLEND_MODE": 1
+    }
   ],
   "_states": [
     {
@@ -24,6 +26,14 @@
     }
   ],
   "_props": [
-    {}
+    {
+      "tilingOffset": {
+        "__type__": "cc.Vec4",
+        "x": 3.5,
+        "y": 1,
+        "z": 0,
+        "w": 0
+      }
+    }
   ]
 }
