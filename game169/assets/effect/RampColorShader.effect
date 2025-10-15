@@ -1,5 +1,20 @@
 // Ramp Color Shader - 支援 Ramp 顏色調整、多種方向、UV 控制和混合模式
-// 基於 builtin-sprite 修改，適用於 Cocos Creator 3.8
+// 基於             displayName: 'Blend Mode',
+            type: enum,
+            enumList: [
+              'Normal',
+              'Multiply',
+              'Screen',
+              'Overlay',
+              'Darken',
+              'Lighten',
+              'Color Dodge',
+              'Color Burn',
+              'Hard Light',
+              'Soft Light',
+              'Difference',
+              'Exclusion',
+              'Hue',改，適用於 Cocos Creator 3.8
 
 CCEffect %{
   techniques:
@@ -32,9 +47,14 @@ CCEffect %{
         rampDirection: { 
           value: 0, 
           editor: { 
-            displayName: 'Ramp 方向',
+            displayName: 'Ramp Direction',
             type: enum,
-            enumList: ['水平', '垂直', '圓形', '徑向']
+            enumList: [
+              'Horizontal',
+              'Vertical',
+              'Circular',
+              'Radial'
+            ]
           }
         }
         rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
@@ -51,25 +71,25 @@ CCEffect %{
         blendMode: { 
           value: 0, 
           editor: { 
-            displayName: '混合模式',
+            displayName: 'Blend Mode',
             type: enum,
             enumList: [
-              '正常',
-              '正片疊底',
-              '濾色',
-              '疊加',
-              '變暗',
-              '變亮',
-              '顏色減淡',
-              '顏色加深',
-              '強光',
-              '柔光',
-              '差值',
-              '排除',
-              '色相',
-              '飽和度',
-              '顏色',
-              '明度'
+              'Normal',
+              'Multiply',
+              'Screen',
+              'Overlay',
+              'Darken',
+              'Lighten',
+              'Color Dodge',
+              'Color Burn',
+              'Hard Light',
+              'Soft Light',
+              'Difference',
+              'Exclusion',
+              'Hue',
+              'Saturation',
+              'Color',
+              'Luminosity'
             ]
           }
         }
