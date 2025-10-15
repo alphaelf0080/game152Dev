@@ -31,6 +31,10 @@
 ├── ResourceValidator-Usage-Guide.md      # 資源驗證器使用指南
 ├── Cocos-Creator-Slot-Game-Depth-Effects.md # Slot 遊戲深度效果完整實現指南
 ├── Cocos-Creator-Depth-Effects-Implementation-Guide.md # 好運咚咚專案實作指南
+├── RampColorShader-Guide.md              # Ramp Color Shader 完整指南 ⭐
+├── RampColorShader-UV-Controls.md        # UV 控制功能詳細說明
+├── RampColorShader-BlendMode-TilingFix.md # 混合模式與 UV Tiling 修復報告
+├── Cocos-Effect-No-Enum-Support.md       # Cocos Creator Effect 不支援 enum 說明
 └── 好運咚咚_遊戲玩法說明.md              # 遊戲玩法說明
 ```
 
@@ -61,6 +65,235 @@
 ---
 
 ## 專案記錄 (新 → 舊)
+
+## 11. RampColorShader 混合模式與 UV Tiling 完整實現 [2025-10-15 ~ 2025-10-16]
+
+### 請求歷程
+
+#### 初始請求 (2025-10-15)
+1. "blendMode 選項改成使用下拉式選單" - 實現 16 種 Photoshop 風格混合模式
+2. "ramp direction, blend mode 都可以有下拉選單，但是只有整數數字，且選了沒效果" - 修復下拉選單功能
+3. "缺少可以調整 uv repeat 或是 uv wrap" - 新增 UV 控制功能
+
+#### 修正請求 (2025-10-16)
+4. "blend mode 錯誤, tiled offset 錯誤" - 修復混合順序和 UV 重複
+5. "blend mode, 混合方式錯誤，tiled uv沒有重複" - 使用 fract() 實現正確的 UV 重複
+6. "不正確，變成sprite 在repeat, ramp 無，要ramp uv repeat" - 將 tiling 應用到 Ramp 計算而非 sprite
+
+### 實作內容
+
+#### 1. 混合模式下拉選單實現
+**問題發現**:
+- Cocos Creator Effect 不支援 `editor.type: enum`
+- 只支援 `vector` 和 `color` 類型
+
+**解決方案**: 使用 Macro 定義
+```glsl
+#pragma define-meta BLEND_MODE range([0, 15])
+#pragma define-meta RAMP_DIRECTION range([0, 3])
+```
+
+**16 種混合模式**:
+| 編號 | 模式 | 算法 |
+|------|------|------|
+| 0 | Normal | 正常混合 |
+| 1 | Multiply | base × blend |
+| 2 | Screen | 1 - (1-base) × (1-blend) |
+| 3 | Overlay | 對比混合 |
+| 4 | Darken | min(base, blend) |
+| 5 | Lighten | max(base, blend) |
+| 6 | Color Dodge | base / (1-blend) |
+| 7 | Color Burn | 1 - (1-base) / blend |
+| 8 | Hard Light | 強光 |
+| 9 | Soft Light | 柔光 |
+| 10 | Difference | abs(base - blend) |
+| 11 | Exclusion | base + blend - 2×base×blend |
+| 12 | Hue | 色相替換 |
+| 13 | Saturation | 飽和度替換 |
+| 14 | Color | 顏色替換 |
+| 15 | Luminosity | 亮度替換 |
+
+**技術實現**:
+- 使用編譯時 `#if BLEND_MODE == X` 條件編譯
+- 每個選項生成獨立的 shader 變體
+- 實現 Photoshop 標準算法（包含 HSL 轉換）
+
+#### 2. UV Tiling 和 Offset 控制
+
+**屬性定義**:
+```yaml
+tilingOffset: { 
+  value: [1.0, 1.0, 0.0, 0.0],  # XY=tiling, ZW=offset
+  editor: { 
+    displayName: 'Tiling & Offset',
+    tooltip: 'XY=Tiling(重複), ZW=Offset(偏移)'
+  }
+}
+```
+
+**修復歷程**:
+1. **第一版**: 嘗試在 sprite 紋理上應用 tiling
+   ```glsl
+   vec2 mainUV = uv0 * tilingOffset.xy + tilingOffset.zw;
+   o *= CCSampleWithAlphaSeparated(cc_spriteTexture, mainUV);
+   ```
+   ❌ 問題: 沒有使用 fract()，UV 超出範圍
+
+2. **第二版**: 添加 fract() 實現重複
+   ```glsl
+   vec2 tiledUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
+   o *= CCSampleWithAlphaSeparated(cc_spriteTexture, tiledUV);
+   ```
+   ❌ 問題: sprite 紋理在重複，但需求是 Ramp 重複
+
+3. **最終版** ✅: 將 tiling 應用到 Ramp 計算
+   ```glsl
+   float calculateRampCoord(vec2 uv) {
+       // 先應用 tilingOffset 來實現 UV repeat
+       vec2 tiledUV = fract(uv * tilingOffset.xy) + tilingOffset.zw;
+       
+       // 應用 Ramp UV 變換
+       vec2 transformedUV = (tiledUV - rampUVOffset) / rampUVScale;
+       
+       // ... Ramp 方向計算
+   }
+   ```
+
+#### 3. 混合順序修正
+
+**問題**: 混合模式應用順序不正確
+
+**修復前**:
+```glsl
+vec4 mainTexColor = texture(mainTexture, mainUV);
+o *= mainTexColor;  // 先混合紋理
+o.rgb = applyBlendMode(o.rgb, rampColor, rampIntensity);  // 再混合 ramp
+```
+
+**修復後** ✅:
+```glsl
+#if USE_TEXTURE
+  o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+#endif
+
+if (useMainTexture > 0.5) {
+  vec2 mainUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
+  vec4 mainTexColor = texture(mainTexture, mainUV);
+  o.rgb *= mainTexColor.rgb;
+  o.a *= mainTexColor.a;
+}
+
+// 最後應用 Ramp 混合
+o.rgb = applyBlendMode(o.rgb, rampColor, rampIntensity);
+```
+
+### 最終實現架構
+
+```
+Fragment Shader 處理流程:
+┌─────────────────────┐
+│ 1. Sprite 紋理      │ ← 使用原始 UV (uv0)
+│    (USE_TEXTURE)    │
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│ 2. 主紋理 (可選)    │ ← 使用 tiled UV (可選功能)
+│    (useMainTexture) │
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│ 3. Ramp 計算        │ ← tilingOffset 在此應用
+│    calculateRamp()  │    (UV repeat + offset)
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│ 4. 混合模式         │ ← 16 種混合算法
+│    applyBlendMode() │    (compile-time)
+└──────────┬──────────┘
+           │
+┌──────────▼──────────┐
+│ 5. 頂點顏色         │
+│    * color          │
+└─────────────────────┘
+```
+
+### UV 應用策略
+
+| 紋理/計算 | UV 類型 | 受 tilingOffset 影響 |
+|-----------|---------|---------------------|
+| Sprite 紋理 | 原始 uv0 | ❌ 否 |
+| 主紋理 (可選) | tiled UV | ✅ 是（當 useMainTexture=1） |
+| Ramp 計算 | tiled UV | ✅ 是（總是應用） |
+
+### 技術亮點
+
+1. **Macro 下拉選單**: 解決 Cocos Creator 不支援 enum 的限制
+2. **編譯時優化**: 每個 blend mode 生成獨立 shader 變體，無運行時分支
+3. **fract() 重複**: 正確實現 UV 循環重複
+4. **靈活架構**: tilingOffset 應用到 Ramp，sprite 保持原始 UV
+5. **Photoshop 兼容**: 實現標準的 HSL 色彩空間轉換算法
+
+### 文件產出
+
+1. **RampColorShader-Guide.md**: 完整使用指南（保留原有）
+2. **RampColorShader-UV-Controls.md**: UV 控制功能詳細說明
+   - UV Tiling 原理
+   - fract() 函數說明
+   - 使用範例和應用場景
+   
+3. **RampColorShader-BlendMode-TilingFix.md**: 修復報告
+   - 問題分析（UV 重複、混合順序）
+   - 修復方案對比
+   - fract() 技術細節
+   - 16 種混合模式列表
+   
+4. **Cocos-Effect-No-Enum-Support.md**: 技術限制說明
+   - 為何不支援 enum
+   - Macro 替代方案
+   - 官方文檔驗證
+
+### Git 提交記錄
+```
+d89e36b - Fix: Apply tilingOffset to Ramp UV calculation, not sprite texture
+32b50fd - Fix tilingOffset: apply to sprite texture and add useMainTexture toggle  
+cc97bcb - Fix blend mode order and UV tiling with fract()
+ce2f6b1 - Add UV tiling, offset, and wrap mode controls to RampColorShader
+d0eb1d7 - Fix RampColorShader to use macros for dropdown functionality
+f602f66 - (之前的提交)
+```
+
+### 使用範例
+
+#### 基本 Ramp 重複
+```yaml
+RAMP_DIRECTION: 0         # 水平
+tilingOffset: [3, 1, 0, 0]  # 水平重複 3 次
+BLEND_MODE: 1             # Multiply
+rampIntensity: 1.0
+```
+
+#### 圓形 Ramp 2x2 重複
+```yaml
+RAMP_DIRECTION: 2         # 圓形
+tilingOffset: [2, 2, 0, 0]  # 2x2 重複
+BLEND_MODE: 9             # Soft Light
+```
+
+#### UV 滾動動畫（需要腳本）
+```yaml
+RAMP_DIRECTION: 0
+tilingOffset: [1, 1, time*0.1, 0]  # 動態偏移
+BLEND_MODE: 2             # Screen
+```
+
+### 相關文件
+- `game169/assets/effect/RampColorShader.effect`: 主 shader 檔案
+- `docs/RampColorShader-Guide.md`: 完整使用指南
+- `docs/RampColorShader-UV-Controls.md`: UV 控制詳解
+- `docs/RampColorShader-BlendMode-TilingFix.md`: 修復報告
+- `docs/Cocos-Effect-No-Enum-Support.md`: Enum 限制說明
+
+---
 
 ## 10. LangBunder 文件整理與索引建立 [2025-10-15]
 
