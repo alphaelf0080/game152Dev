@@ -41,7 +41,7 @@ CCEffect %{
         saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
         
         # 混合模式和強度
-        blendMode: { value: 0, editor: { type: enum, enumList: ['Normal', 'Multiply', 'Add', 'Screen', 'Overlay', 'SoftLight', 'ColorDodge', 'ColorBurn'], displayName: '混合模式' } }
+        blendMode: { value: 0, editor: { type: enum, enumList: ['Normal', 'Multiply', 'Screen', 'Overlay', 'Darken', 'Lighten', 'ColorDodge', 'ColorBurn', 'HardLight', 'SoftLight', 'Difference', 'Exclusion', 'Hue', 'Saturation', 'Color', 'Luminosity'], displayName: '混合模式' } }
         rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
         
         # 進階控制
@@ -222,68 +222,131 @@ CCProgram sprite-fs %{
     return adjustColor(rampColor);
   }
   
+  // 輔助函數：獲取亮度值
+  float getLuminance(vec3 c) {
+    return dot(c, vec3(0.2126, 0.7152, 0.0722));
+  }
+  
+  // 輔助函數：設置指定顏色的亮度值
+  vec3 setLuminance(vec3 c, float l) {
+    float d = l - getLuminance(c);
+    return c + vec3(d);
+  }
+  
+  // 輔助函數：計算顏色的飽和度
+  float getSaturation(vec3 c) {
+    return max(max(c.r, c.g), c.b) - min(min(c.r, c.g), c.b);
+  }
+  
+  // 輔助函數：飽和度調整
+  vec3 setSaturationValue(vec3 c, float s) {
+    float l = getLuminance(c);
+    vec3 grey = vec3(l);
+    return mix(grey, c, s);
+  }
+  
   // 混合模式函數
   vec3 applyBlendMode(vec3 base, vec3 blend, float mode, float intensity) {
     vec3 result = base;
     int blendType = int(mode);
     
+    const float EPSILON = 0.00001;  // 防止除零錯誤
+    
     if (blendType == 0) {
-      // Normal
+      // Normal - 正常混合
       result = mix(base, blend, intensity);
-    } else if (blendType == 1) {
-      // Multiply
+    } 
+    else if (blendType == 1) {
+      // Multiply - 正片疊底
+      // 公式：color.rgb * dst_color
       result = mix(base, base * blend, intensity);
-    } else if (blendType == 2) {
-      // Add
-      result = mix(base, min(base + blend, vec3(1.0)), intensity);
-    } else if (blendType == 3) {
-      // Screen
-      result = mix(base, vec3(1.0) - (vec3(1.0) - base) * (vec3(1.0) - blend), intensity);
-    } else if (blendType == 4) {
-      // Overlay
-      vec3 overlayResult = vec3(0.0);
-      for (int i = 0; i < 3; i++) {
-        if (base[i] < 0.5) {
-          overlayResult[i] = 2.0 * base[i] * blend[i];
-        } else {
-          overlayResult[i] = 1.0 - 2.0 * (1.0 - base[i]) * (1.0 - blend[i]);
-        }
-      }
+    } 
+    else if (blendType == 2) {
+      // Screen - 濾色
+      // 公式：color.rgb + dst_color.rgb * (1 - color.rgb)
+      vec3 screenResult = blend + base * (vec3(1.0) - blend);
+      result = mix(base, screenResult, intensity);
+    } 
+    else if (blendType == 3) {
+      // Overlay - 疊加
+      vec3 overlayResult = mix(
+        2.0 * base * blend,
+        vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
+        step(0.5, base)
+      );
       result = mix(base, overlayResult, intensity);
-    } else if (blendType == 5) {
-      // Soft Light
-      vec3 softLightResult = vec3(0.0);
-      for (int i = 0; i < 3; i++) {
-        if (blend[i] < 0.5) {
-          softLightResult[i] = base[i] - (1.0 - 2.0 * blend[i]) * base[i] * (1.0 - base[i]);
-        } else {
-          float d = base[i] < 0.25 ? ((16.0 * base[i] - 12.0) * base[i] + 4.0) * base[i] : sqrt(base[i]);
-          softLightResult[i] = base[i] + (2.0 * blend[i] - 1.0) * (d - base[i]);
-        }
-      }
-      result = mix(base, softLightResult, intensity);
-    } else if (blendType == 6) {
-      // Color Dodge
-      vec3 dodgeResult = vec3(0.0);
-      for (int i = 0; i < 3; i++) {
-        if (blend[i] < 1.0) {
-          dodgeResult[i] = min(base[i] / (1.0 - blend[i]), 1.0);
-        } else {
-          dodgeResult[i] = 1.0;
-        }
-      }
+    } 
+    else if (blendType == 4) {
+      // Darken - 變暗
+      result = mix(base, min(base, blend), intensity);
+    } 
+    else if (blendType == 5) {
+      // Lighten - 變亮
+      result = mix(base, max(base, blend), intensity);
+    } 
+    else if (blendType == 6) {
+      // Color Dodge - 顏色加深
+      vec3 dodgeResult = base / max(vec3(EPSILON), vec3(1.0) - blend);
       result = mix(base, dodgeResult, intensity);
-    } else if (blendType == 7) {
-      // Color Burn
-      vec3 burnResult = vec3(0.0);
-      for (int i = 0; i < 3; i++) {
-        if (blend[i] > 0.0) {
-          burnResult[i] = max(1.0 - (1.0 - base[i]) / blend[i], 0.0);
-        } else {
-          burnResult[i] = 0.0;
-        }
-      }
+    } 
+    else if (blendType == 7) {
+      // Color Burn - 顏色加深
+      vec3 burnResult = vec3(1.0) - (vec3(1.0) - base) / max(vec3(EPSILON), blend);
       result = mix(base, burnResult, intensity);
+    } 
+    else if (blendType == 8) {
+      // Hard Light - 強光
+      vec3 hardLightResult = mix(
+        2.0 * base * blend,
+        vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
+        step(0.5, blend)
+      );
+      result = mix(base, hardLightResult, intensity);
+    } 
+    else if (blendType == 9) {
+      // Soft Light - 柔光（Photoshop 公式）
+      vec3 usePoly = step(base, vec3(0.25));
+      vec3 Gpoly = ((vec3(16.0) * base - vec3(12.0)) * base + vec3(4.0)) * base;
+      vec3 G = usePoly * Gpoly + (vec3(1.0) - usePoly) * sqrt(base);
+      
+      vec3 A = base - (vec3(1.0) - 2.0 * blend) * base * (vec3(1.0) - base);
+      vec3 B = base + (2.0 * blend - vec3(1.0)) * (G - base);
+      
+      vec3 softLightResult = mix(A, B, step(vec3(0.5), blend));
+      result = mix(base, softLightResult, intensity);
+    } 
+    else if (blendType == 10) {
+      // Difference - 差值
+      result = mix(base, abs(base - blend), intensity);
+    } 
+    else if (blendType == 11) {
+      // Exclusion - 排除
+      vec3 exclusionResult = base + blend - 2.0 * base * blend;
+      result = mix(base, exclusionResult, intensity);
+    } 
+    else if (blendType == 12) {
+      // Hue - 色相
+      float s = getSaturation(base);
+      float l = getLuminance(base);
+      vec3 hueResult = setLuminance(setSaturationValue(blend, s), l);
+      result = mix(base, hueResult, intensity);
+    } 
+    else if (blendType == 13) {
+      // Saturation - 飽和度
+      float s = getSaturation(blend);
+      float l = getLuminance(base);
+      vec3 satResult = setLuminance(setSaturationValue(base, s), l);
+      result = mix(base, satResult, intensity);
+    } 
+    else if (blendType == 14) {
+      // Color - 顏色
+      vec3 colorResult = setLuminance(blend, getLuminance(base));
+      result = mix(base, colorResult, intensity);
+    } 
+    else if (blendType == 15) {
+      // Luminosity - 亮度
+      vec3 lumResult = setLuminance(base, getLuminance(blend));
+      result = mix(base, lumResult, intensity);
     }
     
     return clamp(result, 0.0, 1.0);
