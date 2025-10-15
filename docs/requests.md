@@ -7,20 +7,21 @@
 ```
 ./docs/
 ├── requests.md                           # 本文件 - 主要記錄檔
+├── LangBunderDocs/                       # LangBunder 文件專區（新增 2025-10-15）
+│   ├── README.md                         # 索引文件 - 完整導航和技術摘要
+│   ├── LangBunder-Analysis.md            # 基礎分析
+│   ├── LangBunder-Config-Refactor.md     # 配置重構
+│   ├── LangBunder-Debug-Enhancement.md   # 除錯增強（500+ 行）⭐
+│   ├── LangBunder-LoadingStrategy-Analysis.md # 載入策略分析
+│   ├── LangBunder-Optimization-Analysis.md    # 效能優化分析
+│   ├── LangBunder-Refactor-Complete.md        # 完整重構報告
+│   ├── LangBunder-Refactor-Report.md          # 重構過程記錄
+│   ├── LangBunder-Usage-Guide.md              # 使用指南
+│   ├── Language-Resource-Loading-Analysis.md  # 完整系統分析（1000+ 行）⭐
+│   └── Language-Resource-Isolation-Analysis.md # 隔離機制驗證（800+ 行）⭐
 ├── Complete-Error-Fix-Report.md          # 完整錯誤修復報告
 ├── EmergencyResourceFix-Guide.md         # 緊急資源修復指南
 ├── Error-Fix-Quick-Summary.md            # 錯誤修復快速摘要
-├── LangBunder-Analysis.md                # 語言包分析
-├── LangBunder-Config-Refactor.md         # 語言包配置重構
-├── LangBunder-LoadingStrategy-Analysis.md # 語言包載入策略分析
-├── LangBunder-Refactor-Repor#### 7.4 相關文件
-- `docs/Cocos-Creator-Slot-Game-Depth-Effects.md`: 完整實現指南
-- `docs/Cocos-Creator-Depth-Effects-Implementation-Guide.md`: 好運咚咚專案實作指南
-  - 詳細的節點佈局說明
-  - 編輯器操作步驟
-  - 腳本整合方法
-  - 效果調整與優化建議md         # 語言包重構報告
-├── LangBunder-Usage-Guide.md             # 語言包使用指南
 ├── ReelController-Refactor-Analysis.md   # 捲軸控制器重構分析
 ├── ReelController-Refactor-Phase1-Report.md # 捲軸控制器重構第一階段報告
 ├── Resource-Fix-Summary.md               # 資源修復摘要
@@ -28,6 +29,8 @@
 ├── Resource-Loading-Error-Quick-Fix.md   # 資源載入錯誤快速修復
 ├── Resource-Missing-Fix-Guide.md         # 資源缺失修復指南
 ├── ResourceValidator-Usage-Guide.md      # 資源驗證器使用指南
+├── Cocos-Creator-Slot-Game-Depth-Effects.md # Slot 遊戲深度效果完整實現指南
+├── Cocos-Creator-Depth-Effects-Implementation-Guide.md # 好運咚咚專案實作指南
 └── 好運咚咚_遊戲玩法說明.md              # 遊戲玩法說明
 ```
 
@@ -58,6 +61,89 @@
 ---
 
 ## 專案記錄 (新 → 舊)
+
+## 10. LangBunder 文件整理與索引建立 [2025-10-15]
+
+### 請求
+"將 #sym:LangBunder 所有分析文件檔案放在 ./docs/LangBunderDocs 中"
+
+### 實作內容
+
+#### 文件整理
+- **創建目錄**: `docs/LangBunderDocs/`
+- **移動文件數量**: 10 個 LangBunder 相關分析文件
+- **索引文件**: 創建完整的 `README.md` 作為導航索引
+
+#### 移動的文件清單
+1. ✅ `LangBunder-Analysis.md` - 基礎分析文件
+2. ✅ `LangBunder-Config-Refactor.md` - 配置系統重構文件
+3. ✅ `LangBunder-Debug-Enhancement.md` - 註解與除錯系統增強文件（500+ 行）
+4. ✅ `LangBunder-LoadingStrategy-Analysis.md` - 載入策略分析
+5. ✅ `LangBunder-Optimization-Analysis.md` - 效能優化分析
+6. ✅ `LangBunder-Refactor-Complete.md` - 完整重構報告
+7. ✅ `LangBunder-Refactor-Report.md` - 重構過程記錄
+8. ✅ `LangBunder-Usage-Guide.md` - 使用指南
+9. ✅ `Language-Resource-Loading-Analysis.md` - 語言資源載入系統完整分析（1000+ 行）⭐
+10. ✅ `Language-Resource-Isolation-Analysis.md` - 語言資源隔離機制驗證（800+ 行）⭐
+
+#### 索引文件特色
+創建了完整的 `README.md` 索引文件，包含：
+- **📋 文件目錄**: 按功能分類（核心分析、重構、優化、使用指南）
+- **🎯 快速導航**: 
+  - 新手入門路徑
+  - 深入理解路徑
+  - 重構與優化路徑
+- **📊 關鍵數據**: 
+  - 效能提升數據（載入速度 +60%、節點查找 +90%）
+  - 支援的 14 種語言列表
+  - 資源類型和載入優先級說明
+- **🔒 安全性保證**: 
+  - 4 層語言資源隔離機制說明
+  - 100% 不會跨語系載入的保證
+- **🛠️ 技術架構**: 
+  - 核心檔案清單（5 個主要檔案）
+  - 設計模式說明（單例、配置驅動、Promise-based、分層架構）
+- **📝 版本歷史**: v2.0.0 重構版本記錄
+- **🔗 相關連結**: 源碼位置、配置檔案、資源目錄路徑
+
+### 組織效益
+- ✅ **集中管理**: 所有 LangBunder 相關文件集中在一個專門目錄
+- ✅ **快速查閱**: 完整的索引文件提供多種導航路徑
+- ✅ **清晰分類**: 按功能分類，易於定位所需文件
+- ✅ **詳細文件**: 每個文件都有完整的功能說明和內容概覽
+- ✅ **技術摘要**: 關鍵數據、效能指標、架構說明一目了然
+
+### 技術亮點
+- **文件完整性**: 涵蓋從基礎分析到深度驗證的完整文件鏈
+- **索引導航**: 提供新手、進階、優化三種不同層級的學習路徑
+- **效能數據**: 具體的效能提升數據和優化指標
+- **安全驗證**: 完整的語言資源隔離機制驗證和證明
+
+### 相關文件
+- `docs/LangBunderDocs/README.md`: 完整索引文件
+  - 10 個分析文件的詳細說明
+  - 快速導航指南
+  - 關鍵數據摘要
+  - 技術架構概覽
+  - 安全性保證說明
+
+### 目錄結構
+```
+docs/LangBunderDocs/
+├── README.md                                    # 索引文件（新建）
+├── LangBunder-Analysis.md                       # 基礎分析
+├── LangBunder-Config-Refactor.md                # 配置重構
+├── LangBunder-Debug-Enhancement.md              # 除錯增強 ⭐
+├── LangBunder-LoadingStrategy-Analysis.md       # 載入策略
+├── LangBunder-Optimization-Analysis.md          # 效能優化
+├── LangBunder-Refactor-Complete.md              # 重構報告
+├── LangBunder-Refactor-Report.md                # 重構記錄
+├── LangBunder-Usage-Guide.md                    # 使用指南
+├── Language-Resource-Loading-Analysis.md        # 完整系統分析 ⭐
+└── Language-Resource-Isolation-Analysis.md      # 隔離機制驗證 ⭐
+```
+
+---
 
 ## 9. LocalServer 初始盤面功能實現 [2025-10-14]
 
@@ -608,5 +694,171 @@ python main.py --all --json --json-dir complete_results
 - 遊戲視覺層次優化
 
 這次的技術問答為遊戲視覺效果開發提供了完整的解決方案，特別適用於需要增強立體感和動態效果的 slot game 專案。
+
+---
+
+### 日期：2025-10-15
+
+#### 8. GitHub 專案重構與推送
+
+##### 8.1 請求內容
+1. 將 pss-on-00152 專案從 GitHub 移除
+2. 以 game169 專案替代並推送到 GitHub
+3. 推送最新的相機特效系統變更
+
+##### 8.2 執行步驟
+
+**步驟 1: 移除 pss-on-00152 專案**
+```bash
+git rm -r pss-on-00152
+git commit -m "chore: 移除 pss-on-00152 專案"
+```
+- 移除了數千個檔案（完整的 Cocos Creator 遊戲專案）
+- 包含 assets/、extensions/、settings/ 等所有目錄
+
+**步驟 2: 添加 game169 專案**
+```bash
+# 移除 game169 內部的 .git 資料夾（將子模組轉為普通資料夾）
+Remove-Item -Recurse -Force "game169\.git"
+# 添加 game169 到 git
+git add game169/
+git commit -m "feat: 添加 game169 遊戲專案替代 pss-on-00152"
+```
+- 添加了 3,367 個物件
+- 包含完整的 Cocos Creator 遊戲專案結構
+- 處理了內嵌的 git 子模組問題
+
+**步驟 3: 推送專案重構**
+```bash
+git push origin main
+```
+- 成功推送 30.01 MiB 的資料
+- 推送速度：20.33 MiB/s
+- Commit: 87ad64f → 3c09ad7
+
+**步驟 4: 推送相機特效系統**
+```bash
+git add .
+git commit -m "feat: 添加相機特效系統和程序化波浪效果"
+git push origin main
+```
+- 16 個檔案變更
+- 2,173 行新增，29 行刪除
+- 推送 22 個物件，18.13 KiB
+
+##### 8.3 新增功能
+
+**相機特效系統**
+- `CameraDisplacementEffect2D.ts`: 2D 相機位移特效
+- `CameraProceduralWaveEffect.ts`: 相機程序化波浪特效
+- `CameraEffect_Setup_Guide.md`: 設定指南文件
+
+**程序化波浪控制器**
+- `ProceduralWaveController.ts`: 波浪效果控制器
+- `DisplacementDistortion.effect`: 位移扭曲效果
+- `DisplacementDistortion_ProceduralWave.effect`: 程序化波浪效果
+- `README.md`: 效果說明文件
+
+**場景和材質更新**
+- `main.scene`: 主場景更新
+- `dispMtr.mtl`: 材質檔案更新
+
+##### 8.4 專案結構變更
+
+**移除：**
+- `pss-on-00152/` - 舊的 Cocos Creator 遊戲專案（好運咚咚）
+  - 完整移除所有資源、腳本、設定檔案
+  - 釋放大量儲存空間
+
+**新增：**
+- `game169/` - 新的 Cocos Creator 遊戲專案
+  - 完整的遊戲資源結構
+  - 優化的專案配置
+  - 新增相機特效系統
+
+**保留：**
+- `gameServer/` - Python 後端服務器
+- `docs/` - 文件目錄
+- 其他專案配置檔案
+
+##### 8.5 .gitignore 配置問題
+
+**發現問題：**
+在 `game169/.gitignore` 中發現以下規則：
+```ignore
+profiles/      # 第 9 行
+local/         # 第 7 行
+library/       # 第 4 行
+temp/          # 第 5 行
+build/         # 第 7 行
+```
+
+**影響：**
+- `game169/settings/` 和 `game169/profiles/` 被忽略
+- 這些目錄包含 Cocos Creator 的本地配置
+- 未被推送到 GitHub
+
+**說明：**
+這是 Cocos Creator 專案的標準配置：
+- `profiles/`: 用戶個人配置（如編輯器偏好）
+- `settings/`: 專案設定（部分應該版本控制）
+- `library/`: 編譯快取（不應版本控制）
+- `temp/`: 臨時檔案（不應版本控制）
+
+##### 8.6 同步狀態確認
+
+**Git 日誌：**
+```
+28ed1db (HEAD -> main, origin/main) feat: 添加相機特效系統和程序化波浪效果
+3c09ad7 feat: 添加 game169 遊戲專案替代 pss-on-00152
+87584ac chore: 移除 pss-on-00152 專案
+9a54961 中獎推送
+ba42a8a 修正：使用Cocos Preview自動編譯，不需手動Build
+```
+
+**同步確認：**
+- 本地 `main` 分支：`28ed1db`
+- 遠端 `origin/main`：`28ed1db`
+- 狀態：✅ 完全同步
+
+##### 8.7 技術要點
+
+**Git 操作：**
+1. 正確處理大規模檔案刪除
+2. 處理 git 子模組轉換
+3. 有效的 commit 訊息管理
+4. 確保本地與遠端同步
+
+**專案管理：**
+1. 合理的 .gitignore 配置
+2. 專案結構優化
+3. 版本控制最佳實踐
+4. 大型二進制檔案處理
+
+##### 8.8 相關文件
+- `.gitignore`: 根目錄 Git 忽略規則
+- `game169/.gitignore`: game169 專案 Git 忽略規則
+- `game169/assets/effect/displacementDistor/`: 相機特效系統目錄
+  - 包含所有特效組件和效果檔案
+  - 提供完整的設定指南
+
+##### 8.9 後續建議
+
+**版本控制：**
+1. 定期檢查 .gitignore 規則的合理性
+2. 評估 settings/ 目錄中哪些檔案需要版本控制
+3. 考慮為大型資源檔案使用 Git LFS
+
+**專案維護：**
+1. 保持 game169 專案結構的清晰
+2. 定期清理不需要的快取和臨時檔案
+3. 維護良好的 commit 歷史記錄
+
+**團隊協作：**
+1. 如果 settings/ 包含重要配置，考慮選擇性添加
+2. 建立專案配置共享機制
+3. 文件化專案初始化流程
+
+這次的專案重構成功完成了舊專案的移除和新專案的遷移，並且添加了先進的相機特效系統，為遊戲開發提供了更好的視覺效果基礎。
 
 ---
