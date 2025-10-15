@@ -35,8 +35,32 @@ CCEffect %{
       properties:
         alphaThreshold: { value: 0.5 }
         
+        # 主紋理 UV 控制
+        mainTexture: { 
+          value: white, 
+          editor: { displayName: '主紋理' },
+          sampler: {
+            minFilter: linear,
+            magFilter: linear,
+            mipFilter: none,
+            addressU: repeat,
+            addressV: repeat
+          }
+        }
+        tilingOffset: { value: [1.0, 1.0, 0.0, 0.0], editor: { displayName: 'Tiling & Offset', tooltip: 'XY=Tiling(重複), ZW=Offset(偏移)' } }
+        
         # Ramp 紋理和顏色控制
-        rampTexture: { value: white, editor: { displayName: 'Ramp 紋理', tooltip: '用於顏色映射的 Ramp 紋理' } }
+        rampTexture: { 
+          value: white, 
+          editor: { displayName: 'Ramp 紋理', tooltip: '用於顏色映射的 Ramp 紋理' },
+          sampler: {
+            minFilter: linear,
+            magFilter: linear,
+            mipFilter: none,
+            addressU: repeat,
+            addressV: repeat
+          }
+        }
         useRampTexture: { value: 0.0, editor: { displayName: '使用 Ramp 紋理', tooltip: '1=使用紋理, 0=使用顏色漸變' } }
         
         # 顏色漸變設置（當不使用 Ramp 紋理時）
@@ -121,9 +145,11 @@ CCProgram sprite-fs %{
     layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
   #endif
   
+  uniform sampler2D mainTexture;
   uniform sampler2D rampTexture;
   
   uniform RampProperties {
+    vec4 tilingOffset;      // xy = tiling(repeat), zw = offset
     vec4 colorStart;
     vec4 colorEnd;
     vec2 rampCenter;
@@ -352,13 +378,20 @@ CCProgram sprite-fs %{
   vec4 frag () {
     vec4 o = vec4(1, 1, 1, 1);
     
+    // 應用 UV Tiling 和 Offset
+    vec2 mainUV = uv0 * tilingOffset.xy + tilingOffset.zw;
+    
     #if USE_TEXTURE
-      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, mainUV);
       #if IS_GRAY
         float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
         o.r = o.g = o.b = gray;
       #endif
     #endif
+    
+    // 如果有主紋理，也採樣它
+    vec4 mainTexColor = texture(mainTexture, mainUV);
+    o *= mainTexColor;
     
     // 計算 Ramp 座標
     float rampCoord = calculateRampCoord(uv0);
