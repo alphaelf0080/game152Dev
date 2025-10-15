@@ -106,10 +106,13 @@ venv.bak/
 dmypy.json
 
 # Game output files
-*.json
-game_output/
-test_json_output/
-json_output/
+# 只過濾遊戲輸出的 JSON，保留 Cocos Creator 配置文件
+game_output/**/*.json
+test_json_output/**/*.json
+json_output/**/*.json
+gameServer/game_output/**/*.json
+**/resources/**/*.json
+assets/resources/**/*.json
 
 # Cocos Creator
 library/
