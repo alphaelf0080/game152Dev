@@ -43,20 +43,7 @@ CCEffect %{
         colorStart: { value: [0.0, 0.0, 0.0, 1.0], editor: { type: color, displayName: '起始顏色' } }
         colorEnd: { value: [1.0, 1.0, 1.0, 1.0], editor: { type: color, displayName: '結束顏色' } }
         
-        # Ramp 方向和範圍控制
-        rampDirection: { 
-          value: 0, 
-          editor: { 
-            displayName: 'Ramp Direction',
-            type: enum,
-            enumList: [
-              'Horizontal',
-              'Vertical',
-              'Circular',
-              'Radial'
-            ]
-          }
-        }
+        # Ramp 範圍控制
         rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
         rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'UV 縮放' } }
         rampUVOffset: { value: [0.0, 0.0], editor: { displayName: 'UV 偏移' } }
@@ -67,32 +54,7 @@ CCEffect %{
         contrast: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '對比度' } }
         saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
         
-        # 混合模式和強度
-        blendMode: { 
-          value: 0, 
-          editor: { 
-            displayName: 'Blend Mode',
-            type: enum,
-            enumList: [
-              'Normal',
-              'Multiply',
-              'Screen',
-              'Overlay',
-              'Darken',
-              'Lighten',
-              'Color Dodge',
-              'Color Burn',
-              'Hard Light',
-              'Soft Light',
-              'Difference',
-              'Exclusion',
-              'Hue',
-              'Saturation',
-              'Color',
-              'Luminosity'
-            ]
-          }
-        }
+        # 強度控制
         rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
         
         # 進階控制
@@ -147,6 +109,10 @@ CCProgram sprite-fs %{
   #include <builtin/internal/embedded-alpha>
   #include <builtin/internal/alpha-test>
   
+  // 使用 macro 定義下拉選單選項
+  #pragma define-meta RAMP_DIRECTION range([0, 3])
+  #pragma define-meta BLEND_MODE range([0, 15])
+  
   in vec4 color;
   in vec2 uv0;
   
@@ -165,11 +131,9 @@ CCProgram sprite-fs %{
     vec2 rampUVOffset;
     vec2 rampRange;
     float useRampTexture;
-    float rampDirection;
     float brightness;
     float contrast;
     float saturation;
-    float blendMode;
     float rampIntensity;
     float invertRamp;
     float smoothness;
@@ -217,23 +181,23 @@ CCProgram sprite-fs %{
     vec2 transformedUV = (uv - rampUVOffset) / rampUVScale;
     
     float rampCoord = 0.0;
-    int direction = int(rampDirection);
     
-    if (direction == 0) {
+    // 使用 macro RAMP_DIRECTION
+    #if RAMP_DIRECTION == 0
       // 水平 Ramp
       rampCoord = transformedUV.x;
-    } else if (direction == 1) {
+    #elif RAMP_DIRECTION == 1
       // 垂直 Ramp
       rampCoord = transformedUV.y;
-    } else if (direction == 2) {
+    #elif RAMP_DIRECTION == 2
       // 圓形 Ramp（從中心向外）
       vec2 centeredUV = transformedUV - rampCenter;
       rampCoord = length(centeredUV);
-    } else if (direction == 3) {
+    #elif RAMP_DIRECTION == 3
       // 徑向 Ramp（角度漸變）
       vec2 centeredUV = transformedUV - rampCenter;
       rampCoord = (atan(centeredUV.y, centeredUV.x) + 3.14159) / (2.0 * 3.14159);
-    }
+    #endif
     
     // 應用範圍映射
     float rangeStart = rampRange.x;
@@ -297,28 +261,22 @@ CCProgram sprite-fs %{
   }
   
   // 混合模式函數
-  vec3 applyBlendMode(vec3 base, vec3 blend, float mode, float intensity) {
+  vec3 applyBlendMode(vec3 base, vec3 blend, float intensity) {
     vec3 result = base;
-    int blendType = int(mode);
     
     const float EPSILON = 0.00001;  // 防止除零錯誤
     
-    if (blendType == 0) {
+    #if BLEND_MODE == 0
       // Normal - 正常混合
       result = mix(base, blend, intensity);
-    } 
-    else if (blendType == 1) {
+    #elif BLEND_MODE == 1
       // Multiply - 正片疊底
-      // 公式：color.rgb * dst_color
       result = mix(base, base * blend, intensity);
-    } 
-    else if (blendType == 2) {
+    #elif BLEND_MODE == 2
       // Screen - 濾色
-      // 公式：color.rgb + dst_color.rgb * (1 - color.rgb)
       vec3 screenResult = blend + base * (vec3(1.0) - blend);
       result = mix(base, screenResult, intensity);
-    } 
-    else if (blendType == 3) {
+    #elif BLEND_MODE == 3
       // Overlay - 疊加
       vec3 overlayResult = mix(
         2.0 * base * blend,
@@ -326,26 +284,21 @@ CCProgram sprite-fs %{
         step(0.5, base)
       );
       result = mix(base, overlayResult, intensity);
-    } 
-    else if (blendType == 4) {
+    #elif BLEND_MODE == 4
       // Darken - 變暗
       result = mix(base, min(base, blend), intensity);
-    } 
-    else if (blendType == 5) {
+    #elif BLEND_MODE == 5
       // Lighten - 變亮
       result = mix(base, max(base, blend), intensity);
-    } 
-    else if (blendType == 6) {
-      // Color Dodge - 顏色加深
+    #elif BLEND_MODE == 6
+      // Color Dodge - 顏色減淡
       vec3 dodgeResult = base / max(vec3(EPSILON), vec3(1.0) - blend);
       result = mix(base, dodgeResult, intensity);
-    } 
-    else if (blendType == 7) {
+    #elif BLEND_MODE == 7
       // Color Burn - 顏色加深
       vec3 burnResult = vec3(1.0) - (vec3(1.0) - base) / max(vec3(EPSILON), blend);
       result = mix(base, burnResult, intensity);
-    } 
-    else if (blendType == 8) {
+    #elif BLEND_MODE == 8
       // Hard Light - 強光
       vec3 hardLightResult = mix(
         2.0 * base * blend,
@@ -353,8 +306,7 @@ CCProgram sprite-fs %{
         step(0.5, blend)
       );
       result = mix(base, hardLightResult, intensity);
-    } 
-    else if (blendType == 9) {
+    #elif BLEND_MODE == 9
       // Soft Light - 柔光（Photoshop 公式）
       vec3 usePoly = step(base, vec3(0.25));
       vec3 Gpoly = ((vec3(16.0) * base - vec3(12.0)) * base + vec3(4.0)) * base;
@@ -365,40 +317,34 @@ CCProgram sprite-fs %{
       
       vec3 softLightResult = mix(A, B, step(vec3(0.5), blend));
       result = mix(base, softLightResult, intensity);
-    } 
-    else if (blendType == 10) {
+    #elif BLEND_MODE == 10
       // Difference - 差值
       result = mix(base, abs(base - blend), intensity);
-    } 
-    else if (blendType == 11) {
+    #elif BLEND_MODE == 11
       // Exclusion - 排除
       vec3 exclusionResult = base + blend - 2.0 * base * blend;
       result = mix(base, exclusionResult, intensity);
-    } 
-    else if (blendType == 12) {
+    #elif BLEND_MODE == 12
       // Hue - 色相
       float s = getSaturation(base);
       float l = getLuminance(base);
       vec3 hueResult = setLuminance(setSaturationValue(blend, s), l);
       result = mix(base, hueResult, intensity);
-    } 
-    else if (blendType == 13) {
+    #elif BLEND_MODE == 13
       // Saturation - 飽和度
       float s = getSaturation(blend);
       float l = getLuminance(base);
       vec3 satResult = setLuminance(setSaturationValue(base, s), l);
       result = mix(base, satResult, intensity);
-    } 
-    else if (blendType == 14) {
+    #elif BLEND_MODE == 14
       // Color - 顏色
       vec3 colorResult = setLuminance(blend, getLuminance(base));
       result = mix(base, colorResult, intensity);
-    } 
-    else if (blendType == 15) {
+    #elif BLEND_MODE == 15
       // Luminosity - 亮度
       vec3 lumResult = setLuminance(base, getLuminance(blend));
       result = mix(base, lumResult, intensity);
-    }
+    #endif
     
     return clamp(result, 0.0, 1.0);
   }
@@ -421,7 +367,7 @@ CCProgram sprite-fs %{
     vec3 rampColor = getRampColor(rampCoord);
     
     // 應用混合模式
-    o.rgb = applyBlendMode(o.rgb, rampColor, blendMode, rampIntensity);
+    o.rgb = applyBlendMode(o.rgb, rampColor, rampIntensity);
     
     // 應用頂點顏色
     o *= color;
