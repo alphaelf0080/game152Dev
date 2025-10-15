@@ -1,20 +1,5 @@
 // Ramp Color Shader - 支援 Ramp 顏色調整、多種方向、UV 控制和混合模式
-// 基於             displayName: 'Blend Mode',
-            type: enum,
-            enumList: [
-              'Normal',
-              'Multiply',
-              'Screen',
-              'Overlay',
-              'Darken',
-              'Lighten',
-              'Color Dodge',
-              'Color Burn',
-              'Hard Light',
-              'Soft Light',
-              'Difference',
-              'Exclusion',
-              'Hue',改，適用於 Cocos Creator 3.8
+// 適用於 Cocos Creator 3.8
 
 CCEffect %{
   techniques:
@@ -378,28 +363,31 @@ CCProgram sprite-fs %{
   vec4 frag () {
     vec4 o = vec4(1, 1, 1, 1);
     
-    // 應用 UV Tiling 和 Offset
-    vec2 mainUV = uv0 * tilingOffset.xy + tilingOffset.zw;
+    // 應用 UV Tiling 和 Offset（使用 fract 確保重複）
+    vec2 mainUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
     
     #if USE_TEXTURE
-      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, mainUV);
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
       #if IS_GRAY
         float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
         o.r = o.g = o.b = gray;
       #endif
     #endif
     
-    // 如果有主紋理，也採樣它
+    // 採樣主紋理（使用 tiling UV）
     vec4 mainTexColor = texture(mainTexture, mainUV);
-    o *= mainTexColor;
     
-    // 計算 Ramp 座標
+    // 計算 Ramp 座標（使用原始 UV）
     float rampCoord = calculateRampCoord(uv0);
     
     // 獲取 Ramp 顏色
     vec3 rampColor = getRampColor(rampCoord);
     
-    // 應用混合模式
+    // 先將主紋理和 sprite 紋理混合
+    o.rgb *= mainTexColor.rgb;
+    o.a *= mainTexColor.a;
+    
+    // 再應用 Ramp 混合模式（base=原始紋理, blend=rampColor）
     o.rgb = applyBlendMode(o.rgb, rampColor, rampIntensity);
     
     // 應用頂點顏色
