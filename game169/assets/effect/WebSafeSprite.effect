@@ -1,0 +1,81 @@
+// 超級安全的 Web 兼容 Sprite Shader
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.0 }
+}%
+
+CCProgram sprite-vs %{
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+  
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  attribute vec3 a_position;
+  attribute vec2 a_texCoord;
+  attribute vec4 a_color;
+
+  varying vec4 v_color;
+  varying vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1.0);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+  
+  #include <builtin/internal/alpha-test>
+  
+  varying vec4 v_color;
+  varying vec2 v_uv0;
+  
+  #if USE_TEXTURE
+    uniform sampler2D cc_spriteTexture;
+  #endif
+  
+  vec4 frag () {
+    vec4 o = vec4(1.0, 1.0, 1.0, 1.0);
+    
+    #if USE_TEXTURE
+      o = texture2D(cc_spriteTexture, v_uv0);
+    #endif
+    
+    o = o * v_color;
+    
+    ALPHA_TEST(o);
+    return o;
+  }
+}%
