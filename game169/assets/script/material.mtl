@@ -5,15 +5,23 @@
   "__editorExtras__": {},
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "379d400a-ee8a-4c33-89b3-40f1908779e9",
+    "__uuid__": "6b73043f-d116-495a-9faf-807be75f275d",
     "__expectedType__": "cc.EffectAsset"
   },
   "_techIdx": 0,
   "_defines": [
-    {}
+    {
+      "USE_LOCAL": true,
+      "SAMPLE_FROM_RT": true,
+      "USE_PIXEL_ALIGNMENT": true,
+      "USE_ALPHA_TEST": true,
+      "USE_TEXTURE": true,
+      "IS_GRAY": true
+    }
   ],
   "_states": [
     {
+      "stage": 200,
       "rasterizerState": {},
       "depthStencilState": {},
       "blendState": {
@@ -24,6 +32,8 @@
     }
   ],
   "_props": [
-    {}
+    {
+      "alphaThreshold": -0.3
+    }
   ]
 }

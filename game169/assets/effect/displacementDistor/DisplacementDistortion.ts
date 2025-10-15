@@ -1,5 +1,15 @@
-import { _decorator, Component, Material, MeshRenderer, Sprite, Vec4, Texture2D, SpriteFrame } from 'cc';
+import { _decorator, Component, Material, MeshRenderer, Sprite, Vec4, Texture2D, SpriteFrame, Enum } from 'cc';
 const { ccclass, property, executeInEditMode } = _decorator;
+
+/**
+ * 扭曲類型枚舉
+ */
+export enum DistortionType {
+    XY = 0,      // XY 軸都扭曲
+    X_Only = 1,  // 只有 X 軸
+    Y_Only = 2,  // 只有 Y 軸
+    Radial = 3   // 徑向扭曲
+}
 
 /**
  * Displacement Distortion Controller
@@ -42,7 +52,6 @@ export class DisplacementDistortion extends Component {
     private _displacementStrength: number = 0.1;
     
     @property({ 
-        type: Number,
         range: [0, 1, 0.01],
         slide: true
     })
@@ -57,7 +66,7 @@ export class DisplacementDistortion extends Component {
     @property({ tooltip: '位移貼圖縮放' })
     private _displacementScale: number = 1.0;
     
-    @property({ type: Number })
+    @property
     get displacementScale() {
         return this._displacementScale;
     }
@@ -69,7 +78,7 @@ export class DisplacementDistortion extends Component {
     @property({ tooltip: '動畫速度 (設為 0 則靜態)' })
     private _timeSpeed: number = 0.0;
     
-    @property({ type: Number })
+    @property
     get timeSpeed() {
         return this._timeSpeed;
     }
@@ -80,11 +89,11 @@ export class DisplacementDistortion extends Component {
     
     @property({ 
         tooltip: '扭曲類型',
-        type: DistortionType
+        type: Enum(DistortionType)
     })
     private _distortionType: DistortionType = DistortionType.XY;
     
-    @property({ type: DistortionType })
+    @property({ type: Enum(DistortionType) })
     get distortionType() {
         return this._distortionType;
     }
@@ -193,14 +202,4 @@ export class DisplacementDistortion extends Component {
         this._mainTexture = texture;
         this.updateMaterial();
     }
-}
-
-/**
- * 扭曲類型枚舉
- */
-export enum DistortionType {
-    XY = 0,      // XY 軸都扭曲
-    X_Only = 1,  // 只有 X 軸
-    Y_Only = 2,  // 只有 Y 軸
-    Radial = 3   // 徑向扭曲
 }

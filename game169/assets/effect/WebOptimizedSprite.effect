@@ -1,0 +1,98 @@
+// Web 優化雙層 Sprite Shader - 針對 WebGL 兼容性優化
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.0 }
+        
+        # 第二層控制（簡化版）
+        layer2Texture: { value: white }
+        layer2Enabled: { value: 0.0 }
+        layer2Opacity: { value: 1.0 }
+}%
+
+CCProgram sprite-vs %{
+  precision mediump float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    uv0 = a_texCoord;
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision mediump float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  
+  in vec4 color;
+  in vec2 uv0;
+  
+  #if USE_TEXTURE
+    #pragma builtin(local)
+    layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  #endif
+  
+  uniform sampler2D layer2Texture;
+  
+  uniform Layer2Properties {
+    float layer2Enabled;
+    float layer2Opacity;
+  };
+  
+  vec4 frag () {
+    vec4 o = vec4(1.0, 1.0, 1.0, 1.0);
+    
+    #if USE_TEXTURE
+      o = texture(cc_spriteTexture, uv0);
+    #endif
+    
+    // 簡化的第二層混合（避免複雜運算）
+    float useLayer2 = step(0.5, layer2Enabled);
+    vec4 layer2Color = texture(layer2Texture, uv0);
+    
+    // 使用 mix 而不是 if 語句（更好的 WebGL 兼容性）
+    o.rgb = mix(o.rgb, 
+                mix(o.rgb, layer2Color.rgb, layer2Color.a * layer2Opacity),
+                useLayer2);
+    
+    o = o * color;
+    
+    ALPHA_TEST(o);
+    return o;
+  }
+}%

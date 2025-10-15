@@ -59,7 +59,7 @@ export class InitialBoardConfig extends Component {
     // ========== 編輯器屬性 ==========
     
     @property({
-        type: BoardDataSource,
+        type: Enum(BoardDataSource),
         tooltip: '盤面數據來源\n' +
                  'EDITOR_CONFIG: 使用下方編輯器配置\n' +
                  'JSON_FILE: 從 Resources 載入 JSON\n' +
@@ -95,21 +95,21 @@ export class InitialBoardConfig extends Component {
     
     // Reel 1
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 1 輪 - 上方符號'
     })
     public reel1_top: SymbolID = SymbolID.Q;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 1 輪 - 中間符號'
     })
     public reel1_mid: SymbolID = SymbolID.紅包;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 1 輪 - 下方符號'
     })
@@ -117,21 +117,21 @@ export class InitialBoardConfig extends Component {
     
     // Reel 2
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 2 輪 - 上方符號'
     })
     public reel2_top: SymbolID = SymbolID.金元寶;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 2 輪 - 中間符號'
     })
     public reel2_mid: SymbolID = SymbolID.K;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 2 輪 - 下方符號'
     })
@@ -139,21 +139,21 @@ export class InitialBoardConfig extends Component {
     
     // Reel 3
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 3 輪 - 上方符號'
     })
     public reel3_top: SymbolID = SymbolID.銅錢;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 3 輪 - 中間符號'
     })
     public reel3_mid: SymbolID = SymbolID.A;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 3 輪 - 下方符號'
     })
@@ -161,21 +161,21 @@ export class InitialBoardConfig extends Component {
     
     // Reel 4
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 4 輪 - 上方符號'
     })
     public reel4_top: SymbolID = SymbolID.鼓_Scatter;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 4 輪 - 中間符號'
     })
     public reel4_mid: SymbolID = SymbolID.A;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 4 輪 - 下方符號'
     })
@@ -183,21 +183,21 @@ export class InitialBoardConfig extends Component {
     
     // Reel 5
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 5 輪 - 上方符號'
     })
     public reel5_top: SymbolID = SymbolID.Q;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 5 輪 - 中間符號'
     })
     public reel5_mid: SymbolID = SymbolID.紅包;
     
     @property({
-        type: SymbolID,
+        type: Enum(SymbolID),
         visible: function() { return this.dataSource === BoardDataSource.EDITOR_CONFIG; },
         tooltip: '第 5 輪 - 下方符號'
     })
@@ -530,3 +530,4 @@ export function isEditorBoardReady(): boolean {
     const globalData = window['GameInitialBoard'];
     return globalData && globalData.isReady === true;
 }
+

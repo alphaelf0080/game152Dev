@@ -1,0 +1,318 @@
+// Ramp Color Shader - 支援 Ramp 顏色調整、多種方向、UV 控制和混合模式
+// 基於 builtin-sprite 修改，適用於 Cocos Creator 3.8
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        
+        # Ramp 紋理和顏色控制
+        rampTexture: { value: white, editor: { displayName: 'Ramp 紋理', tooltip: '用於顏色映射的 Ramp 紋理' } }
+        useRampTexture: { value: 0.0, editor: { displayName: '使用 Ramp 紋理', tooltip: '1=使用紋理, 0=使用顏色漸變' } }
+        
+        # 顏色漸變設置（當不使用 Ramp 紋理時）
+        colorStart: { value: [0.0, 0.0, 0.0, 1.0], editor: { type: color, displayName: '起始顏色' } }
+        colorEnd: { value: [1.0, 1.0, 1.0, 1.0], editor: { type: color, displayName: '結束顏色' } }
+        
+        # Ramp 方向和範圍控制
+        rampDirection: { value: 0, editor: { type: enum, enumList: ['水平', '垂直', '圓形', '徑向'], displayName: 'Ramp 方向' } }
+        rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
+        rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'UV 縮放' } }
+        rampUVOffset: { value: [0.0, 0.0], editor: { displayName: 'UV 偏移' } }
+        rampRange: { value: [0.0, 1.0], editor: { displayName: 'Ramp 範圍', tooltip: 'X=起始位置, Y=結束位置' } }
+        
+        # 顏色調整
+        brightness: { value: 0.0, editor: { range: [-1.0, 1.0], slide: true, displayName: '亮度調整' } }
+        contrast: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '對比度' } }
+        saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
+        
+        # 混合模式和強度
+        blendMode: { value: 0, editor: { type: enum, enumList: ['Normal', 'Multiply', 'Add', 'Screen', 'Overlay', 'SoftLight', 'ColorDodge', 'ColorBurn'], displayName: '混合模式' } }
+        rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
+        
+        # 進階控制
+        invertRamp: { value: 0.0, editor: { displayName: '反轉 Ramp', tooltip: '1=反轉漸變方向' } }
+        smoothness: { value: 0.0, editor: { range: [0.0, 1.0], slide: true, displayName: '平滑度', tooltip: '邊緣平滑程度' } }
+}%
+
+CCProgram sprite-vs %{
+  precision mediump float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision mediump float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  
+  in vec4 color;
+  in vec2 uv0;
+  
+  #if USE_TEXTURE
+    #pragma builtin(local)
+    layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  #endif
+  
+  uniform sampler2D rampTexture;
+  
+  uniform RampProperties {
+    vec4 colorStart;
+    vec4 colorEnd;
+    vec2 rampCenter;
+    vec2 rampUVScale;
+    vec2 rampUVOffset;
+    vec2 rampRange;
+    float useRampTexture;
+    float rampDirection;
+    float brightness;
+    float contrast;
+    float saturation;
+    float blendMode;
+    float rampIntensity;
+    float invertRamp;
+    float smoothness;
+  };
+  
+  // RGB 轉 HSV
+  vec3 rgb2hsv(vec3 c) {
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+    
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+  }
+  
+  // HSV 轉 RGB
+  vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+  }
+  
+  // 顏色調整函數
+  vec3 adjustColor(vec3 inputColor) {
+    // 亮度調整
+    vec3 result = inputColor + brightness;
+    
+    // 對比度調整
+    result = (result - 0.5) * contrast + 0.5;
+    
+    // 飽和度調整
+    if (saturation != 1.0) {
+      vec3 hsv = rgb2hsv(result);
+      hsv.y *= saturation;
+      result = hsv2rgb(hsv);
+    }
+    
+    return clamp(result, 0.0, 1.0);
+  }
+  
+  // 計算 Ramp 座標
+  float calculateRampCoord(vec2 uv) {
+    // 應用 UV 變換
+    vec2 transformedUV = (uv - rampUVOffset) / rampUVScale;
+    
+    float rampCoord = 0.0;
+    int direction = int(rampDirection);
+    
+    if (direction == 0) {
+      // 水平 Ramp
+      rampCoord = transformedUV.x;
+    } else if (direction == 1) {
+      // 垂直 Ramp
+      rampCoord = transformedUV.y;
+    } else if (direction == 2) {
+      // 圓形 Ramp（從中心向外）
+      vec2 centeredUV = transformedUV - rampCenter;
+      rampCoord = length(centeredUV);
+    } else if (direction == 3) {
+      // 徑向 Ramp（角度漸變）
+      vec2 centeredUV = transformedUV - rampCenter;
+      rampCoord = (atan(centeredUV.y, centeredUV.x) + 3.14159) / (2.0 * 3.14159);
+    }
+    
+    // 應用範圍映射
+    float rangeStart = rampRange.x;
+    float rangeEnd = rampRange.y;
+    rampCoord = (rampCoord - rangeStart) / (rangeEnd - rangeStart);
+    
+    // 限制到 0-1 範圍
+    rampCoord = clamp(rampCoord, 0.0, 1.0);
+    
+    // 應用反轉
+    if (invertRamp > 0.5) {
+      rampCoord = 1.0 - rampCoord;
+    }
+    
+    // 應用平滑度
+    if (smoothness > 0.0) {
+      rampCoord = smoothstep(0.0, 1.0, rampCoord);
+      // 進一步平滑
+      rampCoord = mix(rampCoord, smoothstep(0.0, 1.0, rampCoord), smoothness);
+    }
+    
+    return rampCoord;
+  }
+  
+  // 獲取 Ramp 顏色
+  vec3 getRampColor(float rampCoord) {
+    vec3 rampColor;
+    
+    if (useRampTexture > 0.5) {
+      // 使用 Ramp 紋理
+      rampColor = texture(rampTexture, vec2(rampCoord, 0.5)).rgb;
+    } else {
+      // 使用顏色漸變
+      rampColor = mix(colorStart.rgb, colorEnd.rgb, rampCoord);
+    }
+    
+    return adjustColor(rampColor);
+  }
+  
+  // 混合模式函數
+  vec3 applyBlendMode(vec3 base, vec3 blend, float mode, float intensity) {
+    vec3 result = base;
+    int blendType = int(mode);
+    
+    if (blendType == 0) {
+      // Normal
+      result = mix(base, blend, intensity);
+    } else if (blendType == 1) {
+      // Multiply
+      result = mix(base, base * blend, intensity);
+    } else if (blendType == 2) {
+      // Add
+      result = mix(base, min(base + blend, vec3(1.0)), intensity);
+    } else if (blendType == 3) {
+      // Screen
+      result = mix(base, vec3(1.0) - (vec3(1.0) - base) * (vec3(1.0) - blend), intensity);
+    } else if (blendType == 4) {
+      // Overlay
+      vec3 overlayResult = vec3(0.0);
+      for (int i = 0; i < 3; i++) {
+        if (base[i] < 0.5) {
+          overlayResult[i] = 2.0 * base[i] * blend[i];
+        } else {
+          overlayResult[i] = 1.0 - 2.0 * (1.0 - base[i]) * (1.0 - blend[i]);
+        }
+      }
+      result = mix(base, overlayResult, intensity);
+    } else if (blendType == 5) {
+      // Soft Light
+      vec3 softLightResult = vec3(0.0);
+      for (int i = 0; i < 3; i++) {
+        if (blend[i] < 0.5) {
+          softLightResult[i] = base[i] - (1.0 - 2.0 * blend[i]) * base[i] * (1.0 - base[i]);
+        } else {
+          float d = base[i] < 0.25 ? ((16.0 * base[i] - 12.0) * base[i] + 4.0) * base[i] : sqrt(base[i]);
+          softLightResult[i] = base[i] + (2.0 * blend[i] - 1.0) * (d - base[i]);
+        }
+      }
+      result = mix(base, softLightResult, intensity);
+    } else if (blendType == 6) {
+      // Color Dodge
+      vec3 dodgeResult = vec3(0.0);
+      for (int i = 0; i < 3; i++) {
+        if (blend[i] < 1.0) {
+          dodgeResult[i] = min(base[i] / (1.0 - blend[i]), 1.0);
+        } else {
+          dodgeResult[i] = 1.0;
+        }
+      }
+      result = mix(base, dodgeResult, intensity);
+    } else if (blendType == 7) {
+      // Color Burn
+      vec3 burnResult = vec3(0.0);
+      for (int i = 0; i < 3; i++) {
+        if (blend[i] > 0.0) {
+          burnResult[i] = max(1.0 - (1.0 - base[i]) / blend[i], 0.0);
+        } else {
+          burnResult[i] = 0.0;
+        }
+      }
+      result = mix(base, burnResult, intensity);
+    }
+    
+    return clamp(result, 0.0, 1.0);
+  }
+  
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+    
+    #if USE_TEXTURE
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+      #if IS_GRAY
+        float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+        o.r = o.g = o.b = gray;
+      #endif
+    #endif
+    
+    // 計算 Ramp 座標
+    float rampCoord = calculateRampCoord(uv0);
+    
+    // 獲取 Ramp 顏色
+    vec3 rampColor = getRampColor(rampCoord);
+    
+    // 應用混合模式
+    o.rgb = applyBlendMode(o.rgb, rampColor, blendMode, rampIntensity);
+    
+    // 應用頂點顏色
+    o *= color;
+    
+    ALPHA_TEST(o);
+    return o;
+  }
+}%
