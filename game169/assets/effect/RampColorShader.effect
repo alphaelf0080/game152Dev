@@ -66,7 +66,7 @@ CCEffect %{
         
         # 長方形 Ramp 控制（RAMP_DIRECTION = 4 或 5 時使用）
         rectangleAspect: { value: [1.0, 1.0], editor: { displayName: '長方形寬高比', tooltip: 'X=寬度, Y=高度' } }
-        cornerRadius: { value: 0.0, editor: { range: [0.0, 0.5], slide: true, displayName: '圓角半徑', tooltip: '0=直角, 0.5=完全圓形' } }
+        cornerRadius: { value: 0.0, editor: { range: [0.0, 2.0], slide: true, step: 0.01, displayName: '圓角半徑', tooltip: '0=直角, 值越大圓角越大' } }
 }%
 
 CCProgram sprite-vs %{
