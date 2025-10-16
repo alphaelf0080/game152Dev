@@ -67,6 +67,10 @@ CCEffect %{
         # 長方形 Ramp 控制（RAMP_DIRECTION = 4 或 5 時使用）
         rectangleAspect: { value: [1.0, 1.0], editor: { displayName: '長方形寬高比', tooltip: 'X=寬度, Y=高度' } }
         cornerRadius: { value: 0.0, editor: { range: [0.0, 2.0], slide: true, step: 0.01, displayName: '圓角半徑', tooltip: '0=直角, 值越大圓角越大' } }
+        
+        # 扭曲變形控制
+        distortionIntensity: { value: 0.0, editor: { range: [0.0, 1.0], slide: true, step: 0.01, displayName: '扭曲強度', tooltip: '扭曲變形的強度' } }
+        distortionFrequency: { value: 5.0, editor: { range: [1.0, 20.0], slide: true, step: 0.1, displayName: '扭曲頻率', tooltip: '扭曲變形的頻率/細節' } }
 }%
 
 CCProgram sprite-vs %{
@@ -149,7 +153,31 @@ CCProgram sprite-fs %{
     float rampIntensity;
     float invertRamp;
     float smoothness;
+    float distortionIntensity;  // 扭曲強度
+    float distortionFrequency;  // 扭曲頻率
   };
+  
+  // 簡化的噪聲函數（基於 hash）
+  float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+  }
+  
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    
+    // 平滑插值
+    f = f * f * (3.0 - 2.0 * f);
+    
+    // 四個角落的噪聲值
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    
+    // 雙線性插值
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
   
   // RGB 轉 HSV
   vec3 rgb2hsv(vec3 c) {
@@ -191,6 +219,15 @@ CCProgram sprite-fs %{
   float calculateRampCoord(vec2 uv) {
     // 先應用 tilingOffset 來實現 UV repeat
     vec2 tiledUV = fract(uv * tilingOffset.xy) + tilingOffset.zw;
+    
+    // 應用扭曲變形
+    if (distortionIntensity > 0.0) {
+      vec2 distortionOffset = vec2(
+        noise(tiledUV * distortionFrequency) - 0.5,
+        noise(tiledUV * distortionFrequency + vec2(17.3, 29.7)) - 0.5
+      );
+      tiledUV += distortionOffset * distortionIntensity * 0.1;
+    }
     
     // 應用 Ramp UV 變換
     vec2 transformedUV = (tiledUV - rampUVOffset) / rampUVScale;
