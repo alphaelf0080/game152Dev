@@ -1,10 +1,11 @@
-import { _decorator, Component, Material, Vec2, Vec4, Color, Sprite } from 'cc';
+import { _decorator, Component, Material, Vec2, Vec4, Color, Sprite, UITransform } from 'cc';
 
 const { ccclass, property, executeInEditMode } = _decorator;
 
 /**
  * RampShader 重置監控組件
  * 當檢測到 resetAll 參數為 true 時,自動重置所有參數並將 resetAll 設回 false
+ * 同時自動計算並設置 nodeUVScale 參數
  */
 @ccclass('RampShaderResetInspector')
 @executeInEditMode
@@ -27,6 +28,7 @@ export class RampShaderResetInspector extends Component {
         useRampTexture: 0.0,
         colorStart: new Color(0, 0, 0, 255),
         colorEnd: new Color(255, 255, 255, 255),
+        nodeUVScale: new Vec2(1.0, 1.0),  // 將由 updateNodeUVScale 自動設置
         rampCenter: new Vec2(0.5, 0.5),
         rampUVScale: new Vec2(1.0, 1.0),
         rampUVOffset: new Vec2(0.0, 0.0),
@@ -46,6 +48,31 @@ export class RampShaderResetInspector extends Component {
     protected onLoad(): void {
         if (!this.targetSprite) {
             this.targetSprite = this.getComponent(Sprite);
+        }
+        
+        // 初始化時自動設置 nodeUVScale
+        this.updateNodeUVScale();
+    }
+    
+    /**
+     * 自動計算並更新 nodeUVScale
+     */
+    private updateNodeUVScale(): void {
+        if (!this.targetSprite || !this.targetSprite.customMaterial) {
+            return;
+        }
+        
+        try {
+            const uiTransform = this.node.getComponent(UITransform);
+            if (uiTransform) {
+                const contentSize = uiTransform.contentSize;
+                const nodeUVScaleX = 2.0 / contentSize.width;
+                const nodeUVScaleY = 2.0 / contentSize.height;
+                this.targetSprite.customMaterial.setProperty('nodeUVScale', new Vec2(nodeUVScaleX, nodeUVScaleY), 0);
+                console.log(`📐 nodeUVScale set to (${nodeUVScaleX.toFixed(6)}, ${nodeUVScaleY.toFixed(6)}) for node with content size (${contentSize.width}, ${contentSize.height})`);
+            }
+        } catch (error) {
+            console.error('Error updating nodeUVScale:', error);
         }
     }
     
@@ -95,6 +122,17 @@ export class RampShaderResetInspector extends Component {
      */
     private resetAllParameters(material: Material): void {
         try {
+            // 自動計算並設置 nodeUVScale
+            // nodeUVScale = 1/contentSize * 2
+            const uiTransform = this.node.getComponent(UITransform);
+            if (uiTransform) {
+                const contentSize = uiTransform.contentSize;
+                const nodeUVScaleX = 2.0 / contentSize.width;
+                const nodeUVScaleY = 2.0 / contentSize.height;
+                material.setProperty('nodeUVScale', new Vec2(nodeUVScaleX, nodeUVScaleY), 0);
+                console.log(`✨ nodeUVScale automatically set to (${nodeUVScaleX.toFixed(6)}, ${nodeUVScaleY.toFixed(6)}) based on content size (${contentSize.width}, ${contentSize.height})`);
+            }
+            
             // 主紋理 UV 控制
             material.setProperty('tilingOffset', this.DEFAULT_VALUES.tilingOffset.clone(), 0);
             material.setProperty('useMainTexture', this.DEFAULT_VALUES.useMainTexture, 0);

@@ -11,7 +11,6 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "BLEND_MODE": 1,
       "USE_TEXTURE": true
     }
   ],
@@ -27,12 +26,6 @@
     }
   ],
   "_props": [
-    {
-      "rampUVScale": {
-        "__type__": "cc.Vec2",
-        "x": 0.01,
-        "y": 1
-      }
-    }
+    {}
   ]
 }

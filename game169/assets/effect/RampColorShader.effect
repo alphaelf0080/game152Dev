@@ -46,6 +46,9 @@ CCEffect %{
         colorStart: { value: [0.0, 0.0, 0.0, 1.0], editor: { type: color, displayName: '起始顏色' } }
         colorEnd: { value: [1.0, 1.0, 1.0, 1.0], editor: { type: color, displayName: '結束顏色' } }
         
+        # Node UV 縮放控制（用於正確規範化 nodeUV）
+        nodeUVScale: { value: [1.0, 1.0], editor: { displayName: 'Node UV Scale', tooltip: '節點 UV 的縮放因子，根據 contentSize 計算為 1/contentSize * 2' } }
+        
         # Ramp 範圍控制
         rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
         rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'Ramp UV Tiling', tooltip: 'Ramp效果的重複次數 (1=不重複, 2=重複2x2, 3=重複3x3)' } }
@@ -122,13 +125,10 @@ CCProgram sprite-vs %{
     // 對於 SIMPLE: 永遠是 (0,0)
     tileInfo = floor(a_texCoord);
     
-    // nodeUV: 基於 a_position 的局部座標，規範化到 0~1
-    // a_position 的範圍通常是 [-width/2, width/2] x [-height/2, height/2]
-    // 我們假設 node 的 anchor 是 0.5,0.5（中心），所以需要加上偏移
-    // 簡化做法：使用 a_position 的相對範圍
-    // 注意：這裡假設 node 大小已知，但實際上無法在 shader 中直接獲得
-    // 最好的辦法是在 vertex shader 中用 a_position 的百分比
-    nodeUV = (a_position.xy + vec2(1.0)) * 0.5;  // 假設 position 在 [-1, 1]
+    // nodeUV: 直接傳遞 a_position（未經規範化）
+    // 在 fragment shader 中會根據 nodeUVScale 進行正確規範化
+    // a_position 的範圍是 [-contentSize/2, contentSize/2]
+    nodeUV = a_position.xy;
     
     color = a_color;
 
@@ -163,6 +163,7 @@ CCProgram sprite-fs %{
     vec4 tilingOffset;      // xy = tiling(repeat), zw = offset
     vec4 colorStart;
     vec4 colorEnd;
+    vec2 nodeUVScale;       // Node UV 的縮放因子
     vec2 rampCenter;
     vec2 rampUVScale;
     vec2 rampUVOffset;
@@ -242,17 +243,20 @@ CCProgram sprite-fs %{
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
     // 使用 nodeUV 而不是 effectUV，完全迴避 sprite tiling 的影響
-    // nodeUV 是基於 node 的局部位置的獨立 UV，範圍 0~1
+    // nodeUV 包含原始的 a_position（範圍 [-contentSize/2, contentSize/2]）
     
-    // 應用基礎偏移（tilingOffset.zw）
-    vec2 baseUV = uv + tilingOffset.zw;
+    // 第一步：應用 nodeUVScale 進行正確的規範化
+    // nodeUVScale = 1/contentSize * 2
+    // 這樣將 [-contentSize/2, contentSize/2] 轉換為 [-1, 1]
+    // 再加 1.0 和 * 0.5 將其轉換為 [0, 1]
+    vec2 normalizedUV = (uv * nodeUVScale + 1.0) * 0.5;
     
-    // 應用 Ramp UV Tiling（重複）和 Offset
+    // 第二步：應用 Ramp UV Tiling（重複）和 Offset
     // rampUVScale 控制重複次數
     // > 1.0 = 增加重複
     // = 1.0 = 單次覆蓋
     // < 1.0 = 減少重複
-    vec2 rampUV = fract(baseUV * rampUVScale + rampUVOffset);
+    vec2 rampUV = fract((normalizedUV + rampUVOffset) * rampUVScale);
     
     // 第四步：應用扭曲變形
     if (distortionIntensity > 0.0) {
