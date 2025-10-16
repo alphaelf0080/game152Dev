@@ -91,6 +91,7 @@ CCProgram sprite-vs %{
   out vec2 uv0;
   out vec2 effectUV;     // Ramp effect 專用 UV（獨立系統，0-1 範圍）
   out vec2 tileInfo;     // Tile 索引資訊
+  out vec2 nodeUV;       // 獨立的 node UV（0~1），不受 sprite tiling 影響
 
   vec4 vert () {
     vec4 pos = vec4(a_position, 1);
@@ -123,6 +124,14 @@ CCProgram sprite-vs %{
     // TILED 3x3 sprite: (0,0) ~ (2,2)
     tileInfo = floor(a_texCoord);
     
+    // nodeUV: 基於 a_position 的局部座標，規範化到 0~1
+    // a_position 的範圍通常是 [-width/2, width/2] x [-height/2, height/2]
+    // 我們假設 node 的 anchor 是 0.5,0.5（中心），所以需要加上偏移
+    // 簡化做法：使用 a_position 的相對範圍
+    // 注意：這裡假設 node 大小已知，但實際上無法在 shader 中直接獲得
+    // 最好的辦法是在 vertex shader 中用 a_position 的百分比
+    nodeUV = (a_position.xy + vec2(1.0)) * 0.5;  // 假設 position 在 [-1, 1]
+    
     color = a_color;
 
     return pos;
@@ -142,6 +151,7 @@ CCProgram sprite-fs %{
   in vec2 uv0;
   in vec2 effectUV;
   in vec2 tileInfo;  // 新增：tile 索引資訊
+  in vec2 nodeUV;    // 新增：獨立的 node UV，不受 sprite tiling 影響
   
   #if USE_TEXTURE
     #pragma builtin(local)
@@ -233,6 +243,7 @@ CCProgram sprite-fs %{
   
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
+<<<<<<< HEAD
     // uv 參數就是 effectUV，已經在 vertex shader 中通過 fract() 處理過
     // 它的範圍永遠是 0-1（每個 tile 內的 UV）
     
@@ -247,13 +258,20 @@ CCProgram sprite-fs %{
     //   uvInTile = (0.5, 0.5)
     //   globalUV = (1.5, 1.5) / (3, 3) = (0.5, 0.5) ✅
     vec2 globalUV = (tileInfo + uvInTile) / tileCount;
+=======
+    // 使用 nodeUV 而不是 effectUV，完全迴避 sprite tiling 的影響
+    // nodeUV 是基於 node 的局部位置的獨立 UV，範圍 0~1
+>>>>>>> Implement independent Ramp UV system - not affected by sprite tiling
     
-    // 第二步：應用基礎偏移（tilingOffset.zw）
-    vec2 baseUV = globalUV + tilingOffset.zw;
+    // 應用基礎偏移（tilingOffset.zw）
+    vec2 baseUV = uv + tilingOffset.zw;
     
-    // 第三步：應用 Ramp UV Tiling（重複）和 Offset
-    // rampUVScale 現在是相對於整個 Sprite 的重複次數
-    vec2 rampUV = fract(baseUV * rampUVScale) + rampUVOffset;
+    // 應用 Ramp UV Tiling（重複）和 Offset
+    // rampUVScale 控制重複次數
+    // > 1.0 = 增加重複
+    // = 1.0 = 單次覆蓋
+    // < 1.0 = 減少重複
+    vec2 rampUV = fract(baseUV * rampUVScale + rampUVOffset);
     
     // 第四步：應用扭曲變形
     if (distortionIntensity > 0.0) {
@@ -495,8 +513,8 @@ CCProgram sprite-fs %{
       o.a *= mainTexColor.a;
     }
     
-    // 計算 Ramp 座標（使用 effectUV，不受 Sprite 紋理 UV 影響）
-    float rampCoord = calculateRampCoord(effectUV);
+    // 計算 Ramp 座標（使用 nodeUV，完全不受 Sprite tiling 影響）
+    float rampCoord = calculateRampCoord(nodeUV);
     
     // 獲取 Ramp 顏色
     vec3 rampColor = getRampColor(rampCoord);
