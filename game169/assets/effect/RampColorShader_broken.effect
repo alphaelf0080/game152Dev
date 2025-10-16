@@ -25,8 +25,15 @@ CCEffect %{
           value: white, 
           editor: { displayName: '主紋理' }
         }
-        tilingOffset: { value: [1.0, 1.0, 0.0, 0.0], editor: { displayName: 'Tiling & Offset', tooltip: 'XY=Sprite Tiling數量 (Simple=1,1 | Tiled3x3=3,3) **必須設定** | ZW=Ramp基礎偏移' } }
+        tilingOffset: { value: [1.0, 1.0, 0.0, 0.0], editor: { displayName: '主紋理 Tiling & Offset', tooltip: 'XY=Tiling(重複), ZW=Offset(偏移)' } }
         useMainTexture: { value: 0.0, editor: { displayName: '使用主紋理', tooltip: '1=使用主紋理, 0=不使用' } }
+        
+        # Sprite Tiling 設置（用於標準化 effectUV）
+        spriteTiling: { value: [1.0, 1.0], editor: { displayName: 'Sprite Tiling 數量', tooltip: 'Sprite 的 Tiled Type 重複次數 (Simple=1,1; Tiled 3x3=3,3)' } }
+        
+        # Ramp 效果 UV 控制（獨立於 Sprite）
+        rampUVTiling: { value: [1.0, 1.0], editor: { displayName: 'Ramp UV Tiling', tooltip: 'Ramp 效果的重複次數（獨立於 Sprite）' } }
+        rampUVOffsetControl: { value: [0.0, 0.0], editor: { displayName: 'Ramp UV Offset', tooltip: 'Ramp 效果的偏移（獨立於 Sprite）' } }
         
         # Ramp 紋理和顏色控制
         rampTexture: { 
@@ -48,8 +55,8 @@ CCEffect %{
         
         # Ramp 範圍控制
         rampCenter: { value: [0.5, 0.5], editor: { displayName: 'Ramp 中心點', tooltip: '圓形/徑向模式的中心點' } }
-        rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'Ramp UV Tiling', tooltip: 'Ramp效果的重複次數 (1=不重複, 2=重複2x2, 3=重複3x3)' } }
-        rampUVOffset: { value: [0.0, 0.0], editor: { displayName: 'Ramp UV Offset', tooltip: 'Ramp效果的偏移' } }
+        rampUVScale: { value: [1.0, 1.0], editor: { displayName: 'UV 縮放' } }
+        rampUVOffset: { value: [0.0, 0.0], editor: { displayName: 'UV 偏移' } }
         rampRange: { value: [0.0, 1.0], editor: { displayName: 'Ramp 範圍', tooltip: 'X=起始位置, Y=結束位置' } }
         
         # 顏色調整
@@ -88,9 +95,8 @@ CCProgram sprite-vs %{
   in vec4 a_color;
 
   out vec4 color;
-  out vec2 uv0;
-  out vec2 effectUV;
-  out vec2 tileInfo;  // 新增：用於傳遞 tile 資訊
+  out vec2 uv0;        // Sprite 的 UV (受 Tiled Type 影響，用於紋理採樣)
+  out vec2 effectUV;   // Effect 的獨立 UV (不受 Tiled Type 影響，用於 Ramp 計算)
 
   vec4 vert () {
     vec4 pos = vec4(a_position, 1);
@@ -107,19 +113,14 @@ CCProgram sprite-vs %{
       pos = cc_matViewProj * pos;
     #endif
 
+    // uv0: 用於 Sprite 紋理採樣，保持原始 texCoord  
     uv0 = a_texCoord;
     #if SAMPLE_FROM_RT
       CC_HANDLE_RT_SAMPLE_FLIP(uv0);
     #endif
     
-    // effectUV: 保持原始 UV
+    // effectUV: 暫時傳遞原始 texCoord，在 fragment shader 中處理標準化
     effectUV = a_texCoord;
-    
-    // tileInfo: 計算 tile 索引（用於 TILED sprite）
-    // floor(a_texCoord) 給出 tile 的索引
-    // 對於 TILED 3x3: tile (0,0), (1,0), (2,0), (0,1), (1,1)...
-    // 對於 SIMPLE: 永遠是 (0,0)
-    tileInfo = floor(a_texCoord);
     
     color = a_color;
 
@@ -137,9 +138,8 @@ CCProgram sprite-fs %{
   #pragma define-meta BLEND_MODE range([0, 15])
   
   in vec4 color;
-  in vec2 uv0;
-  in vec2 effectUV;
-  in vec2 tileInfo;  // 新增：tile 索引資訊
+  in vec2 uv0;        // Sprite 的 UV (用於紋理採樣)
+  in vec2 effectUV;   // Effect 的獨立 UV (用於 Ramp 計算)
   
   #if USE_TEXTURE
     #pragma builtin(local)
@@ -150,7 +150,10 @@ CCProgram sprite-fs %{
   uniform sampler2D rampTexture;
   
   uniform RampProperties {
-    vec4 tilingOffset;      // xy = tiling(repeat), zw = offset
+    vec4 tilingOffset;      // 主紋理 xy = tiling(repeat), zw = offset
+    vec2 spriteTiling;      // Sprite 的 Tiling 數量（用於標準化 effectUV）
+    vec2 rampUVTiling;      // Ramp 效果的 UV Tiling（獨立）
+    vec2 rampUVOffsetControl;  // Ramp 效果的 UV Offset（獨立）
     vec4 colorStart;
     vec4 colorEnd;
     vec2 rampCenter;
@@ -229,42 +232,33 @@ CCProgram sprite-fs %{
     return clamp(result, 0.0, 1.0);
   }
   
+  // 標準化 UV：將可能超出 [0,1] 的 UV 映射到 [0,1]
+  vec2 normalizeEffectUV(vec2 uv) {
+    // 簡單直接的方法：使用用戶設置的 spriteTiling 來標準化
+    // 如果 Sprite Type = Simple，spriteTiling = (1, 1)，UV 保持不變
+    // 如果 Sprite Type = Tiled 3x3，spriteTiling = (3, 3)，UV 從 [0,3] 映射到 [0,1]
+    return uv / max(spriteTiling, vec2(1.0, 1.0));
+  }
+  
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
-    // 第一步：處理 TILED Sprite - 重建全域 UV
-    // tileInfo 包含當前 tile 的索引 (由 Vertex Shader 傳入)
-    // uv (effectUV) 是 tile 內的 UV (0-1)
+    // 第一步：標準化 UV 到 [0,1]（處理 Tiled Sprite）
+    vec2 normalizedUV = normalizeEffectUV(uv);
     
-    vec2 tileCount = max(tilingOffset.xy, vec2(1.0, 1.0));
+    // 第二步：應用 Ramp 專用的 tiling 和 offset
+    vec2 tiledUV = fract(normalizedUV * rampUVTiling) + rampUVOffsetControl;
     
-    // tile 內的 UV (0-1)
-    vec2 uvInTile = fract(uv);
-    
-    // 計算全域 UV：將 tile 索引和 tile 內 UV 組合
-    // 對於 TILED 3x3 的中心 tile:
-    //   tileInfo = (1, 1)
-    //   uvInTile = (0.5, 0.5)
-    //   globalUV = (1.5, 1.5) / (3, 3) = (0.5, 0.5) ✅
-    vec2 globalUV = (tileInfo + uvInTile) / tileCount;
-    
-    // 第二步：應用基礎偏移（tilingOffset.zw）
-    vec2 baseUV = globalUV + tilingOffset.zw;
-    
-    // 第三步：應用 Ramp UV Tiling（重複）和 Offset
-    // rampUVScale 現在是相對於整個 Sprite 的重複次數
-    vec2 rampUV = fract(baseUV * rampUVScale) + rampUVOffset;
-    
-    // 第四步：應用扭曲變形
+    // 應用扭曲變形
     if (distortionIntensity > 0.0) {
       vec2 distortionOffset = vec2(
-        noise(rampUV * distortionFrequency) - 0.5,
-        noise(rampUV * distortionFrequency + vec2(17.3, 29.7)) - 0.5
+        noise(tiledUV * distortionFrequency) - 0.5,
+        noise(tiledUV * distortionFrequency + vec2(17.3, 29.7)) - 0.5
       );
-      rampUV += distortionOffset * distortionIntensity * 0.1;
+      tiledUV += distortionOffset * distortionIntensity * 0.1;
     }
     
-    // transformedUV 用於後續的 Ramp 計算
-    vec2 transformedUV = rampUV;
+    // 應用 Ramp UV 變換
+    vec2 transformedUV = (tiledUV - rampUVOffset) / rampUVScale;
     
     float rampCoord = 0.0;
     
@@ -478,7 +472,7 @@ CCProgram sprite-fs %{
     vec4 o = vec4(1, 1, 1, 1);
     
     #if USE_TEXTURE
-      // Sprite 紋理使用原始 UV（不受 tilingOffset 影響）
+      // Sprite 紋理使用 uv0 (保持 Sprite 原本的 Tiled 行為)
       o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
       #if IS_GRAY
         float gray = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
@@ -486,15 +480,15 @@ CCProgram sprite-fs %{
       #endif
     #endif
     
-    // 如果啟用主紋理，採樣並混合
+    // 如果啟用主紋理，使用 uv0 採樣 (與 Sprite 保持一致)
     if (useMainTexture > 0.5) {
-      vec2 mainUV = fract(uv0 * tilingOffset.xy) + tilingOffset.zw;
-      vec4 mainTexColor = texture(mainTexture, mainUV);
+      vec4 mainTexColor = texture(mainTexture, uv0);
       o.rgb *= mainTexColor.rgb;
       o.a *= mainTexColor.a;
     }
     
-    // 計算 Ramp 座標（使用 effectUV，不受 Sprite 紋理 UV 影響）
+    // 計算 Ramp 座標 - 使用 effectUV (獨立的 UV，不受 Sprite Tiled Type 影響)
+    // 這樣即使 Sprite 是 Tiled 3x3，Ramp 效果也只會顯示一次，覆蓋整個 Sprite
     float rampCoord = calculateRampCoord(effectUV);
     
     // 獲取 Ramp 顏色

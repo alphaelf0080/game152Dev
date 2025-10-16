@@ -7,5 +7,13 @@
     ".json"
   ],
   "subMetas": {},
-  "userData": {}
+  "userData": {
+    "combinations": [
+      {
+        "BLEND_MODE": [
+          2
+        ]
+      }
+    ]
+  }
 }

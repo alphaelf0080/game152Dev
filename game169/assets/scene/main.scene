@@ -42791,7 +42791,7 @@
     "_priority": 2,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 349.55725190839695,
+    "_orthoHeight": 320,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -42982,7 +42982,7 @@
       "__id__": 1158
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 1160
@@ -43054,7 +43054,7 @@
     "_enabled": true,
     "__prefab": null,
     "_customMaterial": {
-      "__uuid__": "63e55665-bab4-4d76-9e91-52b47555e6a4",
+      "__uuid__": "de79e269-c2b5-4431-8742-9f9515809de3",
       "__expectedType__": "cc.Material"
     },
     "_srcBlendFactor": 2,
@@ -43143,7 +43143,7 @@
       "__id__": 1162
     },
     "_children": [],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 1164
@@ -43214,10 +43214,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_customMaterial": {
-      "__uuid__": "17c78af2-3405-4c11-8c8b-41666ece5b30",
-      "__expectedType__": "cc.Material"
-    },
+    "_customMaterial": null,
     "_srcBlendFactor": 2,
     "_dstBlendFactor": 4,
     "_color": {
@@ -43240,7 +43237,7 @@
       "y": 0
     },
     "_fillStart": 0,
-    "_fillRange": 0,
+    "_fillRange": 1,
     "_isTrimmedMode": true,
     "_useGrayscale": false,
     "_atlas": null,

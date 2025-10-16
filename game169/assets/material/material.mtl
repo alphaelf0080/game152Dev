@@ -5,12 +5,13 @@
   "__editorExtras__": {},
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "2dbf2536-e227-46f1-bf17-7730f0eb1a44",
+    "__uuid__": "6b73043f-d116-495a-9faf-807be75f275d",
     "__expectedType__": "cc.EffectAsset"
   },
   "_techIdx": 0,
   "_defines": [
     {
+      "BLEND_MODE": 1,
       "USE_TEXTURE": true
     }
   ],
@@ -27,15 +28,10 @@
   ],
   "_props": [
     {
-      "rampCenter": {
+      "rampUVScale": {
         "__type__": "cc.Vec2",
-        "x": 2.4,
-        "y": 0.5
-      },
-      "rectangleAspect": {
-        "__type__": "cc.Vec2",
-        "x": 1.7,
-        "y": -2
+        "x": 3.8,
+        "y": 1
       }
     }
   ]
