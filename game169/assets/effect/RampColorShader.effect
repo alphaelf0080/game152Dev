@@ -233,14 +233,13 @@ CCProgram sprite-fs %{
   
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
-    // 第一步：處理 TILED Sprite - 重建全域 UV
-    // tileInfo 包含當前 tile 的索引 (由 Vertex Shader 傳入)
-    // uv (effectUV) 是 tile 內的 UV (0-1)
+    // uv 參數就是 effectUV，已經在 vertex shader 中通過 fract() 處理過
+    // 它的範圍永遠是 0-1（每個 tile 內的 UV）
     
     vec2 tileCount = max(tilingOffset.xy, vec2(1.0, 1.0));
     
-    // tile 內的 UV (0-1)
-    vec2 uvInTile = fract(uv);
+    // uv 已經是 tile 內的 UV (0-1)，不需要再 fract()
+    vec2 uvInTile = uv;
     
     // 計算全域 UV：將 tile 索引和 tile 內 UV 組合
     // 對於 TILED 3x3 的中心 tile:
