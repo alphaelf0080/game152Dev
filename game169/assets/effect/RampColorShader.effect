@@ -63,6 +63,10 @@ CCEffect %{
         # 進階控制
         invertRamp: { value: 0.0, editor: { displayName: '反轉 Ramp', tooltip: '1=反轉漸變方向' } }
         smoothness: { value: 0.0, editor: { range: [0.0, 1.0], slide: true, displayName: '平滑度', tooltip: '邊緣平滑程度' } }
+        
+        # 長方形 Ramp 控制（RAMP_DIRECTION = 4 或 5 時使用）
+        rectangleAspect: { value: [1.0, 1.0], editor: { displayName: '長方形寬高比', tooltip: 'X=寬度, Y=高度' } }
+        cornerRadius: { value: 0.0, editor: { range: [0.0, 0.5], slide: true, displayName: '圓角半徑', tooltip: '0=直角, 0.5=完全圓形' } }
 }%
 
 CCProgram sprite-vs %{
@@ -113,7 +117,7 @@ CCProgram sprite-fs %{
   #include <builtin/internal/alpha-test>
   
   // 使用 macro 定義下拉選單選項
-  #pragma define-meta RAMP_DIRECTION range([0, 3])
+  #pragma define-meta RAMP_DIRECTION range([0, 5])
   #pragma define-meta BLEND_MODE range([0, 15])
   
   in vec4 color;
@@ -135,6 +139,8 @@ CCProgram sprite-fs %{
     vec2 rampUVScale;
     vec2 rampUVOffset;
     vec2 rampRange;
+    vec2 rectangleAspect;   // 長方形寬高比
+    float cornerRadius;     // 圓角半徑
     float useRampTexture;
     float useMainTexture;
     float brightness;
@@ -206,6 +212,45 @@ CCProgram sprite-fs %{
       // 徑向 Ramp（角度漸變）
       vec2 centeredUV = transformedUV - rampCenter;
       rampCoord = (atan(centeredUV.y, centeredUV.x) + 3.14159) / (2.0 * 3.14159);
+    #elif RAMP_DIRECTION == 4
+      // 長方形內縮 Ramp（從邊緣向中心）
+      vec2 centeredUV = transformedUV - rampCenter;
+      
+      // 根據寬高比調整 UV
+      vec2 aspectUV = centeredUV / rectangleAspect;
+      
+      // 計算到長方形邊緣的距離（帶圓角）
+      vec2 halfSize = vec2(0.5, 0.5);
+      vec2 cornerOffset = abs(aspectUV) - halfSize + cornerRadius;
+      
+      // 計算圓角距離場
+      float outsideDist = length(max(cornerOffset, 0.0));
+      float insideDist = min(max(cornerOffset.x, cornerOffset.y), 0.0);
+      float dist = outsideDist + insideDist - cornerRadius;
+      
+      // 距離越大（越靠近邊緣），rampCoord 越小（內縮效果）
+      // 正規化到 0-1 範圍，0 = 邊緣，1 = 中心
+      rampCoord = 1.0 - clamp(dist * 2.0 + 1.0, 0.0, 1.0);
+      
+    #elif RAMP_DIRECTION == 5
+      // 長方形外擴 Ramp（從中心向邊緣）
+      vec2 centeredUV = transformedUV - rampCenter;
+      
+      // 根據寬高比調整 UV
+      vec2 aspectUV = centeredUV / rectangleAspect;
+      
+      // 計算到長方形邊緣的距離（帶圓角）
+      vec2 halfSize = vec2(0.5, 0.5);
+      vec2 cornerOffset = abs(aspectUV) - halfSize + cornerRadius;
+      
+      // 計算圓角距離場
+      float outsideDist = length(max(cornerOffset, 0.0));
+      float insideDist = min(max(cornerOffset.x, cornerOffset.y), 0.0);
+      float dist = outsideDist + insideDist - cornerRadius;
+      
+      // 距離越大（越靠近邊緣），rampCoord 越大（外擴效果）
+      // 正規化到 0-1 範圍，0 = 中心，1 = 邊緣
+      rampCoord = clamp(dist * 2.0 + 1.0, 0.0, 1.0);
     #endif
     
     // 應用範圍映射
