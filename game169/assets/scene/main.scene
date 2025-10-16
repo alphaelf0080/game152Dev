@@ -43215,7 +43215,7 @@
     "_enabled": true,
     "__prefab": null,
     "_customMaterial": {
-      "__uuid__": "7d3ef85e-e3ea-4d15-af46-f39ecf7df6a9",
+      "__uuid__": "ea5682c2-b49f-4061-bea4-bca4e2487a4d",
       "__expectedType__": "cc.Material"
     },
     "_srcBlendFactor": 2,
