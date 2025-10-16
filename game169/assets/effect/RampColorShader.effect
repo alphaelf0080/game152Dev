@@ -89,8 +89,8 @@ CCProgram sprite-vs %{
 
   out vec4 color;
   out vec2 uv0;
-  out vec2 effectUV;
-  out vec2 tileInfo;  // 新增：用於傳遞 tile 資訊
+  out vec2 effectUV;     // Ramp effect 專用 UV（獨立系統，0-1 範圍）
+  out vec2 tileInfo;     // Tile 索引資訊
 
   vec4 vert () {
     vec4 pos = vec4(a_position, 1);
@@ -112,13 +112,15 @@ CCProgram sprite-vs %{
       CC_HANDLE_RT_SAMPLE_FLIP(uv0);
     #endif
     
-    // effectUV: 保持原始 UV
-    effectUV = a_texCoord;
+    // effectUV: Ramp effect 專用的獨立 UV 座標系統
+    // 無論 Sprite 是 SIMPLE 或 TILED，effectUV 永遠在 0-1 範圍內
+    // fract() 確保每個 tile 都有完整的 0-1 UV 空間
+    effectUV = fract(a_texCoord);
     
-    // tileInfo: 計算 tile 索引（用於 TILED sprite）
+    // tileInfo: 記錄當前是第幾個 tile（用於 TILED sprite）
     // floor(a_texCoord) 給出 tile 的索引
-    // 對於 TILED 3x3: tile (0,0), (1,0), (2,0), (0,1), (1,1)...
-    // 對於 SIMPLE: 永遠是 (0,0)
+    // SIMPLE sprite: (0, 0)
+    // TILED 3x3 sprite: (0,0) ~ (2,2)
     tileInfo = floor(a_texCoord);
     
     color = a_color;
