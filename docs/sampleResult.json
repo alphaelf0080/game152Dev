@@ -1,0 +1,6123 @@
+{
+  "game_id": "PSS-ON-00163",
+  "logs": [
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImRIMWVtb3B5RDBUSjNFY05hZGFJYVE9PSIsInZhbHVlIjoiblBIYmtESVVmc05idGVOMXJ2SHd0Zz09IiwibWFjIjoiMWIxZmI2OGU3OThlMGNiMzY1ZjNkOTExN2MzZjdmYmE4YzcyZmUzMTA2MTIxMzhkM2RlOTI2ODIxOTk2YTA3MSJ9"
+      },
+      "time": "2025-09-19T12:26:47.168+08:00",
+      "serial": 0
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:26:47.204+08:00",
+      "serial": 1
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813585,
+        "rng": [
+          17,
+          54,
+          70,
+          48,
+          22,
+          26,
+          14,
+          11
+        ],
+        "win": 173,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:26:49.560+08:00",
+      "serial": 2
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813708,
+        "rng": [
+          36,
+          5,
+          56,
+          68,
+          31,
+          36,
+          14,
+          62
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:26:51.726+08:00",
+      "serial": 3
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813658,
+        "rng": [
+          109,
+          56,
+          77,
+          66,
+          1,
+          48,
+          10,
+          66
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:26:53.930+08:00",
+      "serial": 4
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813608,
+        "rng": [
+          30,
+          69,
+          21,
+          31,
+          29,
+          40,
+          3,
+          53
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:26:56.107+08:00",
+      "serial": 5
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813558,
+        "rng": [
+          23,
+          41,
+          83,
+          85,
+          48,
+          54,
+          41,
+          27
+        ],
+        "win": 101,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:26:58.276+08:00",
+      "serial": 6
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813609,
+        "rng": [
+          36,
+          84,
+          83,
+          5,
+          32,
+          4,
+          60,
+          36
+        ],
+        "win": 64,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:00.449+08:00",
+      "serial": 7
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813623,
+        "rng": [
+          9,
+          38,
+          32,
+          27,
+          12,
+          20,
+          57,
+          29
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:02.633+08:00",
+      "serial": 8
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:27:03.317+08:00",
+      "serial": 9
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkFsN1paSGE0eTBvT01XcVBOeGZHY0E9PSIsInZhbHVlIjoiN0dWeVJhSVo2UVdXWGwwdGZRalwva2c9PSIsIm1hYyI6IjU0MzM1ZjYwMjk1N2NkNDRkNmI1NDdlMTYzM2U4YzhkNzk1NDg3N2U4Y2ZlMzRlOTkzZjdjNTMyNTIwYjI4OWQifQ=="
+      },
+      "time": "2025-09-19T12:27:08.194+08:00",
+      "serial": 10
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:27:08.231+08:00",
+      "serial": 11
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813623,
+        "rng": [
+          9,
+          38,
+          32,
+          27,
+          12,
+          20,
+          57,
+          29
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:08.466+08:00",
+      "serial": 12
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813573,
+        "rng": [
+          7,
+          88,
+          93,
+          79,
+          49,
+          30,
+          46,
+          61
+        ],
+        "win": 121,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:10.592+08:00",
+      "serial": 13
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813644,
+        "rng": [
+          19,
+          54,
+          54,
+          29,
+          12,
+          40,
+          30,
+          3
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:12.838+08:00",
+      "serial": 14
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813594,
+        "rng": [
+          95,
+          49,
+          26,
+          32,
+          16,
+          42,
+          17,
+          15
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:15.013+08:00",
+      "serial": 15
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813544,
+        "rng": [
+          80,
+          50,
+          40,
+          24,
+          11,
+          0,
+          20,
+          33
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:17.201+08:00",
+      "serial": 16
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813494,
+        "rng": [
+          34,
+          44,
+          27,
+          94,
+          26,
+          29,
+          59,
+          11
+        ],
+        "win": 72,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:19.438+08:00",
+      "serial": 17
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813516,
+        "rng": [
+          26,
+          75,
+          22,
+          31,
+          20,
+          43,
+          42,
+          10
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:21.635+08:00",
+      "serial": 18
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:27:22.439+08:00",
+      "serial": 19
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkNCdVU3U01SM3l0SmJiQzV0S29aYVE9PSIsInZhbHVlIjoiVzZFcmVOWlRMeDV1XC81cmRrNlBvUlE9PSIsIm1hYyI6Ijc0ZjE4ZGIxNTdhNTliNWE5Njc4OTE5MDY3NDI3NjljMmQ1ZDI0ZmNjMmUyMjExYTEzYjA3ZDVkYmYzNzAxNDQifQ=="
+      },
+      "time": "2025-09-19T12:27:26.231+08:00",
+      "serial": 20
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:27:26.272+08:00",
+      "serial": 21
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813516,
+        "rng": [
+          26,
+          75,
+          22,
+          31,
+          20,
+          43,
+          42,
+          10
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:26.495+08:00",
+      "serial": 22
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813466,
+        "rng": [
+          95,
+          98,
+          15,
+          54,
+          40,
+          10,
+          15,
+          16
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:28.592+08:00",
+      "serial": 23
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813416,
+        "rng": [
+          40,
+          41,
+          36,
+          38,
+          10,
+          52,
+          39,
+          62
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:30.823+08:00",
+      "serial": 24
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813366,
+        "rng": [
+          83,
+          43,
+          1,
+          26,
+          49,
+          8,
+          43,
+          65
+        ],
+        "win": 14,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:33.044+08:00",
+      "serial": 25
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813330,
+        "rng": [
+          77,
+          33,
+          66,
+          67,
+          29,
+          26,
+          29,
+          3
+        ],
+        "win": 29,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:35.231+08:00",
+      "serial": 26
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813309,
+        "rng": [
+          78,
+          58,
+          87,
+          58,
+          40,
+          10,
+          40,
+          8
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:37.416+08:00",
+      "serial": 27
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813259,
+        "rng": [
+          52,
+          5,
+          24,
+          99,
+          54,
+          1,
+          37,
+          61
+        ],
+        "win": 35,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:39.659+08:00",
+      "serial": 28
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:27:40.612+08:00",
+      "serial": 29
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IjhsS1RKXC9cL0VUOTJRdWtUdm5oMnJDUT09IiwidmFsdWUiOiJXdXIxeWtIRTBWXC9sbzJQakZoNkVldz09IiwibWFjIjoiMDc5ZjllOWM0OWVjMzcxZTI1YmI0Y2FmNmM4YmM5YjQ2NDRmNWQzNjQ0NzMxODc2NzM0ZGQ0ZmQ2ODRmMzAzZSJ9"
+      },
+      "time": "2025-09-19T12:27:44.282+08:00",
+      "serial": 30
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:27:44.319+08:00",
+      "serial": 31
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813294,
+        "rng": [
+          52,
+          5,
+          24,
+          99,
+          54,
+          1,
+          37,
+          61
+        ],
+        "win": 35,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              5,
+              15,
+              16,
+              26,
+              36
+            ],
+            "credit": 15,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 15,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:44.550+08:00",
+      "serial": 32
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813244,
+        "rng": [
+          83,
+          95,
+          14,
+          74,
+          44,
+          1,
+          64,
+          28
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:46.663+08:00",
+      "serial": 33
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813194,
+        "rng": [
+          2,
+          59,
+          51,
+          36,
+          15,
+          23,
+          72,
+          4
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:48.871+08:00",
+      "serial": 34
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813144,
+        "rng": [
+          38,
+          76,
+          87,
+          98,
+          28,
+          32,
+          65,
+          17
+        ],
+        "win": 34,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:51.042+08:00",
+      "serial": 35
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813128,
+        "rng": [
+          55,
+          99,
+          11,
+          65,
+          52,
+          15,
+          50,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:53.244+08:00",
+      "serial": 36
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813078,
+        "rng": [
+          28,
+          74,
+          35,
+          12,
+          5,
+          26,
+          1,
+          17
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:55.477+08:00",
+      "serial": 37
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9813028,
+        "rng": [
+          62,
+          70,
+          75,
+          85,
+          22,
+          4,
+          4,
+          33
+        ],
+        "win": 20,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:57.729+08:00",
+      "serial": 38
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812998,
+        "rng": [
+          99,
+          32,
+          94,
+          32,
+          25,
+          37,
+          17,
+          38
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:27:59.919+08:00",
+      "serial": 39
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:28:00.754+08:00",
+      "serial": 40
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Imt4R3hlUWtSNWdDNTFkcG5hUVJCMHc9PSIsInZhbHVlIjoiOWxhcXA4MFh3T202VDJBMkxDNGptQT09IiwibWFjIjoiZDllZjFjNTcyNGJlYWQxOTgyMzUwNDM0NDAwMWU2MTBmYWNmYWI3NjEzNzdjMDE2NzM2ODAwNjBlOWYyOTRiYSJ9"
+      },
+      "time": "2025-09-19T12:28:05.353+08:00",
+      "serial": 41
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:28:05.390+08:00",
+      "serial": 42
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812998,
+        "rng": [
+          99,
+          32,
+          94,
+          32,
+          25,
+          37,
+          17,
+          38
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:05.606+08:00",
+      "serial": 43
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812948,
+        "rng": [
+          47,
+          73,
+          37,
+          49,
+          36,
+          10,
+          13,
+          4
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:07.699+08:00",
+      "serial": 44
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812898,
+        "rng": [
+          60,
+          16,
+          31,
+          70,
+          5,
+          21,
+          9,
+          31
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:09.885+08:00",
+      "serial": 45
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812848,
+        "rng": [
+          33,
+          13,
+          27,
+          77,
+          35,
+          29,
+          27,
+          17
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:12.070+08:00",
+      "serial": 46
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812798,
+        "rng": [
+          87,
+          28,
+          40,
+          99,
+          35,
+          33,
+          59,
+          11
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:14.244+08:00",
+      "serial": 47
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812748,
+        "rng": [
+          26,
+          88,
+          41,
+          97,
+          23,
+          36,
+          45,
+          15
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:16.434+08:00",
+      "serial": 48
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812698,
+        "rng": [
+          29,
+          76,
+          69,
+          17,
+          31,
+          15,
+          45,
+          45
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:18.670+08:00",
+      "serial": 49
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812648,
+        "rng": [
+          34,
+          76,
+          54,
+          53,
+          35,
+          37,
+          9,
+          60
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:20.915+08:00",
+      "serial": 50
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:28:21.972+08:00",
+      "serial": 51
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImQwRFc5Z3FXQ2RFWmxHUVwvejhIWG5BPT0iLCJ2YWx1ZSI6Im1aWjIwMTZoOUIrYUd6T2xsSlhoNGc9PSIsIm1hYyI6IjcxOWJhMTExYjY2MTc0MWQyNzQ5MDNiODU3ODRhNWI1Njc2NjgyYjRhNjUzNTM4MGRhOTYxMWQ3ZmM4ODk4MDcifQ=="
+      },
+      "time": "2025-09-19T12:28:26.400+08:00",
+      "serial": 52
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:28:26.436+08:00",
+      "serial": 53
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812648,
+        "rng": [
+          34,
+          76,
+          54,
+          53,
+          35,
+          37,
+          9,
+          60
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:26.650+08:00",
+      "serial": 54
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812598,
+        "rng": [
+          57,
+          32,
+          10,
+          80,
+          13,
+          55,
+          38,
+          65
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:28.776+08:00",
+      "serial": 55
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812548,
+        "rng": [
+          59,
+          90,
+          82,
+          12,
+          7,
+          6,
+          46,
+          41
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:30.963+08:00",
+      "serial": 56
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812498,
+        "rng": [
+          14,
+          44,
+          3,
+          88,
+          5,
+          2,
+          25,
+          40
+        ],
+        "win": 29,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:33.201+08:00",
+      "serial": 57
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812477,
+        "rng": [
+          105,
+          46,
+          17,
+          69,
+          33,
+          62,
+          60,
+          16
+        ],
+        "win": 240,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:35.406+08:00",
+      "serial": 58
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812667,
+        "rng": [
+          45,
+          77,
+          53,
+          83,
+          41,
+          37,
+          11,
+          48
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:37.575+08:00",
+      "serial": 59
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812617,
+        "rng": [
+          62,
+          20,
+          52,
+          42,
+          0,
+          36,
+          51,
+          10
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:39.842+08:00",
+      "serial": 60
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812567,
+        "rng": [
+          92,
+          12,
+          91,
+          86,
+          1,
+          61,
+          13,
+          75
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:42.014+08:00",
+      "serial": 61
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:28:51.362+08:00",
+      "serial": 62
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImhiY2k2TWZ6SkxDeW9KTytUZ0NEQ1E9PSIsInZhbHVlIjoiRXIyTFdRU3hLcmx2RDJBU1wvREZGeHc9PSIsIm1hYyI6IjU4OGY1MDk0OWEzNWEzNWJhYTE3MzQ1MWI5MGYwYjJiZDliYTAyNGQ0YjdhMTM2ZDYyMzNhMDIyNjkxYWQyNjMifQ=="
+      },
+      "time": "2025-09-19T12:28:56.547+08:00",
+      "serial": 63
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:28:56.583+08:00",
+      "serial": 64
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812567,
+        "rng": [
+          92,
+          12,
+          91,
+          86,
+          1,
+          61,
+          13,
+          75
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:56.850+08:00",
+      "serial": 65
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812517,
+        "rng": [
+          47,
+          81,
+          57,
+          49,
+          32,
+          41,
+          12,
+          44
+        ],
+        "win": 66,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:28:58.946+08:00",
+      "serial": 66
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812533,
+        "rng": [
+          37,
+          26,
+          39,
+          62,
+          26,
+          32,
+          46,
+          62
+        ],
+        "win": 39,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:01.133+08:00",
+      "serial": 67
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812522,
+        "rng": [
+          34,
+          88,
+          76,
+          75,
+          40,
+          40,
+          50,
+          13
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:03.318+08:00",
+      "serial": 68
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812472,
+        "rng": [
+          42,
+          98,
+          8,
+          85,
+          42,
+          55,
+          54,
+          9
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:05.522+08:00",
+      "serial": 69
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812422,
+        "rng": [
+          77,
+          97,
+          33,
+          56,
+          16,
+          10,
+          63,
+          1
+        ],
+        "win": 34,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:07.761+08:00",
+      "serial": 70
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:29:16.165+08:00",
+      "serial": 71
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImZpZkVtYUJZamR6b255Ulk3MXJLOGc9PSIsInZhbHVlIjoiQ1MrVU51VFhwaE9QcVE0d1FNRjJMZz09IiwibWFjIjoiOGRmYmQ5YmY2ZmNlNDczYzRkMDExMzBmMDNiZjc0MTFmNDc0ZTRkYzI0NWEwMGVhZGUyNDc1ZmNmM2QxZDljMCJ9"
+      },
+      "time": "2025-09-19T12:29:20.554+08:00",
+      "serial": 72
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:29:20.590+08:00",
+      "serial": 73
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812456,
+        "rng": [
+          77,
+          97,
+          33,
+          56,
+          16,
+          10,
+          63,
+          1
+        ],
+        "win": 34,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              11,
+              2,
+              12,
+              22,
+              32,
+              3,
+              23
+            ],
+            "credit": 34,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 34,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:20.866+08:00",
+      "serial": 74
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812406,
+        "rng": [
+          38,
+          4,
+          11,
+          80,
+          14,
+          67,
+          51,
+          65
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:22.976+08:00",
+      "serial": 75
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812356,
+        "rng": [
+          69,
+          98,
+          96,
+          43,
+          21,
+          41,
+          28,
+          22
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:25.153+08:00",
+      "serial": 76
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812306,
+        "rng": [
+          63,
+          68,
+          67,
+          11,
+          25,
+          4,
+          13,
+          26
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:27.429+08:00",
+      "serial": 77
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812256,
+        "rng": [
+          39,
+          68,
+          63,
+          77,
+          10,
+          10,
+          59,
+          16
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:29.600+08:00",
+      "serial": 78
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812206,
+        "rng": [
+          10,
+          87,
+          74,
+          29,
+          54,
+          55,
+          37,
+          25
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:31.821+08:00",
+      "serial": 79
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:29:32.666+08:00",
+      "serial": 80
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IlFVQ3ZEZFVEMlVNUjA3dzFCS2lPdUE9PSIsInZhbHVlIjoiakY0TStlcVJmVHB2WEs3ZUdEM1l4QT09IiwibWFjIjoiMDI2ZTYyYTNkNWZkZDc4M2I5MWM1ZjgyMTQzNjhjMGU5ZDI3MDJlMTQ5OTg4MzQwYTNhMTMwYzc1OTFmMTFmYSJ9"
+      },
+      "time": "2025-09-19T12:29:35.594+08:00",
+      "serial": 81
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:29:35.630+08:00",
+      "serial": 82
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812206,
+        "rng": [
+          10,
+          87,
+          74,
+          29,
+          54,
+          55,
+          37,
+          25
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:35.902+08:00",
+      "serial": 83
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812156,
+        "rng": [
+          73,
+          33,
+          41,
+          38,
+          17,
+          44,
+          19,
+          9
+        ],
+        "win": 58,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:37.998+08:00",
+      "serial": 84
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812164,
+        "rng": [
+          89,
+          12,
+          2,
+          58,
+          55,
+          50,
+          59,
+          60
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:40.163+08:00",
+      "serial": 85
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812114,
+        "rng": [
+          65,
+          39,
+          21,
+          19,
+          49,
+          37,
+          19,
+          57
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:42.332+08:00",
+      "serial": 86
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812064,
+        "rng": [
+          105,
+          48,
+          72,
+          54,
+          11,
+          31,
+          20,
+          65
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:44.520+08:00",
+      "serial": 87
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812014,
+        "rng": [
+          80,
+          84,
+          79,
+          79,
+          43,
+          13,
+          46,
+          5
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:46.768+08:00",
+      "serial": 88
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:29:47.775+08:00",
+      "serial": 89
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImQwQU5oaXBXUVd1OHpoenRNS0dWVVE9PSIsInZhbHVlIjoiYjJtOHZvNlwvS3RZMG9oVTlmWGdWUkE9PSIsIm1hYyI6IjI2ZjBjYWY0ZjlmNzMzNzczN2M4YjU5NzRmYjUxZTk1ODhlYTI2YWE5MTQyZmE4ZmFjNjVkZTkyM2FjMjBmZDQifQ=="
+      },
+      "time": "2025-09-19T12:29:50.639+08:00",
+      "serial": 90
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:29:50.675+08:00",
+      "serial": 91
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812014,
+        "rng": [
+          80,
+          84,
+          79,
+          79,
+          43,
+          13,
+          46,
+          5
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:50.941+08:00",
+      "serial": 92
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811964,
+        "rng": [
+          57,
+          90,
+          32,
+          77,
+          13,
+          20,
+          12,
+          53
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:53.054+08:00",
+      "serial": 93
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811914,
+        "rng": [
+          106,
+          56,
+          69,
+          99,
+          55,
+          27,
+          31,
+          49
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:55.238+08:00",
+      "serial": 94
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811864,
+        "rng": [
+          25,
+          98,
+          29,
+          48,
+          8,
+          0,
+          36,
+          45
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:57.414+08:00",
+      "serial": 95
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811814,
+        "rng": [
+          28,
+          45,
+          88,
+          87,
+          1,
+          44,
+          58,
+          56
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:29:59.586+08:00",
+      "serial": 96
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811764,
+        "rng": [
+          70,
+          92,
+          47,
+          21,
+          10,
+          55,
+          34,
+          38
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:01.753+08:00",
+      "serial": 97
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811714,
+        "rng": [
+          88,
+          28,
+          91,
+          33,
+          35,
+          21,
+          8,
+          3
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:03.929+08:00",
+      "serial": 98
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:30:04.836+08:00",
+      "serial": 99
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Iml6VEQ5U0hZSGRTRUlvZm1xVE9seXc9PSIsInZhbHVlIjoiSEtKTWV3T3ozMXZJUWJGXC9KbE50XC93PT0iLCJtYWMiOiJkZjdhNjQzOWRlNmU1N2QwMTM5YmI0YTRjZGJhZGFkNDEzNjVkMzVmMTQ0NDk0ZjhjOGI0Y2ViN2ZjNjY2OTUwIn0="
+      },
+      "time": "2025-09-19T12:30:08.673+08:00",
+      "serial": 100
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:30:08.712+08:00",
+      "serial": 101
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811714,
+        "rng": [
+          88,
+          28,
+          91,
+          33,
+          35,
+          21,
+          8,
+          3
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:08.990+08:00",
+      "serial": 102
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811664,
+        "rng": [
+          11,
+          44,
+          99,
+          66,
+          20,
+          45,
+          63,
+          21
+        ],
+        "win": 124,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:11.103+08:00",
+      "serial": 103
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811738,
+        "rng": [
+          93,
+          62,
+          51,
+          88,
+          75,
+          58,
+          61,
+          27
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:13.332+08:00",
+      "serial": 104
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811688,
+        "rng": [
+          82,
+          36,
+          85,
+          74,
+          14,
+          51,
+          77,
+          48
+        ],
+        "win": 484,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:15.529+08:00",
+      "serial": 105
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812122,
+        "rng": [
+          103,
+          5,
+          32,
+          75,
+          21,
+          29,
+          2,
+          25
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:17.724+08:00",
+      "serial": 106
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812072,
+        "rng": [
+          80,
+          14,
+          45,
+          90,
+          18,
+          1,
+          48,
+          30
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:19.915+08:00",
+      "serial": 107
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812022,
+        "rng": [
+          24,
+          32,
+          39,
+          48,
+          49,
+          22,
+          26,
+          47
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:22.145+08:00",
+      "serial": 108
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:30:23.088+08:00",
+      "serial": 109
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkM0OFpvYnBJK0V5M3pSdzZaa0JBUlE9PSIsInZhbHVlIjoiVkZ2S09seGJMdlNWMXZKb1p5ZkQ5Zz09IiwibWFjIjoiZWFmYTA4YmM3MjgyYjBmNGIzYWVhMTZhZThhYjhiYTQ4ZDhhNmQ5OGEzMTFlMDFjZjIyMTVlODc4ZDZlZjg1MiJ9"
+      },
+      "time": "2025-09-19T12:30:26.723+08:00",
+      "serial": 110
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:30:26.759+08:00",
+      "serial": 111
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9812022,
+        "rng": [
+          24,
+          32,
+          39,
+          48,
+          49,
+          22,
+          26,
+          47
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:27.060+08:00",
+      "serial": 112
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811972,
+        "rng": [
+          19,
+          88,
+          28,
+          33,
+          41,
+          5,
+          12,
+          4
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:29.145+08:00",
+      "serial": 113
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811922,
+        "rng": [
+          83,
+          70,
+          46,
+          80,
+          53,
+          20,
+          39,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:31.317+08:00",
+      "serial": 114
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811872,
+        "rng": [
+          8,
+          66,
+          14,
+          70,
+          41,
+          15,
+          7,
+          4
+        ],
+        "win": 53,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:33.493+08:00",
+      "serial": 115
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811875,
+        "rng": [
+          69,
+          94,
+          15,
+          46,
+          8,
+          38,
+          38,
+          37
+        ],
+        "win": 62,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:35.716+08:00",
+      "serial": 116
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811887,
+        "rng": [
+          52,
+          92,
+          84,
+          12,
+          6,
+          8,
+          19,
+          22
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:37.880+08:00",
+      "serial": 117
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811837,
+        "rng": [
+          43,
+          86,
+          14,
+          15,
+          27,
+          41,
+          4,
+          19
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:40.105+08:00",
+      "serial": 118
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:30:41.243+08:00",
+      "serial": 119
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6InRpWnErdytIMmJodFVPTjdWcnBjWUE9PSIsInZhbHVlIjoiVjkxanFtRXIrSlFnZUNTTDNWRVhIZz09IiwibWFjIjoiZjA4NDU2NmNiZDM3Zjc4ZTZhY2FlMDE5ZTcyNzA4YjRlOGM0NDYwODlhMjM5ODY4MDkwN2E4MzI3NDcyYmFkNSJ9"
+      },
+      "time": "2025-09-19T12:30:44.770+08:00",
+      "serial": 120
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:30:44.814+08:00",
+      "serial": 121
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811837,
+        "rng": [
+          43,
+          86,
+          14,
+          15,
+          27,
+          41,
+          4,
+          19
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:45.110+08:00",
+      "serial": 122
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811787,
+        "rng": [
+          65,
+          68,
+          69,
+          30,
+          28,
+          50,
+          31,
+          33
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:47.212+08:00",
+      "serial": 123
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811737,
+        "rng": [
+          7,
+          30,
+          2,
+          88,
+          4,
+          15,
+          41,
+          18
+        ],
+        "win": 12,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:49.447+08:00",
+      "serial": 124
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811699,
+        "rng": [
+          63,
+          1,
+          78,
+          82,
+          35,
+          1,
+          24,
+          13
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:51.630+08:00",
+      "serial": 125
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811649,
+        "rng": [
+          19,
+          26,
+          80,
+          1,
+          31,
+          36,
+          48,
+          16
+        ],
+        "win": 85,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:53.803+08:00",
+      "serial": 126
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811684,
+        "rng": [
+          63,
+          60,
+          16,
+          29,
+          41,
+          27,
+          59,
+          42
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:56.001+08:00",
+      "serial": 127
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811634,
+        "rng": [
+          29,
+          6,
+          6,
+          94,
+          46,
+          42,
+          39,
+          4
+        ],
+        "win": 79,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:30:58.193+08:00",
+      "serial": 128
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:30:59.414+08:00",
+      "serial": 129
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImdXOGU0S2xrRWtablhDT0VlT3JoZGc9PSIsInZhbHVlIjoiOEJ0cEo0cGhLUXp5cFdTU3lwQkViQT09IiwibWFjIjoiM2EwNmQ2Y2RlMzk0N2QxZjQ5ZGFmODI2NzEyZjVlMDA1MjRkZDgyZTE3NzgxMmRkZjI4NTAyOGU3NzY3MDE4MiJ9"
+      },
+      "time": "2025-09-19T12:31:02.798+08:00",
+      "serial": 130
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:31:02.837+08:00",
+      "serial": 131
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811713,
+        "rng": [
+          29,
+          6,
+          6,
+          94,
+          46,
+          42,
+          39,
+          4
+        ],
+        "win": 79,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              3,
+              4,
+              14,
+              24,
+              15,
+              25,
+              35,
+              26
+            ],
+            "credit": 79,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 79,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:03.100+08:00",
+      "serial": 132
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811663,
+        "rng": [
+          70,
+          14,
+          61,
+          25,
+          3,
+          52,
+          6,
+          6
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:05.191+08:00",
+      "serial": 133
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811613,
+        "rng": [
+          35,
+          36,
+          57,
+          50,
+          49,
+          36,
+          58,
+          7
+        ],
+        "win": 17,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:07.395+08:00",
+      "serial": 134
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811580,
+        "rng": [
+          75,
+          47,
+          58,
+          66,
+          43,
+          26,
+          19,
+          26
+        ],
+        "win": 88,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:09.600+08:00",
+      "serial": 135
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811618,
+        "rng": [
+          80,
+          13,
+          79,
+          7,
+          53,
+          33,
+          10,
+          19
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:12.017+08:00",
+      "serial": 136
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811568,
+        "rng": [
+          88,
+          30,
+          29,
+          91,
+          39,
+          25,
+          6,
+          37
+        ],
+        "win": 10,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:14.193+08:00",
+      "serial": 137
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811528,
+        "rng": [
+          32,
+          20,
+          66,
+          0,
+          7,
+          1,
+          17,
+          53
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:16.363+08:00",
+      "serial": 138
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:31:17.539+08:00",
+      "serial": 139
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkwrYmtPS1p2RnBzUFd3YjRBNVRGTlE9PSIsInZhbHVlIjoiRXhnWk5JMlJQYkl0RVh1aW5MblwvdEE9PSIsIm1hYyI6IjlkYTA1YjM2ZWY4NzBmOGRjMmFhZGE5NDYwODJhOTUzYTcyY2IxYzUzMzcyMjQ4NDY1ZGNhMzM2NTI3YzUwYTcifQ=="
+      },
+      "time": "2025-09-19T12:31:20.846+08:00",
+      "serial": 140
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:31:20.884+08:00",
+      "serial": 141
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811528,
+        "rng": [
+          32,
+          20,
+          66,
+          0,
+          7,
+          1,
+          17,
+          53
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:21.112+08:00",
+      "serial": 142
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811478,
+        "rng": [
+          89,
+          81,
+          61,
+          23,
+          36,
+          7,
+          6,
+          30
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:23.226+08:00",
+      "serial": 143
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811428,
+        "rng": [
+          88,
+          19,
+          78,
+          97,
+          10,
+          31,
+          66,
+          63
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:25.426+08:00",
+      "serial": 144
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811378,
+        "rng": [
+          78,
+          16,
+          17,
+          26,
+          63,
+          17,
+          73,
+          20
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:27.661+08:00",
+      "serial": 145
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811328,
+        "rng": [
+          66,
+          85,
+          51,
+          88,
+          3,
+          46,
+          11,
+          48
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:29.836+08:00",
+      "serial": 146
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811278,
+        "rng": [
+          27,
+          96,
+          71,
+          55,
+          12,
+          6,
+          58,
+          18
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:32.035+08:00",
+      "serial": 147
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811228,
+        "rng": [
+          34,
+          68,
+          49,
+          33,
+          55,
+          10,
+          0,
+          16
+        ],
+        "win": 64,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:34.241+08:00",
+      "serial": 148
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:31:34.728+08:00",
+      "serial": 149
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Ik9ZNW5tNkt6TllZRDg2ZlpJbExyVVE9PSIsInZhbHVlIjoiWENnaGI0RlhVampTaHlyWHQ2Nk4wUT09IiwibWFjIjoiN2JkZjFjNGI4NTg3M2M3NGRjYzIyYzUwN2JkMTg5MWE1MmI2MTBjYzMwNDZhOTY3M2JjMTNiZDNkZmM4YjY3ZiJ9"
+      },
+      "time": "2025-09-19T12:31:38.856+08:00",
+      "serial": 150
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:31:38.895+08:00",
+      "serial": 151
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811292,
+        "rng": [
+          34,
+          68,
+          49,
+          33,
+          55,
+          10,
+          0,
+          16
+        ],
+        "win": 64,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              3,
+              4,
+              14,
+              24,
+              15,
+              25,
+              35,
+              26
+            ],
+            "credit": 64,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 64,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:39.114+08:00",
+      "serial": 152
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811242,
+        "rng": [
+          31,
+          88,
+          14,
+          36,
+          32,
+          11,
+          21,
+          4
+        ],
+        "win": 67,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:41.243+08:00",
+      "serial": 153
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811259,
+        "rng": [
+          96,
+          98,
+          46,
+          52,
+          10,
+          27,
+          32,
+          30
+        ],
+        "win": 19,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:43.426+08:00",
+      "serial": 154
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811228,
+        "rng": [
+          95,
+          47,
+          81,
+          3,
+          41,
+          4,
+          25,
+          61
+        ],
+        "win": 64,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:45.627+08:00",
+      "serial": 155
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811242,
+        "rng": [
+          85,
+          67,
+          99,
+          7,
+          27,
+          51,
+          21,
+          66
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:47.858+08:00",
+      "serial": 156
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811192,
+        "rng": [
+          90,
+          93,
+          65,
+          15,
+          7,
+          8,
+          47,
+          36
+        ],
+        "win": 22,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:50.135+08:00",
+      "serial": 157
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811164,
+        "rng": [
+          26,
+          6,
+          82,
+          90,
+          54,
+          7,
+          4,
+          48
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:52.361+08:00",
+      "serial": 158
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811114,
+        "rng": [
+          105,
+          81,
+          35,
+          24,
+          22,
+          5,
+          48,
+          45
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:31:54.548+08:00",
+      "serial": 159
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:32:02.312+08:00",
+      "serial": 160
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkFjbzc3NXZkSDZ4XC9QREFsYWJNQURRPT0iLCJ2YWx1ZSI6IjJITmhuanRcL2kyRlltRnpwOUVCdDB3PT0iLCJtYWMiOiIwNjQ5YzgwN2I2YTFjOWNkNzRmMjE3OTQzOTA5NmQzNWQ3OTljMjFlYmExMjUwNTJhNjRlMWRjZjM1YjNjZDU5In0="
+      },
+      "time": "2025-09-19T12:32:05.967+08:00",
+      "serial": 161
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:32:06.003+08:00",
+      "serial": 162
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811114,
+        "rng": [
+          105,
+          81,
+          35,
+          24,
+          22,
+          5,
+          48,
+          45
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:06.239+08:00",
+      "serial": 163
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811064,
+        "rng": [
+          33,
+          12,
+          83,
+          29,
+          45,
+          1,
+          44,
+          32
+        ],
+        "win": 32,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:08.347+08:00",
+      "serial": 164
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811046,
+        "rng": [
+          95,
+          75,
+          1,
+          37,
+          27,
+          28,
+          2,
+          23
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:10.535+08:00",
+      "serial": 165
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810996,
+        "rng": [
+          104,
+          49,
+          99,
+          97,
+          41,
+          3,
+          3,
+          0
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:12.797+08:00",
+      "serial": 166
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810946,
+        "rng": [
+          35,
+          33,
+          73,
+          30,
+          10,
+          23,
+          39,
+          30
+        ],
+        "win": 48,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:14.976+08:00",
+      "serial": 167
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810944,
+        "rng": [
+          18,
+          92,
+          7,
+          48,
+          55,
+          25,
+          29,
+          12
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:17.142+08:00",
+      "serial": 168
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810894,
+        "rng": [
+          4,
+          23,
+          13,
+          34,
+          12,
+          23,
+          20,
+          48
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:19.328+08:00",
+      "serial": 169
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:32:20.035+08:00",
+      "serial": 170
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IityVzBqNXNNNlc3aUpMNDJQNXlGOXc9PSIsInZhbHVlIjoiT1FOTUZkWDZaMHJLRll1eThFeXdKZz09IiwibWFjIjoiM2JlYjhjYjZlYzQwN2FiNjIzN2I5NDc5NTdjYmIyNTkwZWI3MWU1MTkyMWFjNzY5NzExMTQ4M2FjMWY3Yzk2MiJ9"
+      },
+      "time": "2025-09-19T12:32:23.974+08:00",
+      "serial": 171
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:32:24.018+08:00",
+      "serial": 172
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810894,
+        "rng": [
+          4,
+          23,
+          13,
+          34,
+          12,
+          23,
+          20,
+          48
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:24.237+08:00",
+      "serial": 173
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810844,
+        "rng": [
+          59,
+          65,
+          29,
+          43,
+          52,
+          53,
+          19,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:26.331+08:00",
+      "serial": 174
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810794,
+        "rng": [
+          50,
+          62,
+          56,
+          6,
+          32,
+          51,
+          39,
+          18
+        ],
+        "win": 26,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:28.550+08:00",
+      "serial": 175
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810770,
+        "rng": [
+          38,
+          67,
+          3,
+          10,
+          42,
+          31,
+          39,
+          28
+        ],
+        "win": 53,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:30.722+08:00",
+      "serial": 176
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810773,
+        "rng": [
+          56,
+          52,
+          78,
+          21,
+          27,
+          4,
+          25,
+          65
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:32.907+08:00",
+      "serial": 177
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810723,
+        "rng": [
+          9,
+          13,
+          76,
+          99,
+          54,
+          27,
+          50,
+          15
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:35.115+08:00",
+      "serial": 178
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810673,
+        "rng": [
+          27,
+          21,
+          19,
+          92,
+          6,
+          38,
+          21,
+          36
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:37.330+08:00",
+      "serial": 179
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810623,
+        "rng": [
+          86,
+          18,
+          72,
+          44,
+          49,
+          50,
+          51,
+          46
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:39.501+08:00",
+      "serial": 180
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:32:40.186+08:00",
+      "serial": 181
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IkNQOHNFR21vTVdZT0FzZDVjeFprU2c9PSIsInZhbHVlIjoiUUxGdTQxUjRYaVB6ZmtTQUlQNFU4UT09IiwibWFjIjoiNjRiMzY2MGZiYjA3MDhhYjQwZDcyZTZmOGUwMjQwZWYxY2ZiNzAyNGY1MTE5NjYyYmExYzhiYzI3NDYwM2Q1MSJ9"
+      },
+      "time": "2025-09-19T12:32:45.031+08:00",
+      "serial": 182
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:32:45.071+08:00",
+      "serial": 183
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810623,
+        "rng": [
+          86,
+          18,
+          72,
+          44,
+          49,
+          50,
+          51,
+          46
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:45.296+08:00",
+      "serial": 184
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810573,
+        "rng": [
+          52,
+          86,
+          71,
+          75,
+          41,
+          54,
+          36,
+          33
+        ],
+        "win": 24,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:47.412+08:00",
+      "serial": 185
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810547,
+        "rng": [
+          6,
+          52,
+          81,
+          85,
+          64,
+          48,
+          2,
+          20
+        ],
+        "win": 369,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:49.644+08:00",
+      "serial": 186
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810866,
+        "rng": [
+          24,
+          78,
+          36,
+          14,
+          58,
+          41,
+          3,
+          59
+        ],
+        "win": 308,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:51.897+08:00",
+      "serial": 187
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811124,
+        "rng": [
+          88,
+          46,
+          66,
+          73,
+          8,
+          25,
+          2,
+          49
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:54.123+08:00",
+      "serial": 188
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811074,
+        "rng": [
+          25,
+          36,
+          54,
+          35,
+          20,
+          46,
+          11,
+          20
+        ],
+        "win": 71,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:32:56.329+08:00",
+      "serial": 189
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:32:57.369+08:00",
+      "serial": 190
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6InpBZTBrN0dadHlVMG91Y2NwTGNVQXc9PSIsInZhbHVlIjoiVXpuUURNK0VcL0N3WE1UZklJWEFmR3c9PSIsIm1hYyI6ImMxMDc2MjJiMTE5MTNjZjBhNTE1ZTQ1NmFlMWRhMjg5YWRkMDQxYWMwOTBkYjkyNTI5YmQxMTc0OWRlMDBhYmEifQ=="
+      },
+      "time": "2025-09-19T12:33:00.063+08:00",
+      "serial": 191
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:33:00.099+08:00",
+      "serial": 192
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811145,
+        "rng": [
+          25,
+          36,
+          54,
+          35,
+          20,
+          46,
+          11,
+          20
+        ],
+        "win": 71,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              12,
+              3,
+              13,
+              23,
+              33,
+              34,
+              54,
+              35,
+              45,
+              55,
+              16,
+              26,
+              36
+            ],
+            "credit": 71,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 71,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:00.318+08:00",
+      "serial": 193
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811095,
+        "rng": [
+          85,
+          84,
+          78,
+          6,
+          54,
+          5,
+          26,
+          42
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:02.404+08:00",
+      "serial": 194
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9811045,
+        "rng": [
+          36,
+          41,
+          43,
+          24,
+          12,
+          51,
+          35,
+          62
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:04.576+08:00",
+      "serial": 195
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810995,
+        "rng": [
+          95,
+          65,
+          45,
+          41,
+          44,
+          43,
+          49,
+          1
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:06.842+08:00",
+      "serial": 196
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810945,
+        "rng": [
+          57,
+          46,
+          19,
+          19,
+          31,
+          43,
+          16,
+          59
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:09.028+08:00",
+      "serial": 197
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810895,
+        "rng": [
+          94,
+          30,
+          92,
+          22,
+          17,
+          40,
+          12,
+          58
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:11.200+08:00",
+      "serial": 198
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810845,
+        "rng": [
+          87,
+          86,
+          87,
+          75,
+          32,
+          50,
+          25,
+          22
+        ],
+        "win": 10,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:13.431+08:00",
+      "serial": 199
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:33:14.572+08:00",
+      "serial": 200
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6InVMa1RrcUR4aVJlN3FPbGNMOXdNXC9nPT0iLCJ2YWx1ZSI6IlJ3U25sOVwvU05wcHBtQmd6emxEMFhRPT0iLCJtYWMiOiJmMjBlNThkM2Y3MmVlNzY2N2EyMWQzZjdmMDkwYWQwZTBkNzJhMjlkYzliMWIzZDc1ZGEwY2Q1NzcxOTBlNjUzIn0="
+      },
+      "time": "2025-09-19T12:33:18.112+08:00",
+      "serial": 201
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:33:18.156+08:00",
+      "serial": 202
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810855,
+        "rng": [
+          87,
+          86,
+          87,
+          75,
+          32,
+          50,
+          25,
+          22
+        ],
+        "win": 10,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              23,
+              14,
+              24,
+              5,
+              15,
+              16
+            ],
+            "credit": 10,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 10,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:18.375+08:00",
+      "serial": 203
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810805,
+        "rng": [
+          82,
+          39,
+          45,
+          1,
+          46,
+          40,
+          24,
+          54
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:20.488+08:00",
+      "serial": 204
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810755,
+        "rng": [
+          54,
+          53,
+          37,
+          43,
+          11,
+          0,
+          16,
+          35
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:22.671+08:00",
+      "serial": 205
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810705,
+        "rng": [
+          101,
+          72,
+          44,
+          45,
+          53,
+          9,
+          8,
+          6
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:24.843+08:00",
+      "serial": 206
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810655,
+        "rng": [
+          13,
+          19,
+          99,
+          88,
+          27,
+          45,
+          62,
+          18
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:27.031+08:00",
+      "serial": 207
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810605,
+        "rng": [
+          68,
+          49,
+          32,
+          77,
+          4,
+          5,
+          13,
+          63
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:29.265+08:00",
+      "serial": 208
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810555,
+        "rng": [
+          48,
+          64,
+          63,
+          65,
+          41,
+          43,
+          66,
+          17
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:31.436+08:00",
+      "serial": 209
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:33:31.729+08:00",
+      "serial": 210
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IklQXC8zQTVaK3VtZHhtQW85b1RlU0ZBPT0iLCJ2YWx1ZSI6IlpiOGtjc3RrMVRLZTlqTkRvT3JUb2c9PSIsIm1hYyI6Ijg4ZWYxODVlNDdjZmJmZjc4ZTc3ZDkzMzI5NWM0NGQ5MWUyZDVkNTcwOTBkNDViZWFhZGY0M2ExZmI1ZGI2NzkifQ=="
+      },
+      "time": "2025-09-19T12:33:36.158+08:00",
+      "serial": 211
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:33:36.196+08:00",
+      "serial": 212
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810555,
+        "rng": [
+          48,
+          64,
+          63,
+          65,
+          41,
+          43,
+          66,
+          17
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:36.423+08:00",
+      "serial": 213
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810505,
+        "rng": [
+          17,
+          20,
+          70,
+          87,
+          21,
+          41,
+          52,
+          49
+        ],
+        "win": 72,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:38.524+08:00",
+      "serial": 214
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810527,
+        "rng": [
+          75,
+          2,
+          43,
+          73,
+          46,
+          6,
+          65,
+          35
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:40.703+08:00",
+      "serial": 215
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810477,
+        "rng": [
+          83,
+          34,
+          21,
+          52,
+          53,
+          5,
+          27,
+          25
+        ],
+        "win": 133,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:42.889+08:00",
+      "serial": 216
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810560,
+        "rng": [
+          22,
+          97,
+          48,
+          11,
+          46,
+          43,
+          18,
+          52
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:45.073+08:00",
+      "serial": 217
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810510,
+        "rng": [
+          31,
+          26,
+          88,
+          83,
+          12,
+          62,
+          46,
+          64
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:47.260+08:00",
+      "serial": 218
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810460,
+        "rng": [
+          57,
+          39,
+          21,
+          17,
+          31,
+          45,
+          42,
+          30
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:49.495+08:00",
+      "serial": 219
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810410,
+        "rng": [
+          100,
+          86,
+          77,
+          43,
+          55,
+          39,
+          36,
+          9
+        ],
+        "win": 77,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:51.788+08:00",
+      "serial": 220
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:33:52.900+08:00",
+      "serial": 221
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImxtRzI0SVNFOGhjZ3lSS0ZBXC9Bemx3PT0iLCJ2YWx1ZSI6IjZJVG93MUNGY0JnUUt0bFFFZEtERXc9PSIsIm1hYyI6ImZhMWUxZGZjZDc0ZmQwMGNmOTUxZjQ1MTgyYzRiMGIyNjQzZjNiZWU0ZGFkZWEzYjZhMTU0YjFiZDc5YTRjNzMifQ=="
+      },
+      "time": "2025-09-19T12:33:57.226+08:00",
+      "serial": 222
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:33:57.262+08:00",
+      "serial": 223
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810487,
+        "rng": [
+          100,
+          86,
+          77,
+          43,
+          55,
+          39,
+          36,
+          9
+        ],
+        "win": 77,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              23,
+              4,
+              14,
+              24,
+              15,
+              16,
+              26
+            ],
+            "credit": 22,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 22,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          4,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:57.499+08:00",
+      "serial": 224
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810437,
+        "rng": [
+          14,
+          55,
+          15,
+          38,
+          10,
+          37,
+          42,
+          66
+        ],
+        "win": 146,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:33:59.627+08:00",
+      "serial": 225
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810533,
+        "rng": [
+          92,
+          6,
+          49,
+          93,
+          13,
+          51,
+          45,
+          16
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:01.815+08:00",
+      "serial": 226
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810483,
+        "rng": [
+          102,
+          98,
+          43,
+          2,
+          21,
+          50,
+          34,
+          39
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:04.029+08:00",
+      "serial": 227
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810433,
+        "rng": [
+          88,
+          12,
+          38,
+          58,
+          46,
+          5,
+          51,
+          24
+        ],
+        "win": 28,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:06.265+08:00",
+      "serial": 228
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810411,
+        "rng": [
+          54,
+          61,
+          23,
+          83,
+          39,
+          40,
+          50,
+          53
+        ],
+        "win": 16,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:08.469+08:00",
+      "serial": 229
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810377,
+        "rng": [
+          107,
+          8,
+          27,
+          48,
+          21,
+          13,
+          6,
+          21
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:10.674+08:00",
+      "serial": 230
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810327,
+        "rng": [
+          26,
+          16,
+          85,
+          18,
+          3,
+          30,
+          63,
+          85
+        ],
+        "win": 133,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:12.862+08:00",
+      "serial": 231
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:34:14.090+08:00",
+      "serial": 232
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImxFRmVxSkJPOWF3WWNZRWRTV09jYXc9PSIsInZhbHVlIjoiY0ZsaTltbmh1djFHeVBqNEFuK0FaQT09IiwibWFjIjoiYTlkMmRkMjgyZjI4ZGQzM2QzZjJmNzU1ODZlOTIxOWQwMmVhNWQ3ZGY1MzU5NDZmMTc5ZTU5MWY3MjljNGVkYiJ9"
+      },
+      "time": "2025-09-19T12:34:18.280+08:00",
+      "serial": 233
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:34:18.325+08:00",
+      "serial": 234
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810460,
+        "rng": [
+          26,
+          16,
+          85,
+          18,
+          3,
+          30,
+          63,
+          85
+        ],
+        "win": 133,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              11,
+              21,
+              2,
+              12
+            ],
+            "credit": 44,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 44,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          3,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:18.548+08:00",
+      "serial": 235
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810410,
+        "rng": [
+          34,
+          43,
+          61,
+          0,
+          21,
+          50,
+          34,
+          36
+        ],
+        "win": 97,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:20.683+08:00",
+      "serial": 236
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810457,
+        "rng": [
+          10,
+          67,
+          38,
+          65,
+          15,
+          54,
+          45,
+          46
+        ],
+        "win": 39,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:22.878+08:00",
+      "serial": 237
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810446,
+        "rng": [
+          103,
+          36,
+          78,
+          3,
+          42,
+          11,
+          77,
+          76
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:25.062+08:00",
+      "serial": 238
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810396,
+        "rng": [
+          91,
+          57,
+          17,
+          54,
+          50,
+          20,
+          61,
+          66
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:27.320+08:00",
+      "serial": 239
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810346,
+        "rng": [
+          35,
+          3,
+          91,
+          93,
+          45,
+          53,
+          51,
+          51
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:29.545+08:00",
+      "serial": 240
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:34:30.230+08:00",
+      "serial": 241
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6InYwM1A5ZGxLOSsyOWUwbjhFTW13Snc9PSIsInZhbHVlIjoiR3Y4anZYcDJVeVVcL1htbWU2UW9aWnc9PSIsIm1hYyI6Ijk3MGQxNDFiOTMwMzA1MmI5MzIwMzg2NWFhY2E4NDA4YTFjNDk0NTJlN2JhYTgxOTlmMjVjNTgwYTk1MWEzNzAifQ=="
+      },
+      "time": "2025-09-19T12:34:33.285+08:00",
+      "serial": 242
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:34:33.330+08:00",
+      "serial": 243
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810346,
+        "rng": [
+          35,
+          3,
+          91,
+          93,
+          45,
+          53,
+          51,
+          51
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:33.575+08:00",
+      "serial": 244
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810296,
+        "rng": [
+          81,
+          79,
+          98,
+          98,
+          35,
+          2,
+          56,
+          44
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:35.704+08:00",
+      "serial": 245
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810246,
+        "rng": [
+          60,
+          56,
+          51,
+          41,
+          37,
+          20,
+          25,
+          24
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:37.874+08:00",
+      "serial": 246
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810196,
+        "rng": [
+          39,
+          26,
+          91,
+          13,
+          55,
+          33,
+          31,
+          28
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:40.078+08:00",
+      "serial": 247
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810146,
+        "rng": [
+          76,
+          53,
+          48,
+          92,
+          43,
+          38,
+          62,
+          13
+        ],
+        "win": 33,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:42.287+08:00",
+      "serial": 248
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810129,
+        "rng": [
+          0,
+          39,
+          16,
+          72,
+          50,
+          5,
+          46,
+          25
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:44.485+08:00",
+      "serial": 249
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810079,
+        "rng": [
+          46,
+          14,
+          12,
+          19,
+          57,
+          15,
+          13,
+          26
+        ],
+        "win": 414,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:46.692+08:00",
+      "serial": 250
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:34:47.408+08:00",
+      "serial": 251
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Inlwdk9NNnU0R1h3ZVczM2dlU2syQVE9PSIsInZhbHVlIjoiYlRxZ0Jybmh1NEhaZlV2N3hSOVpvUT09IiwibWFjIjoiMmUxYzNmNTZkMGIxNTY0NmJhMGRmYTBlN2M1MmRjYTU3ZjBiOTBlODBlZDVmMjcyNGIzZmUxZGI5ZjEwMzI0MyJ9"
+      },
+      "time": "2025-09-19T12:34:51.350+08:00",
+      "serial": 252
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:34:51.388+08:00",
+      "serial": 253
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810493,
+        "rng": [
+          46,
+          14,
+          12,
+          19,
+          57,
+          15,
+          13,
+          26
+        ],
+        "win": 414,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              2,
+              12,
+              13,
+              23,
+              14,
+              24,
+              25,
+              45,
+              16,
+              26,
+              36,
+              46
+            ],
+            "credit": 290,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 290,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:51.607+08:00",
+      "serial": 254
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810443,
+        "rng": [
+          20,
+          8,
+          35,
+          58,
+          54,
+          14,
+          26,
+          14
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:53.700+08:00",
+      "serial": 255
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810393,
+        "rng": [
+          54,
+          43,
+          61,
+          89,
+          32,
+          50,
+          15,
+          51
+        ],
+        "win": 313,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:55.878+08:00",
+      "serial": 256
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810656,
+        "rng": [
+          82,
+          86,
+          24,
+          98,
+          3,
+          54,
+          39,
+          66
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:34:59.272+08:00",
+      "serial": 257
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810606,
+        "rng": [
+          92,
+          62,
+          3,
+          56,
+          31,
+          23,
+          9,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:01.747+08:00",
+      "serial": 258
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810556,
+        "rng": [
+          49,
+          70,
+          86,
+          8,
+          23,
+          53,
+          9,
+          14
+        ],
+        "win": 13,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:03.921+08:00",
+      "serial": 259
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810519,
+        "rng": [
+          23,
+          61,
+          36,
+          14,
+          55,
+          7,
+          37,
+          26
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:06.137+08:00",
+      "serial": 260
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:35:06.591+08:00",
+      "serial": 261
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6IlI4cmhxODNBUkZzcXk2QkR6b3F2WVE9PSIsInZhbHVlIjoidmFEbmtjOEFoUXpMXC9FdUo0ZUd6aGc9PSIsIm1hYyI6IjU2NWI3NTI2MWUyNGVmN2NkYmEzMGZlYWNiNjMxNzRhN2Y2MjQ5MWZiODRlZjJkMGQ4YjYyMTNiNTZkNmRkMjMifQ=="
+      },
+      "time": "2025-09-19T12:35:09.405+08:00",
+      "serial": 262
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:35:09.444+08:00",
+      "serial": 263
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810519,
+        "rng": [
+          23,
+          61,
+          36,
+          14,
+          55,
+          7,
+          37,
+          26
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:09.685+08:00",
+      "serial": 264
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810469,
+        "rng": [
+          67,
+          32,
+          87,
+          18,
+          49,
+          25,
+          33,
+          31
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:11.778+08:00",
+      "serial": 265
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810419,
+        "rng": [
+          65,
+          87,
+          45,
+          36,
+          2,
+          4,
+          18,
+          5
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:13.955+08:00",
+      "serial": 266
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810369,
+        "rng": [
+          99,
+          14,
+          69,
+          46,
+          5,
+          48,
+          7,
+          13
+        ],
+        "win": 17,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:16.156+08:00",
+      "serial": 267
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810336,
+        "rng": [
+          98,
+          48,
+          12,
+          43,
+          27,
+          31,
+          65,
+          9
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:18.470+08:00",
+      "serial": 268
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810286,
+        "rng": [
+          102,
+          7,
+          74,
+          42,
+          39,
+          43,
+          65,
+          53
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:20.652+08:00",
+      "serial": 269
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810236,
+        "rng": [
+          34,
+          17,
+          59,
+          94,
+          20,
+          30,
+          46,
+          59
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:22.825+08:00",
+      "serial": 270
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810186,
+        "rng": [
+          106,
+          48,
+          33,
+          74,
+          27,
+          18,
+          53,
+          50
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:25.075+08:00",
+      "serial": 271
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:35:25.732+08:00",
+      "serial": 272
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Ik1tM2tqV1BrUkM0UjRLaEhSbEZGa0E9PSIsInZhbHVlIjoiREY4aDBMaFE1S1pnMXR2Y1l0MUpiQT09IiwibWFjIjoiODI5NDRiZWFiY2Y4YWUwOTdlY2Q0MGY1MTEyYTc1MjE5MzEyZjNhYTU4ZWQ3Njc2NDYyZjNiZmI2ZDViODhjMSJ9"
+      },
+      "time": "2025-09-19T12:35:30.408+08:00",
+      "serial": 273
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:35:30.446+08:00",
+      "serial": 274
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810186,
+        "rng": [
+          106,
+          48,
+          33,
+          74,
+          27,
+          18,
+          53,
+          50
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:30.695+08:00",
+      "serial": 275
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810136,
+        "rng": [
+          30,
+          43,
+          10,
+          73,
+          8,
+          6,
+          64,
+          6
+        ],
+        "win": 24,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:32.784+08:00",
+      "serial": 276
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810110,
+        "rng": [
+          66,
+          33,
+          31,
+          86,
+          11,
+          51,
+          55,
+          17
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:34.951+08:00",
+      "serial": 277
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810060,
+        "rng": [
+          40,
+          4,
+          29,
+          69,
+          45,
+          49,
+          6,
+          51
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:37.153+08:00",
+      "serial": 278
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9810010,
+        "rng": [
+          1,
+          91,
+          1,
+          31,
+          27,
+          44,
+          18,
+          60
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:39.340+08:00",
+      "serial": 279
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809960,
+        "rng": [
+          86,
+          22,
+          84,
+          49,
+          30,
+          37,
+          55,
+          51
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:41.561+08:00",
+      "serial": 280
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809910,
+        "rng": [
+          35,
+          6,
+          0,
+          31,
+          4,
+          2,
+          2,
+          51
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:43.790+08:00",
+      "serial": 281
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:35:44.952+08:00",
+      "serial": 282
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6ImcrZmVZcHVBQkVEM3ZoSlVjNmJZR2c9PSIsInZhbHVlIjoiM1B6RkRMMlc1bkRaSUxXbktFQ204dz09IiwibWFjIjoiMDdmOTI4OTI4NGJlMTM3ZDMzMjc3MTMxY2ZiNDNlZjYxYjJiMmNhYjc5ZDQ4MTQ2ZDExMTE2ZWYyNDcxYWY5OSJ9"
+      },
+      "time": "2025-09-19T12:35:48.443+08:00",
+      "serial": 283
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:35:48.479+08:00",
+      "serial": 284
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809910,
+        "rng": [
+          35,
+          6,
+          0,
+          31,
+          4,
+          2,
+          2,
+          51
+        ],
+        "win": 0,
+        "winLineGrp": [],
+        "multiplierAlone": null,
+        "mulitplierPattern": [],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:48.749+08:00",
+      "serial": 285
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809860,
+        "rng": [
+          41,
+          43,
+          54,
+          27,
+          32,
+          4,
+          53,
+          58
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:50.839+08:00",
+      "serial": 286
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809810,
+        "rng": [
+          66,
+          96,
+          20,
+          17,
+          14,
+          55,
+          3,
+          13
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:53.026+08:00",
+      "serial": 287
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809760,
+        "rng": [
+          97,
+          50,
+          52,
+          65,
+          15,
+          54,
+          7,
+          43
+        ],
+        "win": 52,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:55.293+08:00",
+      "serial": 288
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809762,
+        "rng": [
+          14,
+          20,
+          95,
+          90,
+          49,
+          20,
+          63,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:57.500+08:00",
+      "serial": 289
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809712,
+        "rng": [
+          10,
+          11,
+          95,
+          75,
+          35,
+          42,
+          18,
+          28
+        ],
+        "win": 46,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:35:59.686+08:00",
+      "serial": 290
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:36:00.075+08:00",
+      "serial": 291
+    },
+    {
+      "event": "sendRequest_nodejs_success",
+      "url": "https://dev.iplaystar.net/api/signin?prefix=PS&member_id=robot001&password=1234&mode=0",
+      "statusCode": 200,
+      "data": {
+        "status_code": 0,
+        "access_token": "eyJpdiI6Ijl1UzZxTmFrSDhUclo2MzNlS09IaXc9PSIsInZhbHVlIjoiT2RjR3NJVDhBVms4cGJjYWhVRUdJdz09IiwibWFjIjoiZDRiOGZjOGFmNzQzYjE5NDZkMDVmM2E2Mjg5ZDNkZmM3MWZjZTVlZTJhNDhmOWM5YjYzMjFmZGZkZTI3NWUzYiJ9"
+      },
+      "time": "2025-09-19T12:36:03.501+08:00",
+      "serial": 292
+    },
+    {
+      "event": "connection",
+      "message": "Socket connection established.",
+      "time": "2025-09-19T12:36:03.542+08:00",
+      "serial": 293
+    },
+    {
+      "event": "reconnected_Result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809758,
+        "rng": [
+          10,
+          11,
+          95,
+          75,
+          35,
+          42,
+          18,
+          28
+        ],
+        "win": 46,
+        "winLineGrp": [
+          {
+            "win_line_type": 0,
+            "line_no": 65535,
+            "symbol_id": 255,
+            "pos": [
+              14,
+              24,
+              5,
+              15,
+              16,
+              26
+            ],
+            "credit": 35,
+            "multiplier": 1,
+            "credit_long": {
+              "low": 35,
+              "high": 0,
+              "unsigned": true
+            }
+          }
+        ],
+        "multiplierAlone": 1,
+        "mulitplierPattern": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "next_module": "BS",
+        "winBonusGrp": [],
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:03.760+08:00",
+      "serial": 294
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809708,
+        "rng": [
+          30,
+          64,
+          44,
+          49,
+          0,
+          46,
+          15,
+          50
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:05.874+08:00",
+      "serial": 295
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809658,
+        "rng": [
+          94,
+          62,
+          6,
+          43,
+          17,
+          7,
+          8,
+          7
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:08.055+08:00",
+      "serial": 296
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809608,
+        "rng": [
+          103,
+          94,
+          57,
+          24,
+          25,
+          42,
+          35,
+          8
+        ],
+        "win": 16,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:10.618+08:00",
+      "serial": 297
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809574,
+        "rng": [
+          26,
+          75,
+          8,
+          93,
+          2,
+          37,
+          84,
+          33
+        ],
+        "win": 175,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:12.847+08:00",
+      "serial": 298
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809699,
+        "rng": [
+          101,
+          16,
+          20,
+          33,
+          75,
+          25,
+          31,
+          6
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:15.028+08:00",
+      "serial": 299
+    },
+    {
+      "event": "result",
+      "data": {
+        "module_id": "BS",
+        "credit": 9809649,
+        "rng": [
+          48,
+          88,
+          84,
+          48,
+          42,
+          41,
+          62,
+          9
+        ],
+        "win": 0,
+        "next_module": "BS",
+        "jp_count": 0,
+        "jp": 0
+      },
+      "time": "2025-09-19T12:36:17.245+08:00",
+      "serial": 300
+    },
+    {
+      "event": "disconnection",
+      "message": "Connection Closed !!",
+      "time": "2025-09-19T12:36:18.282+08:00",
+      "serial": 301
+    }
+  ]
+}

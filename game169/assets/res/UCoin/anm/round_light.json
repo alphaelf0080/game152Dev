@@ -1,0 +1,92 @@
+{
+"skeleton": { "hash": "QAY0JLi0CeH8X/XyvvFe3Rd2A2A", "spine": "3.7.94", "width": 0, "height": 0 },
+"bones": [
+	{ "name": "root" },
+	{
+		"name": "position",
+		"parent": "root",
+		"rotation": -90,
+		"x": 64,
+		"y": 327,
+		"scaleX": 0.69,
+		"scaleY": 0.69
+	},
+	{ "name": "round", "parent": "position" }
+],
+"slots": [
+	{ "name": "light", "bone": "round" }
+],
+"skins": {
+	"default": {
+		"light": {
+			"light/light_00": { "x": -44, "width": 60, "height": 50 },
+			"light/light_01": { "x": -44, "width": 60, "height": 50 },
+			"light/light_02": { "x": -44, "width": 60, "height": 50 },
+			"light/light_03": { "x": -44, "width": 60, "height": 50 },
+			"light/light_04": { "x": -44, "width": 60, "height": 50 },
+			"light/light_05": { "x": -44, "width": 60, "height": 50 },
+			"light/light_06": { "x": -44, "width": 60, "height": 50 },
+			"light/light_07": { "x": -44, "width": 60, "height": 50 },
+			"light/light_08": { "x": -44, "width": 60, "height": 50 },
+			"light/light_09": { "x": -44, "width": 60, "height": 50 }
+		}
+	}
+},
+"animations": {
+	"100": {
+		"bones": {
+			"round": {
+				"rotate": [
+					{ "time": 0, "angle": 0 }
+				]
+			}
+		}
+	},
+	"25": {
+		"bones": {
+			"round": {
+				"rotate": [
+					{ "time": 0, "angle": -90 }
+				]
+			}
+		}
+	},
+	"50": {
+		"bones": {
+			"round": {
+				"rotate": [
+					{ "time": 0, "angle": 180 }
+				]
+			}
+		}
+	},
+	"75": {
+		"bones": {
+			"round": {
+				"rotate": [
+					{ "time": 0, "angle": 90 }
+				]
+			}
+		}
+	},
+	"idle": {
+		"slots": {
+			"light": {
+				"attachment": [
+					{ "time": 0, "name": "light/light_00" },
+					{ "time": 0.0667, "name": "light/light_01" },
+					{ "time": 0.1333, "name": "light/light_02" },
+					{ "time": 0.2, "name": "light/light_03" },
+					{ "time": 0.2667, "name": "light/light_04" },
+					{ "time": 0.3333, "name": "light/light_05" },
+					{ "time": 0.4, "name": "light/light_06" },
+					{ "time": 0.4667, "name": "light/light_07" },
+					{ "time": 0.5333, "name": "light/light_08" },
+					{ "time": 0.6, "name": "light/light_09" },
+					{ "time": 0.6667, "name": "light/light_00" }
+				]
+			}
+		}
+	}
+}
+}

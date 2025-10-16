@@ -1,0 +1,47 @@
+{
+  "name": "scene-converter",
+  "version": "1.0.0",
+  "description": "Convert scene between 2D and 3D projects, handling Sprite to SpriteFrame conversion",
+  "main": "./main.js",
+  "author": "Your Name",
+  "editor": ">=3.8.0",
+  "panels": {
+    "default": {
+      "title": "Scene Converter",
+      "type": "simple",
+      "main": "./panels/default/index.js",
+      "flags": {
+        "alwaysOnTop": true
+      },
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 600,
+        "height": 500
+      }
+    }
+  },
+  "contributions": {
+    "menu": [
+      {
+        "path": "Panel/Scene Converter",
+        "label": "Scene Converter",
+        "message": "open-panel"
+      }
+    ],
+    "messages": {
+      "open-panel": {
+        "methods": ["openPanel"]
+      },
+      "test-scene-api": {
+        "methods": ["testSceneAPI"]
+      },
+      "export-scene": {
+        "methods": ["exportScene"]
+      },
+      "import-scene": {
+        "methods": ["importScene"]
+      }
+    }
+  }
+}

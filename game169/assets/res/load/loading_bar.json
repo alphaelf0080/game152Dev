@@ -1,0 +1,139 @@
+{
+"skeleton": { "hash": "RCzH5e3mAvzclw1X1b0gcGyvoDM", "spine": "3.7.94", "width": 0, "height": 0 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "light", "parent": "root", "x": 63.94, "y": 241.16, "scaleX": 1.33, "scaleY": 1.33 },
+	{ "name": "bar", "parent": "root", "x": 360, "y": 240.15 }
+],
+"slots": [
+	{ "name": "light/light_00", "bone": "light", "color": "fffdefff", "blend": "additive" },
+	{ "name": "loading_sweep/loading_sweep_00", "bone": "bar", "blend": "additive" }
+],
+"skins": {
+	"default": {
+		"light/light_00": {
+			"light/light_00": { "width": 60, "height": 50 },
+			"light/light_01": { "width": 60, "height": 50 },
+			"light/light_02": { "width": 60, "height": 50 },
+			"light/light_03": { "width": 60, "height": 50 },
+			"light/light_04": { "width": 60, "height": 50 },
+			"light/light_05": { "width": 60, "height": 50 },
+			"light/light_06": { "width": 60, "height": 50 },
+			"light/light_07": { "width": 60, "height": 50 },
+			"light/light_08": { "width": 60, "height": 50 },
+			"light/light_09": { "width": 60, "height": 50 }
+		},
+		"loading_sweep/loading_sweep_00": {
+			"loading_sweep/loading_sweep_00": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_01": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_02": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_03": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_04": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_05": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_06": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_07": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_08": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_09": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_10": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_11": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_12": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_13": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_14": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_15": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_16": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_17": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_18": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_19": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_20": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_21": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_22": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_23": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_24": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_25": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_26": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_27": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_28": { "width": 610, "height": 22 },
+			"loading_sweep/loading_sweep_29": { "width": 610, "height": 22 }
+		}
+	}
+},
+"animations": {
+	"light_0": {
+		"slots": {
+			"light/light_00": {
+				"attachment": [
+					{ "time": 0, "name": "light/light_00" },
+					{ "time": 0.0333, "name": "light/light_01" },
+					{ "time": 0.0667, "name": "light/light_02" },
+					{ "time": 0.1, "name": "light/light_03" },
+					{ "time": 0.1333, "name": "light/light_04" },
+					{ "time": 0.1667, "name": "light/light_05" },
+					{ "time": 0.2, "name": "light/light_06" },
+					{ "time": 0.2333, "name": "light/light_07" },
+					{ "time": 0.2667, "name": "light/light_08" },
+					{ "time": 0.3, "name": "light/light_09" }
+				]
+			}
+		},
+		"bones": {
+			"light": {
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0 }
+				]
+			}
+		}
+	},
+	"light_100": {
+		"bones": {
+			"light": {
+				"translate": [
+					{ "time": 0, "x": 592.14, "y": 0 }
+				]
+			}
+		}
+	},
+	"loop": {
+		"slots": {
+			"loading_sweep/loading_sweep_00": {
+				"color": [
+					{ "time": 0, "color": "fbffabed" },
+					{ "time": 1.6667, "color": "fbffab00" }
+				],
+				"attachment": [
+					{ "time": 0, "name": null },
+					{ "time": 0.0333, "name": "loading_sweep/loading_sweep_01" },
+					{ "time": 0.0667, "name": "loading_sweep/loading_sweep_02" },
+					{ "time": 0.1, "name": "loading_sweep/loading_sweep_03" },
+					{ "time": 0.1333, "name": "loading_sweep/loading_sweep_04" },
+					{ "time": 0.1667, "name": "loading_sweep/loading_sweep_05" },
+					{ "time": 0.2, "name": "loading_sweep/loading_sweep_06" },
+					{ "time": 0.2333, "name": "loading_sweep/loading_sweep_07" },
+					{ "time": 0.2667, "name": "loading_sweep/loading_sweep_08" },
+					{ "time": 0.3, "name": "loading_sweep/loading_sweep_09" },
+					{ "time": 0.3333, "name": "loading_sweep/loading_sweep_10" },
+					{ "time": 0.3667, "name": "loading_sweep/loading_sweep_11" },
+					{ "time": 0.4, "name": "loading_sweep/loading_sweep_12" },
+					{ "time": 0.4333, "name": "loading_sweep/loading_sweep_13" },
+					{ "time": 0.4667, "name": "loading_sweep/loading_sweep_14" },
+					{ "time": 0.5, "name": "loading_sweep/loading_sweep_15" },
+					{ "time": 0.5333, "name": "loading_sweep/loading_sweep_16" },
+					{ "time": 0.5667, "name": "loading_sweep/loading_sweep_17" },
+					{ "time": 0.6, "name": "loading_sweep/loading_sweep_18" },
+					{ "time": 0.6333, "name": "loading_sweep/loading_sweep_19" },
+					{ "time": 0.6667, "name": "loading_sweep/loading_sweep_20" },
+					{ "time": 0.7, "name": "loading_sweep/loading_sweep_21" },
+					{ "time": 0.7333, "name": "loading_sweep/loading_sweep_22" },
+					{ "time": 0.7667, "name": "loading_sweep/loading_sweep_23" },
+					{ "time": 0.8, "name": "loading_sweep/loading_sweep_24" },
+					{ "time": 0.8333, "name": "loading_sweep/loading_sweep_25" },
+					{ "time": 0.8667, "name": "loading_sweep/loading_sweep_26" },
+					{ "time": 0.9, "name": "loading_sweep/loading_sweep_27" },
+					{ "time": 0.9333, "name": "loading_sweep/loading_sweep_28" },
+					{ "time": 0.9667, "name": "loading_sweep/loading_sweep_29" },
+					{ "time": 1, "name": null }
+				]
+			}
+		}
+	}
+}
+}

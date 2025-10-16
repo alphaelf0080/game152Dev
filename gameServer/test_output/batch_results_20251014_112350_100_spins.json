@@ -1,0 +1,4221 @@
+{
+  "session_info": {
+    "session_id": 1760412230,
+    "total_spins": 100,
+    "timestamp": "2025-10-14T11:23:50.301288",
+    "game_module": "00152"
+  },
+  "results": [
+    {
+      "spin_number": 1,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 5,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 999,
+              "symbol_id": 9,
+              "pos": [
+                1,
+                5,
+                6
+              ],
+              "credit": 5,
+              "multiplier": 1,
+              "credit_long": 5
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            9,
+            5,
+            4,
+            5,
+            9,
+            9,
+            7,
+            8,
+            4,
+            5,
+            6,
+            8,
+            0,
+            1
+          ],
+          "win_bonus_group": [
+            {
+              "module_id": "free_spins",
+              "times": 7
+            }
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300001
+      }
+    },
+    {
+      "spin_number": 2,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 16,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 7,
+              "pos": [
+                1,
+                3,
+                6
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 8,
+              "pos": [
+                2,
+                4,
+                7
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            }
+          ],
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            7,
+            8,
+            2,
+            7,
+            8,
+            3,
+            0,
+            4,
+            5,
+            8,
+            1,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300002
+      }
+    },
+    {
+      "spin_number": 3,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            2,
+            2,
+            5,
+            9,
+            6,
+            8,
+            4,
+            2,
+            7,
+            8,
+            4,
+            0,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300003
+      }
+    },
+    {
+      "spin_number": 4,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            8,
+            3,
+            1,
+            4,
+            3,
+            3,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300004
+      }
+    },
+    {
+      "spin_number": 5,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            3,
+            5,
+            7,
+            8,
+            2,
+            3,
+            5,
+            6,
+            8,
+            3,
+            5,
+            8,
+            3,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300005
+      }
+    },
+    {
+      "spin_number": 6,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            2,
+            1,
+            5,
+            7,
+            8,
+            3,
+            4,
+            3,
+            5,
+            0,
+            1,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300006
+      }
+    },
+    {
+      "spin_number": 7,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            4,
+            4,
+            0,
+            3,
+            1,
+            5,
+            6,
+            9,
+            8,
+            1,
+            4,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999955,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300007
+      }
+    },
+    {
+      "spin_number": 8,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            7,
+            8,
+            1,
+            3,
+            0,
+            1,
+            1,
+            5,
+            6,
+            3,
+            1,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999971,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300008
+      }
+    },
+    {
+      "spin_number": 9,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            0,
+            1,
+            2,
+            6,
+            9,
+            7,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999921,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300009
+      }
+    },
+    {
+      "spin_number": 10,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                1,
+                3,
+                7
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 6,
+              "pos": [
+                2,
+                4,
+                8
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            5,
+            6,
+            7,
+            4,
+            5,
+            6,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999891,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300010
+      }
+    },
+    {
+      "spin_number": 11,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 8,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 7,
+              "pos": [
+                1,
+                5,
+                6
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            }
+          ],
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            7,
+            8,
+            2,
+            8,
+            0,
+            1,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999849,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300011
+      }
+    },
+    {
+      "spin_number": 12,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            3,
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999799,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300012
+      }
+    },
+    {
+      "spin_number": 13,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 15,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 4,
+              "pos": [
+                2,
+                3,
+                8
+              ],
+              "credit": 15,
+              "multiplier": 1,
+              "credit_long": 15
+            }
+          ],
+          "random_syb_pattern": [
+            8,
+            3,
+            4,
+            4,
+            5,
+            6,
+            7,
+            8,
+            4,
+            5,
+            6,
+            7,
+            1,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999764,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300013
+      }
+    },
+    {
+      "spin_number": 14,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            7,
+            8,
+            1,
+            2,
+            3,
+            4,
+            7,
+            8,
+            0,
+            7,
+            8,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999714,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300014
+      }
+    },
+    {
+      "spin_number": 15,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 45,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 2,
+              "pos": [
+                0,
+                4,
+                6
+              ],
+              "credit": 25,
+              "multiplier": 1,
+              "credit_long": 25
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 3,
+              "pos": [
+                1,
+                5,
+                7
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            8,
+            2,
+            3,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999709,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300015
+      }
+    },
+    {
+      "spin_number": 16,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            7,
+            8,
+            1,
+            4,
+            5,
+            6,
+            8,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999659,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300016
+      }
+    },
+    {
+      "spin_number": 17,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                2,
+                4,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            4,
+            5,
+            6,
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999619,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300017
+      }
+    },
+    {
+      "spin_number": 18,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            8,
+            2,
+            3,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8,
+            7,
+            8,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999569,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300018
+      }
+    },
+    {
+      "spin_number": 19,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            4,
+            5,
+            1,
+            2,
+            3,
+            3,
+            4,
+            5,
+            8,
+            3,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999519,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300019
+      }
+    },
+    {
+      "spin_number": 20,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            9,
+            6,
+            7,
+            2,
+            3,
+            4,
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999469,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300020
+      }
+    },
+    {
+      "spin_number": 21,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 6,
+              "pos": [
+                1,
+                3,
+                8
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            4,
+            5,
+            6,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999429,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300021
+      }
+    },
+    {
+      "spin_number": 22,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            4,
+            5,
+            6,
+            1,
+            2,
+            3,
+            8,
+            0,
+            1,
+            8,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999379,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300022
+      }
+    },
+    {
+      "spin_number": 23,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            1,
+            2,
+            3,
+            6,
+            7,
+            8,
+            4,
+            5,
+            6,
+            8,
+            4,
+            5,
+            1,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999329,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300023
+      }
+    },
+    {
+      "spin_number": 24,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 40,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 6,
+              "pos": [
+                0,
+                3,
+                7
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 7,
+              "pos": [
+                1,
+                4,
+                8,
+                9,
+                14
+              ],
+              "credit": 30,
+              "multiplier": 1,
+              "credit_long": 30
+            }
+          ],
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            7,
+            8,
+            1,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999319,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300024
+      }
+    },
+    {
+      "spin_number": 25,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 40,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                2,
+                3,
+                7,
+                11,
+                14
+              ],
+              "credit": 40,
+              "multiplier": 1,
+              "credit_long": 40
+            }
+          ],
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            4,
+            5,
+            6,
+            8,
+            4,
+            5,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999309,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300025
+      }
+    },
+    {
+      "spin_number": 26,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                2,
+                4,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            9,
+            5,
+            4,
+            5,
+            6,
+            5,
+            6,
+            7,
+            8,
+            0,
+            1,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999269,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300026
+      }
+    },
+    {
+      "spin_number": 27,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            2,
+            8,
+            0,
+            1,
+            8,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999219,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300027
+      }
+    },
+    {
+      "spin_number": 28,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            8,
+            1,
+            2,
+            6,
+            7,
+            8,
+            8,
+            1,
+            2,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999169,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300028
+      }
+    },
+    {
+      "spin_number": 29,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            4,
+            5,
+            6,
+            4,
+            5,
+            6,
+            8,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999119,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300029
+      }
+    },
+    {
+      "spin_number": 30,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            1,
+            2,
+            3,
+            5,
+            6,
+            7,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999069,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300030
+      }
+    },
+    {
+      "spin_number": 31,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            1,
+            2,
+            3,
+            6,
+            7,
+            8,
+            8,
+            0,
+            1,
+            6,
+            7,
+            8,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 999019,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300031
+      }
+    },
+    {
+      "spin_number": 32,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            1,
+            2,
+            3,
+            2,
+            3,
+            4,
+            3,
+            4,
+            5,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998969,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300032
+      }
+    },
+    {
+      "spin_number": 33,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            9,
+            5,
+            2,
+            3,
+            4,
+            7,
+            8,
+            2,
+            2,
+            3,
+            4,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998919,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300033
+      }
+    },
+    {
+      "spin_number": 34,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 8,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 8,
+              "pos": [
+                0,
+                5,
+                6
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            }
+          ],
+          "random_syb_pattern": [
+            8,
+            2,
+            3,
+            6,
+            7,
+            8,
+            8,
+            4,
+            5,
+            5,
+            6,
+            7,
+            8,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998877,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300034
+      }
+    },
+    {
+      "spin_number": 35,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 50,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 3,
+              "pos": [
+                1,
+                5,
+                8
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 8,
+              "pos": [
+                0,
+                4,
+                6,
+                9,
+                13
+              ],
+              "credit": 30,
+              "multiplier": 1,
+              "credit_long": 30
+            }
+          ],
+          "random_syb_pattern": [
+            8,
+            3,
+            4,
+            7,
+            8,
+            3,
+            8,
+            2,
+            3,
+            8,
+            1,
+            2,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998877,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300035
+      }
+    },
+    {
+      "spin_number": 36,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            3,
+            4,
+            9,
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            7,
+            8,
+            0,
+            7,
+            8,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998827,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300036
+      }
+    },
+    {
+      "spin_number": 37,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            0,
+            1,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            7,
+            8,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998777,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300037
+      }
+    },
+    {
+      "spin_number": 38,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            6,
+            7,
+            8,
+            7,
+            8,
+            2,
+            6,
+            7,
+            8,
+            8,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998727,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300038
+      }
+    },
+    {
+      "spin_number": 39,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            3,
+            4,
+            5,
+            8,
+            1,
+            2,
+            2,
+            3,
+            4,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998677,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300039
+      }
+    },
+    {
+      "spin_number": 40,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            9,
+            5,
+            6,
+            7,
+            8,
+            1,
+            8,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998627,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300040
+      }
+    },
+    {
+      "spin_number": 41,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            4,
+            5,
+            1,
+            2,
+            3,
+            8,
+            0,
+            1,
+            5,
+            6,
+            7,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998577,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300041
+      }
+    },
+    {
+      "spin_number": 42,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            4,
+            5,
+            6,
+            7,
+            8,
+            1,
+            1,
+            2,
+            3,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998527,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300042
+      }
+    },
+    {
+      "spin_number": 43,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            8,
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998477,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300043
+      }
+    },
+    {
+      "spin_number": 44,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            8,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998427,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300044
+      }
+    },
+    {
+      "spin_number": 45,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            4,
+            5,
+            6,
+            6,
+            9,
+            7,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998377,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300045
+      }
+    },
+    {
+      "spin_number": 46,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            9,
+            6,
+            7,
+            7,
+            8,
+            4,
+            2,
+            3,
+            4,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998327,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300046
+      }
+    },
+    {
+      "spin_number": 47,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2,
+            8,
+            1,
+            2,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998277,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300047
+      }
+    },
+    {
+      "spin_number": 48,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998227,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300048
+      }
+    },
+    {
+      "spin_number": 49,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            2,
+            8,
+            3,
+            4,
+            4,
+            5,
+            6,
+            7,
+            8,
+            4,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998177,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300049
+      }
+    },
+    {
+      "spin_number": 50,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            2,
+            7,
+            8,
+            2,
+            6,
+            7,
+            8,
+            8,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998127,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300050
+      }
+    },
+    {
+      "spin_number": 51,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            2,
+            3,
+            4,
+            8,
+            0,
+            1,
+            4,
+            5,
+            6,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998077,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300051
+      }
+    },
+    {
+      "spin_number": 52,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 16,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 7,
+              "pos": [
+                0,
+                4,
+                6
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 8,
+              "pos": [
+                1,
+                5,
+                7
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            }
+          ],
+          "random_syb_pattern": [
+            7,
+            8,
+            0,
+            6,
+            7,
+            8,
+            7,
+            8,
+            9,
+            3,
+            4,
+            5,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 998043,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300052
+      }
+    },
+    {
+      "spin_number": 53,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            8,
+            4,
+            5,
+            2,
+            3,
+            4,
+            7,
+            8,
+            2,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997993,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300053
+      }
+    },
+    {
+      "spin_number": 54,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            7,
+            8,
+            3,
+            4,
+            5,
+            6,
+            8,
+            2,
+            3,
+            8,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997943,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300054
+      }
+    },
+    {
+      "spin_number": 55,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            8,
+            4,
+            5,
+            3,
+            4,
+            5,
+            7,
+            8,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997893,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300055
+      }
+    },
+    {
+      "spin_number": 56,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            3,
+            4,
+            5,
+            6,
+            6,
+            9,
+            7,
+            5,
+            6,
+            7,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997843,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300056
+      }
+    },
+    {
+      "spin_number": 57,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            7,
+            8,
+            0,
+            8,
+            4,
+            5,
+            4,
+            5,
+            6,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997793,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300057
+      }
+    },
+    {
+      "spin_number": 58,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            8,
+            0,
+            1,
+            7,
+            8,
+            9,
+            5,
+            6,
+            7,
+            1,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997743,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300058
+      }
+    },
+    {
+      "spin_number": 59,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            8,
+            1,
+            2,
+            6,
+            7,
+            8,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997693,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300059
+      }
+    },
+    {
+      "spin_number": 60,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            2,
+            3,
+            6,
+            7,
+            8,
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997643,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300060
+      }
+    },
+    {
+      "spin_number": 61,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            9,
+            5,
+            9,
+            6,
+            7,
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997593,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300061
+      }
+    },
+    {
+      "spin_number": 62,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 15,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 4,
+              "pos": [
+                2,
+                5,
+                7
+              ],
+              "credit": 15,
+              "multiplier": 1,
+              "credit_long": 15
+            }
+          ],
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            7,
+            8,
+            4,
+            3,
+            4,
+            5,
+            1,
+            2,
+            3,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997558,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300062
+      }
+    },
+    {
+      "spin_number": 63,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            4,
+            5,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997508,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300063
+      }
+    },
+    {
+      "spin_number": 64,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 6,
+              "pos": [
+                1,
+                3,
+                7,
+                11
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            5,
+            6,
+            9,
+            4,
+            5,
+            6,
+            8,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997478,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300064
+      }
+    },
+    {
+      "spin_number": 65,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                1,
+                3,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 6,
+              "pos": [
+                2,
+                5,
+                7
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            5,
+            9,
+            6,
+            5,
+            6,
+            7,
+            7,
+            8,
+            1,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997448,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300065
+      }
+    },
+    {
+      "spin_number": 66,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            0,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8,
+            2,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997398,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300066
+      }
+    },
+    {
+      "spin_number": 67,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            2,
+            5,
+            9,
+            6,
+            3,
+            4,
+            5,
+            7,
+            8,
+            1,
+            1,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997348,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300067
+      }
+    },
+    {
+      "spin_number": 68,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997298,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300068
+      }
+    },
+    {
+      "spin_number": 69,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            0,
+            1,
+            2,
+            7,
+            8,
+            3,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            2,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997248,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300069
+      }
+    },
+    {
+      "spin_number": 70,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            8,
+            4,
+            5,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            0,
+            1
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997198,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300070
+      }
+    },
+    {
+      "spin_number": 71,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            4,
+            5,
+            6,
+            7,
+            3,
+            4,
+            5,
+            1,
+            2,
+            3,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997148,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300071
+      }
+    },
+    {
+      "spin_number": 72,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8,
+            4,
+            5,
+            6,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997098,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300072
+      }
+    },
+    {
+      "spin_number": 73,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            2,
+            3,
+            4,
+            5,
+            9,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 997048,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300073
+      }
+    },
+    {
+      "spin_number": 74,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            3,
+            4,
+            1,
+            2,
+            3,
+            7,
+            8,
+            2,
+            3,
+            4,
+            5,
+            8,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996998,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300074
+      }
+    },
+    {
+      "spin_number": 75,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            0,
+            1,
+            2,
+            5,
+            6,
+            7,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996948,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300075
+      }
+    },
+    {
+      "spin_number": 76,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            1,
+            2,
+            3,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996898,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300076
+      }
+    },
+    {
+      "spin_number": 77,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                1,
+                5,
+                6,
+                11
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            9,
+            5,
+            6,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            8,
+            4,
+            5,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996868,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300077
+      }
+    },
+    {
+      "spin_number": 78,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            0,
+            1,
+            4,
+            5,
+            6,
+            7,
+            8,
+            0,
+            7,
+            8,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996818,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300078
+      }
+    },
+    {
+      "spin_number": 79,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 15,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 4,
+              "pos": [
+                1,
+                4,
+                8
+              ],
+              "credit": 15,
+              "multiplier": 1,
+              "credit_long": 15
+            }
+          ],
+          "random_syb_pattern": [
+            8,
+            4,
+            5,
+            3,
+            4,
+            5,
+            8,
+            3,
+            4,
+            8,
+            0,
+            1,
+            0,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996783,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300079
+      }
+    },
+    {
+      "spin_number": 80,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 6,
+              "pos": [
+                2,
+                4,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996743,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300080
+      }
+    },
+    {
+      "spin_number": 81,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            4,
+            5,
+            6,
+            8,
+            2,
+            3,
+            2,
+            3,
+            4,
+            3,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996693,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300081
+      }
+    },
+    {
+      "spin_number": 82,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            6,
+            7,
+            8,
+            6,
+            7,
+            8,
+            2,
+            3,
+            4,
+            4,
+            5,
+            6,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996643,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300082
+      }
+    },
+    {
+      "spin_number": 83,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 50,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 4,
+              "pos": [
+                1,
+                4,
+                6,
+                10
+              ],
+              "credit": 30,
+              "multiplier": 1,
+              "credit_long": 30
+            },
+            {
+              "win_line_type": 0,
+              "line_no": 2,
+              "symbol_id": 5,
+              "pos": [
+                2,
+                5,
+                7,
+                11
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            8,
+            4,
+            5,
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            7,
+            8,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996643,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300083
+      }
+    },
+    {
+      "spin_number": 84,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            1,
+            7,
+            8,
+            1,
+            6,
+            7,
+            8,
+            7,
+            8,
+            0
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996593,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300084
+      }
+    },
+    {
+      "spin_number": 85,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 8,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 7,
+              "pos": [
+                0,
+                4,
+                8
+              ],
+              "credit": 8,
+              "multiplier": 1,
+              "credit_long": 8
+            }
+          ],
+          "random_syb_pattern": [
+            7,
+            8,
+            4,
+            6,
+            7,
+            8,
+            5,
+            6,
+            7,
+            4,
+            5,
+            6,
+            1,
+            2,
+            3
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996551,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300085
+      }
+    },
+    {
+      "spin_number": 86,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                1,
+                5,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            8,
+            4,
+            5,
+            5,
+            6,
+            7,
+            1,
+            2,
+            3,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996511,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300086
+      }
+    },
+    {
+      "spin_number": 87,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            8,
+            2,
+            3,
+            7,
+            8,
+            0,
+            1,
+            2,
+            3,
+            7,
+            8,
+            0,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996461,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300087
+      }
+    },
+    {
+      "spin_number": 88,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996411,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300088
+      }
+    },
+    {
+      "spin_number": 89,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            6,
+            7,
+            8,
+            2,
+            3,
+            4,
+            8,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996361,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300089
+      }
+    },
+    {
+      "spin_number": 90,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            2,
+            3,
+            4,
+            8,
+            4,
+            5,
+            5,
+            6,
+            9,
+            5,
+            6,
+            7,
+            7,
+            8,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996311,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300090
+      }
+    },
+    {
+      "spin_number": 91,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            6,
+            7,
+            8,
+            3,
+            4,
+            5,
+            2,
+            3,
+            4,
+            2,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996261,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300091
+      }
+    },
+    {
+      "spin_number": 92,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            4,
+            6,
+            7,
+            8,
+            2,
+            3,
+            4,
+            7,
+            8,
+            3,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996211,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300092
+      }
+    },
+    {
+      "spin_number": 93,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            7,
+            8,
+            3,
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996161,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300093
+      }
+    },
+    {
+      "spin_number": 94,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            3,
+            4,
+            5,
+            2,
+            3,
+            4,
+            2,
+            3,
+            4,
+            4,
+            5,
+            6
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996111,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300094
+      }
+    },
+    {
+      "spin_number": 95,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            3,
+            4,
+            5,
+            8,
+            0,
+            1,
+            8,
+            4,
+            5,
+            8,
+            1,
+            2,
+            2,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996061,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300095
+      }
+    },
+    {
+      "spin_number": 96,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 10,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                0,
+                5,
+                6
+              ],
+              "credit": 10,
+              "multiplier": 1,
+              "credit_long": 10
+            }
+          ],
+          "random_syb_pattern": [
+            5,
+            6,
+            7,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            7,
+            8,
+            1,
+            5,
+            6,
+            7
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 996021,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300096
+      }
+    },
+    {
+      "spin_number": 97,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            1,
+            2,
+            3,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            5,
+            6,
+            7,
+            8,
+            1,
+            2
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 995971,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300097
+      }
+    },
+    {
+      "spin_number": 98,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 3,
+              "pos": [
+                2,
+                3,
+                7
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            1,
+            2,
+            3,
+            3,
+            4,
+            5,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8,
+            6,
+            7,
+            8
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 995941,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300098
+      }
+    },
+    {
+      "spin_number": 99,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 0,
+          "random_syb_pattern": [
+            1,
+            2,
+            3,
+            7,
+            8,
+            4,
+            3,
+            4,
+            5,
+            7,
+            8,
+            2,
+            8,
+            4,
+            5
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 995891,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300099
+      }
+    },
+    {
+      "spin_number": 100,
+      "bet_amount": 50,
+      "result_recall": {
+        "msgid": 107,
+        "status_code": 0,
+        "result": {
+          "module_id": "00152",
+          "credit": 20,
+          "win_line_group": [
+            {
+              "win_line_type": 0,
+              "line_no": 1,
+              "symbol_id": 5,
+              "pos": [
+                1,
+                5,
+                6,
+                9
+              ],
+              "credit": 20,
+              "multiplier": 1,
+              "credit_long": 20
+            }
+          ],
+          "random_syb_pattern": [
+            4,
+            5,
+            6,
+            3,
+            4,
+            5,
+            5,
+            6,
+            7,
+            5,
+            6,
+            7,
+            8,
+            3,
+            4
+          ],
+          "pay_of_scatter": [
+            0
+          ]
+        },
+        "player_cent": 995861,
+        "next_module": "",
+        "cur_module_play_times": 1,
+        "cur_module_total_times": 1,
+        "accounting_sn": 17604122300100
+      }
+    }
+  ]
+}

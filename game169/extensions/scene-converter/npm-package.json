@@ -1,0 +1,24 @@
+{
+  "name": "scene-converter",
+  "version": "1.0.0",
+  "description": "Scene Converter Extension for Cocos Creator",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cocos-creator",
+    "extension",
+    "scene",
+    "converter",
+    "2d-to-3d"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
