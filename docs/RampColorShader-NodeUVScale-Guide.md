@@ -16,6 +16,8 @@ Ramp 效果層需要獨立的 UV 系統，不受 sprite tiling 的影響。但�
 
 ## 自動計算公式
 
+### nodeUVScale 計算
+
 ```typescript
 const contentSize = uiTransform.contentSize;
 const nodeUVScale = new Vec2(
@@ -24,18 +26,34 @@ const nodeUVScale = new Vec2(
 );
 ```
 
+### rampUVOffset 計算
+
+```typescript
+const anchorPoint = uiTransform.anchorPoint;
+const anchorOffsetX = (anchorPoint.x - 0.5) * 2.0;  // 轉換為 [-1, 1]
+const anchorOffsetY = (anchorPoint.y - 0.5) * 2.0;
+
+// rampUVOffset 抵消 anchorPoint 的偏移
+const rampUVOffset = new Vec2(-anchorOffsetX, -anchorOffsetY);
+```
+
 ### 計算過程詳解
 
-1. **位置範圍轉換**：
-   - 原始 `a_position` 範圍：`[-contentSize/2, contentSize/2]`
-   - 乘以 `nodeUVScale = 2/contentSize`：`[-1, 1]`
-   - 加 1.0 再乘 0.5：`[0, 1]`
+#### 1. nodeUVScale 位置範圍轉換
+- 原始 `a_position` 範圍：`[-contentSize/2, contentSize/2]`
+- 乘以 `nodeUVScale = 2/contentSize`：`[-1, 1]`
+- 加 1.0 再乘 0.5：`[0, 1]`
+- 公式：`normalizedUV = (a_position * nodeUVScale + 1.0) * 0.5`
 
-2. **公式推導**：
-   ```
-   normalizedUV = (a_position * nodeUVScale + 1.0) * 0.5
-                = (a_position * (2/contentSize) + 1.0) * 0.5
-   ```
+#### 2. rampUVOffset 錨點補償
+- **問題**：不同的 node 可能有不同的錨點（anchorPoint）
+  - 標準值：(0.5, 0.5)（中心）
+  - 其他值：(0, 0)（左下）、(1, 1)（右上）等
+- **解決**：根據錨點自動計算偏移
+  - 當 anchorPoint = (0.5, 0.5) 時，anchorOffset = (0, 0)，rampUVOffset = (0, 0)
+  - 當 anchorPoint = (0, 0) 時，anchorOffset = (-1, -1)，rampUVOffset = (1, 1)
+  - 當 anchorPoint = (1, 1) 時，anchorOffset = (1, 1)，rampUVOffset = (-1, -1)
+- **效果**：無論錨點設置如何，Ramp 效果始終相對於 node 的實際中心顯示
 
 ## 使用方法
 
@@ -99,14 +117,17 @@ float calculateRampCoord(vec2 uv) {
 ### Q1: 為什麼需要 nodeUVScale？
 A: 因為不同的 node 有不同的尺寸。例如一個 696×540 的 node 和一個 256×256 的 node 需要不同的 UV 縮放因子才能正確顯示相同的 Ramp 效果。
 
-### Q2: nodeUVScale 會自動更新嗎？
-A: 會的。每次重置參數（點擊 "重置所有參數" 按鈕）時，都會自動重新計算 `nodeUVScale`。如果需要在運行時動態更新 node 尺寸，需要手動調用 `updateNodeUVScale()` 方法。
+### Q2: nodeUVScale 和 rampUVOffset 會自動更新嗎？
+A: 會的。每次重置參數（點擊 "重置所有參數" 按鈕）時，都會自動重新計算這兩個參數。如果需要在運行時動態更新 node 尺寸或錨點，需要手動調用 `updateNodeUVScale()` 方法。
 
-### Q3: 如果沒有 UITransform 組件怎麼辦？
+### Q3: rampUVOffset 是什麼？
+A: 它根據 node 的錨點（anchorPoint）自動計算，用於補償不同錨點設置對 Ramp 效果位置的影響。這樣無論錨點如何設置，Ramp 效果都始終相對於 node 的實際中心顯示。
+
+### Q4: 如果沒有 UITransform 組件怎麼辦？
 A: 腳本會自動檢查並在找不到 UITransform 時輸出錯誤信息。確保 node 上有 UITransform 組件（通常是自動添加的）。
 
-### Q4: 能否手動設置 nodeUVScale？
-A: 可以。自動計算只是默認值。你仍然可以在編輯器中手動修改 nodeUVScale 來實現特殊的效果。
+### Q5: 能否手動設置 nodeUVScale 和 rampUVOffset？
+A: 可以。自動計算只是默認值。你仍然可以在編輯器中手動修改這些值來實現特殊的效果。但通常不需要，因為自動計算已經涵蓋了常見場景。
 
 ## 完整流程
 
@@ -115,15 +136,17 @@ A: 可以。自動計算只是默認值。你仍然可以在編輯器中手動�
    ↓
 2. onLoad() 調用 updateNodeUVScale()
    ↓
-3. 讀取 UITransform.contentSize
+3. 讀取 UITransform 的 contentSize 和 anchorPoint
    ↓
 4. 計算 nodeUVScale = (2/width, 2/height)
+   計算 rampUVOffset 基於 anchorPoint 偏移
    ↓
-5. 設置到材質的 nodeUVScale 屬性
+5. 設置到材質的 nodeUVScale 和 rampUVOffset 屬性
    ↓
-6. Shader 接收 nodeUVScale，正確規範化 UV
+6. Shader 接收參數，正確規範化 UV 和應用錨點補償
    ↓
 7. Ramp 效果正確顯示，不受 sprite tiling 影響
+   無論錨點如何設置，Ramp 中心始終在 node 中心
 ```
 
 ## 測試確認

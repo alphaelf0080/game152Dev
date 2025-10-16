@@ -62,13 +62,17 @@ export class RampShaderResetInspector extends Component {
             return;
         }
         
+        const material = this.targetSprite.customMaterial;
+        
         try {
             const uiTransform = this.node.getComponent(UITransform);
             if (uiTransform) {
                 const contentSize = uiTransform.contentSize;
+                
+                // 計算 nodeUVScale
                 const nodeUVScaleX = 2.0 / contentSize.width;
                 const nodeUVScaleY = 2.0 / contentSize.height;
-                this.targetSprite.customMaterial.setProperty('nodeUVScale', new Vec2(nodeUVScaleX, nodeUVScaleY), 0);
+                material.setProperty('nodeUVScale', new Vec2(nodeUVScaleX, nodeUVScaleY), 0);
                 console.log(`📐 nodeUVScale set to (${nodeUVScaleX.toFixed(6)}, ${nodeUVScaleY.toFixed(6)}) for node with content size (${contentSize.width}, ${contentSize.height})`);
             }
         } catch (error) {
@@ -122,17 +126,19 @@ export class RampShaderResetInspector extends Component {
      */
     private resetAllParameters(material: Material): void {
         try {
-            // 自動計算並設置 nodeUVScale
-            // nodeUVScale = 1/contentSize * 2
+            // 首先更新 nodeUVScale（自動計算）
             const uiTransform = this.node.getComponent(UITransform);
             if (uiTransform) {
                 const contentSize = uiTransform.contentSize;
+                
+                // 計算並設置 nodeUVScale
                 const nodeUVScaleX = 2.0 / contentSize.width;
                 const nodeUVScaleY = 2.0 / contentSize.height;
                 material.setProperty('nodeUVScale', new Vec2(nodeUVScaleX, nodeUVScaleY), 0);
                 console.log(`✨ nodeUVScale automatically set to (${nodeUVScaleX.toFixed(6)}, ${nodeUVScaleY.toFixed(6)}) based on content size (${contentSize.width}, ${contentSize.height})`);
             }
             
+            // 設置其他參數到預設值
             // 主紋理 UV 控制
             material.setProperty('tilingOffset', this.DEFAULT_VALUES.tilingOffset.clone(), 0);
             material.setProperty('useMainTexture', this.DEFAULT_VALUES.useMainTexture, 0);
@@ -145,7 +151,7 @@ export class RampShaderResetInspector extends Component {
             // Ramp 範圍控制
             material.setProperty('rampCenter', this.DEFAULT_VALUES.rampCenter.clone(), 0);
             material.setProperty('rampUVScale', this.DEFAULT_VALUES.rampUVScale.clone(), 0);
-            material.setProperty('rampUVOffset', this.DEFAULT_VALUES.rampUVOffset.clone(), 0);
+            material.setProperty('rampUVOffset', this.DEFAULT_VALUES.rampUVOffset.clone(), 0);  // 使用預設值 (0, 0)
             material.setProperty('rampRange', this.DEFAULT_VALUES.rampRange.clone(), 0);
             
             // 顏色調整
