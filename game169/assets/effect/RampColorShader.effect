@@ -89,8 +89,12 @@ CCProgram sprite-vs %{
 
   out vec4 color;
   out vec2 uv0;
-  out vec2 effectUV;     // Ramp effect 專用 UV（獨立系統，0-1 範圍）
-  out vec2 tileInfo;     // Tile 索引資訊
+  out vec2 effectUV;     // Ramp effect 專用 UV（獨立系統，0-1 範圍，覆蓋整個 node content size）
+
+  // 從 fragment shader 提前聲明需要的 uniform
+  uniform RampProperties {
+    vec4 tilingOffset;      // xy = tiling(repeat), zw = offset
+  };
 
   vec4 vert () {
     vec4 pos = vec4(a_position, 1);
@@ -113,15 +117,18 @@ CCProgram sprite-vs %{
     #endif
     
     // effectUV: Ramp effect 專用的獨立 UV 座標系統
-    // 無論 Sprite 是 SIMPLE 或 TILED，effectUV 永遠在 0-1 範圍內
-    // fract() 確保每個 tile 都有完整的 0-1 UV 空間
-    effectUV = fract(a_texCoord);
-    
-    // tileInfo: 記錄當前是第幾個 tile（用於 TILED sprite）
-    // floor(a_texCoord) 給出 tile 的索引
-    // SIMPLE sprite: (0, 0)
-    // TILED 3x3 sprite: (0,0) ~ (2,2)
-    tileInfo = floor(a_texCoord);
+    // 整個合併起來的 tiledmap 就是 shader 的 UV 0~1, 不 repeat
+    // UV 0~1 覆蓋範圍就是 node 的 content size
+    // 
+    // 對於 SIMPLE sprite: a_texCoord 範圍 (0,0) ~ (1,1)
+    //   tilingOffset.xy = (1, 1), effectUV = a_texCoord / (1,1) = a_texCoord
+    // 
+    // 對於 TILED 3x3 sprite: a_texCoord 範圍 (0,0) ~ (3,3)
+    //   tilingOffset.xy = (3, 3), effectUV = a_texCoord / (3,3) = (0,0) ~ (1,1)
+    // 
+    // 這樣整個 sprite 都有一個統一的 0-1 UV 座標系統
+    vec2 tileCount = max(tilingOffset.xy, vec2(1.0, 1.0));
+    effectUV = a_texCoord / tileCount;
     
     color = a_color;
 
@@ -140,8 +147,7 @@ CCProgram sprite-fs %{
   
   in vec4 color;
   in vec2 uv0;
-  in vec2 effectUV;
-  in vec2 tileInfo;  // 新增：tile 索引資訊
+  in vec2 effectUV;  // 獨立 UV 系統，0-1 範圍覆蓋整個 node content size
   
   #if USE_TEXTURE
     #pragma builtin(local)
@@ -233,29 +239,17 @@ CCProgram sprite-fs %{
   
   // 計算 Ramp 座標
   float calculateRampCoord(vec2 uv) {
-    // uv 參數就是 effectUV，已經在 vertex shader 中通過 fract() 處理過
-    // 它的範圍永遠是 0-1（每個 tile 內的 UV）
+    // uv 參數就是 effectUV，已經在 vertex shader 中正規化到 0-1 範圍
+    // 它覆蓋整個 node content size，不受 sprite tiling 切割影響
     
-    vec2 tileCount = max(tilingOffset.xy, vec2(1.0, 1.0));
+    // 第一步：應用基礎偏移（tilingOffset.zw）
+    vec2 baseUV = uv + tilingOffset.zw;
     
-    // uv 已經是 tile 內的 UV (0-1)，不需要再 fract()
-    vec2 uvInTile = uv;
-    
-    // 計算全域 UV：將 tile 索引和 tile 內 UV 組合
-    // 對於 TILED 3x3 的中心 tile:
-    //   tileInfo = (1, 1)
-    //   uvInTile = (0.5, 0.5)
-    //   globalUV = (1.5, 1.5) / (3, 3) = (0.5, 0.5) ✅
-    vec2 globalUV = (tileInfo + uvInTile) / tileCount;
-    
-    // 第二步：應用基礎偏移（tilingOffset.zw）
-    vec2 baseUV = globalUV + tilingOffset.zw;
-    
-    // 第三步：應用 Ramp UV Tiling（重複）和 Offset
+    // 第二步：應用 Ramp UV Tiling（重複）和 Offset
     // rampUVScale 現在是相對於整個 Sprite 的重複次數
     vec2 rampUV = fract(baseUV * rampUVScale) + rampUVOffset;
     
-    // 第四步：應用扭曲變形
+    // 第三步：應用扭曲變形
     if (distortionIntensity > 0.0) {
       vec2 distortionOffset = vec2(
         noise(rampUV * distortionFrequency) - 0.5,
