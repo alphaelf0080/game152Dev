@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.SceneAsset",
-    "_name": "main",
+    "_name": "scene",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -11,7 +11,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "main",
+    "_name": "scene",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -71,7 +71,7 @@
     "_globals": {
       "__id__": 1192
     },
-    "_id": "d5a06209-2f70-4f38-a799-477c2be9fe30"
+    "_id": "efdea83b-92a7-47be-8f71-e06cc7e621ac"
   },
   {
     "__type__": "cc.Node",
@@ -42791,7 +42791,7 @@
     "_priority": 2,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 349.55725190839695,
+    "_orthoHeight": 387.46987951807233,
     "_near": 1,
     "_far": 2000,
     "_color": {
