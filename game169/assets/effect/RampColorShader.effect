@@ -56,12 +56,12 @@ CCEffect %{
         rampRange: { value: [0.0, 1.0], editor: { displayName: 'Ramp 範圍', tooltip: 'X=起始位置, Y=結束位置' } }
         
         # 顏色調整
-        brightness: { value: 0.0, editor: { range: [-1.0, 1.0], slide: true, displayName: '亮度調整' } }
-        contrast: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '對比度' } }
-        saturation: { value: 1.0, editor: { range: [0.0, 3.0], slide: true, displayName: '飽和度' } }
+        brightness: { value: 0.0, editor: { type: float, range: [-1.0, 1.0], slide: true, step: 0.01, displayName: '亮度調整' } }
+        contrast: { value: 1.0, editor: { type: float, range: [0.0, 3.0], slide: true, step: 0.01, displayName: '對比度' } }
+        saturation: { value: 1.0, editor: { type: float, range: [0.0, 3.0], slide: true, step: 0.01, displayName: '飽和度' } }
         
         # 強度控制
-        rampIntensity: { value: 1.0, editor: { range: [0.0, 2.0], slide: true, displayName: 'Ramp 強度' } }
+        rampIntensity: { value: 1.0, editor: { type: float, range: [0.0, 2.0], slide: true, step: 0.01, displayName: 'Ramp 強度' } }
         
         # 進階控制
         invertRamp: { value: 0.0, editor: { displayName: '反轉 Ramp', tooltip: '1=反轉漸變方向' } }
