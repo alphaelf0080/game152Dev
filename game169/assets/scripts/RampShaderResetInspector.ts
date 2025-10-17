@@ -262,23 +262,26 @@ export class RampShaderResetInspector extends Component {
     ): { x: number, y: number } {
         
         // ========================================
-        // ========================================
         // 步驟 1: 計算錨點造成的 UV 偏移
         // ========================================
         // 
-        // 🔍 關鍵理論修正：
+        // � 修正：只在 anchor ≠ 0.5 時應用補償
         // 
-        // offset = (1.0 - anchor) / 2.0
+        // 當 anchor = 0.5（中心）：
+        //   anchorOffset = 0.0 （無補償）
         // 
-        // 推導：當 anchor != 0.5 時，需要將 normalizedUV [0,1] 向外擴展
+        // 當 anchor ≠ 0.5：
+        //   anchorOffset = (1.0 - anchor) / 2.0
         // 
-        // 驗證：
-        // - anchor = 0.5 → offset = 0.25  (向外擴展 25%)
-        // - anchor = 0.0 → offset = 0.5   (向外擴展 50%)
-        // - anchor = 1.0 → offset = 0.0   (無需擴展)
-        // 
-        const anchorOffsetX = (1.0 - anchorX) / 2.0;
-        const anchorOffsetY = (1.0 - anchorY) / 2.0;
+        let anchorOffsetX = 0.0;
+        let anchorOffsetY = 0.0;
+        
+        if (Math.abs(anchorX - 0.5) > 0.01) {
+            anchorOffsetX = (1.0 - anchorX) / 2.0;
+        }
+        if (Math.abs(anchorY - 0.5) > 0.01) {
+            anchorOffsetY = (1.0 - anchorY) / 2.0;
+        }
         
         // ========================================
         // 步驟 2: 計算 Tiling 造成的影響
