@@ -335,10 +335,17 @@ export class RampShaderResetInspector extends Component {
         //    - 不影響 UV 座標空間
         //    - offset 不應該介入這個過程
         // 
-        // 最終 offset = 錨點補償 + Tiling補償
+        // 最終 offset 計算
         // 
-        const finalOffsetX = anchorOffsetX + tilingOffsetX;
-        const finalOffsetY = anchorOffsetY + tilingOffsetY;
+        // ⚠️ 關鍵發現：offset=(0,0) 會導致漸變從中間開始
+        // 需要反向偏移以實現完整的 0~1 漸變
+        // 
+        // 嘗試方式：offset = -0.5 (完整的向後偏移)
+        // 這樣會將 normalizedUV [0, 1] 變成 [-0.5, 0.5]
+        // fract([-0.5, 0.5]) = [0.5, 1.0) ∪ [0, 0.5) = 完整循環
+        // 
+        const finalOffsetX = -0.5;  // 試驗值：-0.5
+        const finalOffsetY = -0.5;  // 試驗值：-0.5
         
         return {
             x: finalOffsetX,
