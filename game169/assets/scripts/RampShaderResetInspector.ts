@@ -262,39 +262,23 @@ export class RampShaderResetInspector extends Component {
     ): { x: number, y: number } {
         
         // ========================================
+        // ========================================
         // 步驟 1: 計算錨點造成的 UV 偏移
         // ========================================
         // 
-        // 從 Shader 分析：
-        // normalizedUV = (nodeUV * nodeUVScale + 1.0) * 0.5
+        // 🔍 關鍵理論修正：
         // 
-        // 當 anchor = 0.5: nodeUV ∈ [-size/2, size/2]
-        //   → normalizedUV ∈ [0, 1] ✓
+        // offset = (1.0 - anchor) / 2.0
         // 
-        // 當 anchor != 0.5: nodeUV 範圍改變
-        //   → normalizedUV 會偏移
-        //   → 需要 offset 補償
-        // 
-        // 補償公式：
-        // offset = (0.5 - anchor)
+        // 推導：當 anchor != 0.5 時，需要將 normalizedUV [0,1] 向外擴展
         // 
         // 驗證：
-        // - anchor = 0.0 → offset = 0.5 - 0.0 = 0.5
-        // - anchor = 0.5 → offset = 0.5 - 0.5 = 0.0 ✓
-        // - anchor = 1.0 → offset = 0.5 - 1.0 = -0.5
+        // - anchor = 0.5 → offset = 0.25  (向外擴展 25%)
+        // - anchor = 0.0 → offset = 0.5   (向外擴展 50%)
+        // - anchor = 1.0 → offset = 0.0   (無需擴展)
         // 
-        // 等等...這個公式是反的！讓我重新推導：
-        // 
-        // 當 anchor = 0.0 (左下):
-        //   nodeUV = [0, width] → 需要向左偏移 -0.5
-        // 當 anchor = 1.0 (右上):
-        //   nodeUV = [-width, 0] → 需要向右偏移 +0.5
-        // 
-        // 正確公式：
-        // anchorOffset = anchor - 0.5
-        // 
-        const anchorOffsetX = anchorX - 0.5;
-        const anchorOffsetY = anchorY - 0.5;
+        const anchorOffsetX = (1.0 - anchorX) / 2.0;
+        const anchorOffsetY = (1.0 - anchorY) / 2.0;
         
         // ========================================
         // 步驟 2: 計算 Tiling 造成的影響
@@ -344,8 +328,29 @@ export class RampShaderResetInspector extends Component {
         // 這樣會將 normalizedUV [0, 1] 變成 [-0.5, 0.5]
         // fract([-0.5, 0.5]) = [0.5, 1.0) ∪ [0, 0.5) = 完整循環
         // 
-        const finalOffsetX = -0.5;  // 試驗值：-0.5
-        const finalOffsetY = -0.5;  // 試驗值：-0.5
+        // ========================================
+        // 步驟 3: 組合所有補償
+        // ========================================
+        // 
+        // 多個試驗公式（根據錨點補償的不同理論）：
+        // 
+        // 理論 A（當前）: offset = 0.5 - anchor
+        //   - anchor=0.5 → offset=0.0
+        //   - anchor=0.0 → offset=0.5
+        //   - anchor=1.0 → offset=-0.5
+        // 
+        // 理論 B: offset = (1.0 - anchor) / 2.0
+        //   - anchor=0.5 → offset=0.25
+        //   - anchor=0.0 → offset=0.5
+        //   - anchor=1.0 → offset=0.0
+        // 
+        // 理論 C: offset = -0.5 （固定向後偏移，用於完整循環）
+        //   - 適用所有 anchor，強制完整的 0~1 映射
+        // 
+        // 選用理論 A（0.5 - anchor）
+        // 
+        const finalOffsetX = anchorOffsetX + tilingOffsetX;  // 理論 A
+        const finalOffsetY = anchorOffsetY + tilingOffsetY;  // 理論 A
         
         return {
             x: finalOffsetX,
