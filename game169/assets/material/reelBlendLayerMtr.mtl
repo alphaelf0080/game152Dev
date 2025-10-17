@@ -11,8 +11,6 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "RAMP_DIRECTION": 4,
-      "BLEND_MODE": 3,
       "USE_TEXTURE": true
     }
   ],
