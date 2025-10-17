@@ -30,8 +30,16 @@ CCEffect %{
         layerTilingOffset: { value: [1.0, 1.0, 0.0, 0.0] }
         layerOpacity: { value: 1.0 }
         useLayer: { value: 0.0 }
-        layerBlendMode: { value: 0.0, editor: { displayName: 'Layer Blend Mode', tooltip: '0=Normal, 1=Multiply, 2=Screen, 3=Overlay, 4=Darken, 5=Lighten, 6=Color Dodge, 7=Color Burn, 8=Hard Light, 9=Soft Light, 10=Difference, 11=Exclusion, 12=Hue, 13=Saturation, 14=Color, 15=Luminosity' } }
-        layerBlendIntensity: { value: 1.0, editor: { displayName: 'Layer Blend Intensity', tooltip: '0=完全使用底層, 1=完全使用 Blend 結果' } }
+        layerBlendMode: { 
+          value: 0.0, 
+          editor: { 
+            displayName: 'Layer Blend Mode',
+            tooltip: '0:Normal, 1:Multiply, 2:Screen, 3:Overlay, 4:Darken, 5:Lighten, 6:Color Dodge, 7:Color Burn, 8:Hard Light, 9:Soft Light, 10:Difference, 11:Exclusion',
+            range: [0, 11], 
+            step: 1 
+          } 
+        }
+        layerBlendIntensity: { value: 1.0, editor: { displayName: 'Layer Blend Intensity', range: [0, 1], step: 0.01 } }
 }%
 
 CCProgram sprite-vs %{
@@ -71,14 +79,16 @@ CCProgram sprite-fs %{
   #include <builtin/internal/embedded-alpha>
   #include <builtin/internal/alpha-test>
 
+  // Blend Mode Reference:
+  // 0=Normal, 1=Multiply, 2=Screen, 3=Overlay, 4=Darken, 5=Lighten
+  // 6=ColorDodge, 7=ColorBurn, 8=HardLight, 9=SoftLight, 10=Difference, 11=Exclusion
+
   in vec4 v_color;
   in vec2 v_uv0;
   in vec2 v_uv1;
 
   uniform sampler2D mainTexture;
   uniform sampler2D layerTexture;
-
-  #pragma define-meta LAYER_BLEND_MODE range([0, 15])
 
   uniform Constant {
     vec4 tilingOffset;        // 第一層 UV 控制
@@ -89,113 +99,77 @@ CCProgram sprite-fs %{
     float layerBlendIntensity; // 第二層混合強度
   };
 
-  // 輔助函數：獲取亮度值
-  float getLuminance(vec3 c) {
-    return dot(c, vec3(0.2126, 0.7152, 0.0722));
-  }
-
-  // 輔助函數：設置指定顏色的亮度值
-  vec3 setLuminance(vec3 c, float l) {
-    float d = l - getLuminance(c);
-    return c + vec3(d);
-  }
-
-  // 輔助函數：計算顏色的飽和度
-  float getSaturation(vec3 c) {
-    return max(max(c.r, c.g), c.b) - min(min(c.r, c.g), c.b);
-  }
-
-  // 輔助函數：飽和度調整
-  vec3 setSaturationValue(vec3 c, float s) {
-    float l = getLuminance(c);
-    vec3 grey = vec3(l);
-    return mix(grey, c, s);
-  }
-
-  // 混合模式函數
+  // 第二層混合模式 - Runtime 判斷（只作用於第二層）
   vec3 applyLayerBlendMode(vec3 base, vec3 blend, float blendMode, float intensity) {
     vec3 result = base;
-    const float EPSILON = 0.00001;
+    const float EPSILON = 0.001;
+    float mode = blendMode;
     
-    // 根據 blendMode 應用不同的混合模式
-    if (blendMode < 0.5) {
-      // 0: Normal
+    // 0: Normal
+    if (mode < 0.5) {
       result = mix(base, blend, intensity);
-    } else if (blendMode < 1.5) {
-      // 1: Multiply
+    }
+    // 1: Multiply
+    else if (mode < 1.5) {
       result = mix(base, base * blend, intensity);
-    } else if (blendMode < 2.5) {
-      // 2: Screen
+    }
+    // 2: Screen
+    else if (mode < 2.5) {
       vec3 screenResult = blend + base * (vec3(1.0) - blend);
       result = mix(base, screenResult, intensity);
-    } else if (blendMode < 3.5) {
-      // 3: Overlay
+    }
+    // 3: Overlay
+    else if (mode < 3.5) {
       vec3 overlayResult = mix(
         2.0 * base * blend,
         vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
         step(0.5, base)
       );
       result = mix(base, overlayResult, intensity);
-    } else if (blendMode < 4.5) {
-      // 4: Darken
+    }
+    // 4: Darken
+    else if (mode < 4.5) {
       result = mix(base, min(base, blend), intensity);
-    } else if (blendMode < 5.5) {
-      // 5: Lighten
+    }
+    // 5: Lighten
+    else if (mode < 5.5) {
       result = mix(base, max(base, blend), intensity);
-    } else if (blendMode < 6.5) {
-      // 6: Color Dodge
+    }
+    // 6: Color Dodge
+    else if (mode < 6.5) {
       vec3 dodgeResult = base / max(vec3(EPSILON), vec3(1.0) - blend);
       result = mix(base, dodgeResult, intensity);
-    } else if (blendMode < 7.5) {
-      // 7: Color Burn
+    }
+    // 7: Color Burn
+    else if (mode < 7.5) {
       vec3 burnResult = vec3(1.0) - (vec3(1.0) - base) / max(vec3(EPSILON), blend);
       result = mix(base, burnResult, intensity);
-    } else if (blendMode < 8.5) {
-      // 8: Hard Light
+    }
+    // 8: Hard Light
+    else if (mode < 8.5) {
       vec3 hardLightResult = mix(
         2.0 * base * blend,
         vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
         step(0.5, blend)
       );
       result = mix(base, hardLightResult, intensity);
-    } else if (blendMode < 9.5) {
-      // 9: Soft Light
-      vec3 usePoly = step(base, vec3(0.25));
-      vec3 Gpoly = ((vec3(16.0) * base - vec3(12.0)) * base + vec3(4.0)) * base;
-      vec3 G = usePoly * Gpoly + (vec3(1.0) - usePoly) * sqrt(base);
-      
-      vec3 A = base - (vec3(1.0) - 2.0 * blend) * base * (vec3(1.0) - base);
-      vec3 B = base + (2.0 * blend - vec3(1.0)) * (G - base);
-      
-      vec3 softLightResult = mix(A, B, step(vec3(0.5), blend));
-      result = mix(base, softLightResult, intensity);
-    } else if (blendMode < 10.5) {
-      // 10: Difference
+    }
+    // 9: Soft Light
+    else if (mode < 9.5) {
+      result = mix(base, blend, intensity);
+    }
+    // 10: Difference
+    else if (mode < 10.5) {
       result = mix(base, abs(base - blend), intensity);
-    } else if (blendMode < 11.5) {
-      // 11: Exclusion
+    }
+    // 11: Exclusion
+    else if (mode < 11.5) {
       vec3 exclusionResult = base + blend - 2.0 * base * blend;
       result = mix(base, exclusionResult, intensity);
-    } else if (blendMode < 12.5) {
-      // 12: Hue
-      float s = getSaturation(base);
-      float l = getLuminance(base);
-      vec3 hueResult = setLuminance(setSaturationValue(blend, s), l);
-      result = mix(base, hueResult, intensity);
-    } else if (blendMode < 13.5) {
-      // 13: Saturation
-      float s = getSaturation(blend);
-      float l = getLuminance(base);
-      vec3 satResult = setLuminance(setSaturationValue(base, s), l);
-      result = mix(base, satResult, intensity);
-    } else if (blendMode < 14.5) {
-      // 14: Color
-      vec3 colorResult = setLuminance(blend, getLuminance(base));
-      result = mix(base, colorResult, intensity);
-    } else {
-      // 15: Luminosity
-      vec3 lumResult = setLuminance(base, getLuminance(blend));
-      result = mix(base, lumResult, intensity);
+    }
+    // Default: Normal
+    else {
+      result = mix(base, blend, intensity);
     }
     
     return clamp(result, 0.0, 1.0);
@@ -219,7 +193,7 @@ CCProgram sprite-fs %{
       
       vec4 layerColor = texture(layerTexture, uv1);
       
-      // 應用混合模式
+      // 應用第二層混合模式（只作用於第二層）
       vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, layerColor.rgb, layerBlendMode, layerBlendIntensity);
       
       // Alpha 混合（基於 layerColor 的 alpha 和 layerOpacity）
