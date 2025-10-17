@@ -329,28 +329,38 @@ export class RampShaderResetInspector extends Component {
         // fract([-0.5, 0.5]) = [0.5, 1.0) ∪ [0, 0.5) = 完整循環
         // 
         // ========================================
-        // 步驟 3: 組合所有補償
+        // 步驟 3: 計算紋理尺寸補償（關鍵發現！）
         // ========================================
         // 
-        // 多個試驗公式（根據錨點補償的不同理論）：
+        // ✅ 用戶反饋：offset=(0.6, 0.64) 時效果最好
         // 
-        // 理論 A（當前）: offset = 0.5 - anchor
-        //   - anchor=0.5 → offset=0.0
-        //   - anchor=0.0 → offset=0.5
-        //   - anchor=1.0 → offset=-0.5
+        // 分析：
+        // - ContentSize = [1200, 300]
+        // - 最佳 offset = [0.6, 0.64]
+        // - 0.6 = textureWidth / contentWidth = 720 / 1200
+        // - 0.64 = textureHeight / contentHeight = 192 / 300
         // 
-        // 理論 B: offset = (1.0 - anchor) / 2.0
-        //   - anchor=0.5 → offset=0.25
-        //   - anchor=0.0 → offset=0.5
-        //   - anchor=1.0 → offset=0.0
+        // 🔑 正確公式：
+        // offset = textureSize / contentSize
         // 
-        // 理論 C: offset = -0.5 （固定向後偏移，用於完整循環）
-        //   - 適用所有 anchor，強制完整的 0~1 映射
+        let textureSizeOffsetX = 0.0;
+        let textureSizeOffsetY = 0.0;
+        
+        if (textureWidth > 0 && width > 0) {
+            textureSizeOffsetX = textureWidth / width;
+        }
+        if (textureHeight > 0 && height > 0) {
+            textureSizeOffsetY = textureHeight / height;
+        }
+        
+        // ========================================
+        // 步驟 4: 組合所有補償
+        // ========================================
         // 
-        // 選用理論 A（0.5 - anchor）
+        // 最終公式 = 紋理尺寸補償 + 錨點補償 + Tiling補償
         // 
-        const finalOffsetX = anchorOffsetX + tilingOffsetX;  // 理論 A
-        const finalOffsetY = anchorOffsetY + tilingOffsetY;  // 理論 A
+        const finalOffsetX = textureSizeOffsetX + anchorOffsetX + tilingOffsetX;
+        const finalOffsetY = textureSizeOffsetY + anchorOffsetY + tilingOffsetY;
         
         return {
             x: finalOffsetX,
