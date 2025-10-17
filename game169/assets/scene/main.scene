@@ -42416,7 +42416,6 @@
     "__type__": "22932D3fHFEeL5qbrRQXiJ4",
     "_name": "",
     "_objFlags": 0,
-    "__editorExtras__": {},
     "node": {
       "__id__": 1141
     },
@@ -42791,7 +42790,7 @@
     "_priority": 2,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 511.67155425219937,
+    "_orthoHeight": 442.5718194254446,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -43197,8 +43196,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 696,
-      "height": 540
+      "width": 1200,
+      "height": 300
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -43262,7 +43261,14 @@
     "targetSprite": {
       "__id__": 1165
     },
-    "_id": "d5VAt+IC5AuZRSnueo8rVq"
+    "autoCalculateOnLoad": true,
+    "autoCalculateOffset": true,
+    "showDetailedLogs": true,
+    "offsetCalculationMode": 1,
+    "enableManualInput": false,
+    "manualOffsetX": 0,
+    "manualOffsetY": 0,
+    "_id": "65fa+WimtKN6EBQY1Z56U0"
   },
   {
     "__type__": "cc.UITransform",
