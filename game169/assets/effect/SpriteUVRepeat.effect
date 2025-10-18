@@ -44,6 +44,8 @@ CCEffect %{
         layerSaturation: { value: 0.0, editor: { displayName: 'Layer Saturation', range: [-100, 100], step: 1 } }
         layerValue: { value: 0.0, editor: { displayName: 'Layer Value', range: [-100, 100], step: 1 } }
         layerContrast: { value: 0.0, editor: { displayName: 'Layer Contrast', range: [-50, 100], step: 1 } }
+        layerTintColor: { value: [1.0, 1.0, 1.0, 1.0], editor: { displayName: 'Layer Tint Color (RGBA)', type: 'color' } }
+        layerColorInvert: { value: 0.0, editor: { displayName: 'Layer Color Invert', range: [0, 1], step: 1 } }
 }%
 
 CCProgram sprite-vs %{
@@ -105,6 +107,8 @@ CCProgram sprite-fs %{
     float layerSaturation;    // 第二層飽和度 (-100 ~ 100, 0 = 正常)
     float layerValue;         // 第二層明度 (-100 ~ 100, 0 = 正常)
     float layerContrast;      // 第二層對比度 (-50 ~ 100, 0 = 正常)
+    vec4 layerTintColor;      // 第二層染色顏色 (RGB 顏色 + Alpha 混合強度)
+    float layerColorInvert;   // 第二層反色 (0 = 正常, 1 = 反色)
   };
 
   // RGB 轉 HSV
@@ -273,11 +277,17 @@ CCProgram sprite-fs %{
       // 調整第二層的 HSV 和對比度
       vec3 adjustedLayerColor = adjustLayerHSVC(layerColor.rgb, layerHue, layerSaturation, layerValue, layerContrast);
       
+      // 應用 Color Invert（如果啟用）
+      adjustedLayerColor = mix(adjustedLayerColor, vec3(1.0) - adjustedLayerColor, layerColorInvert);
+      
+      // 應用 Tint Color 到第二層（layerTintColor 已經是 0-1 範圍，直接使用）
+      vec3 tintedLayerColor = mix(adjustedLayerColor, adjustedLayerColor * layerTintColor.rgb, layerTintColor.a);
+      
       // 計算第二層的有效透明度（0-100 轉換為 0-1）
       float effectiveOpacity = layerOpacity / 100.0;
       
-      // 應用第二層混合模式（只作用於第二層）
-      vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, adjustedLayerColor, layerBlendMode, layerBlendIntensity);
+      // 應用第二層混合模式（使用 tinted color）
+      vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, tintedLayerColor, layerBlendMode, layerBlendIntensity);
       
       // 混合 RGB 和 Alpha - layerOpacity 控制第二層的覆蓋強度
       vec3 finalRGB = mix(baseColor.rgb, blendedRGB, effectiveOpacity);

@@ -4,7 +4,7 @@
  * 支援 Cocos Creator 3.8 的 Inspector 編輯
  */
 
-import { _decorator, Component, Sprite } from 'cc';
+import { _decorator, Component, Sprite, Color } from 'cc';
 const { ccclass, property, executeInEditMode, requireComponent } = _decorator;
 
 // 混合模式名稱映射
@@ -71,6 +71,12 @@ export class SpriteUVRepeatController extends Component {
   @property({ displayName: '第二層對比度', range: [-50, 100], step: 1 })
   public layerContrast: number = 0;
 
+  @property({ type: Color, displayName: '第二層染色顏色(RGBA)' })
+  public layerTintColor: Color = new Color(255, 255, 255, 255);
+
+  @property({ type: Boolean, displayName: '第二層反色' })
+  public layerColorInvert: boolean = false;
+
   private sprite: Sprite | null = null;
   private lastBlendMode: number = -1;
   private lastBlendIntensity: number = -1;
@@ -80,6 +86,8 @@ export class SpriteUVRepeatController extends Component {
   private lastSaturation: number = -999;
   private lastValue: number = -999;
   private lastContrast: number = -999;
+  private lastTintColor: Color = new Color(255, 255, 255, 255);
+  private lastColorInvert: boolean = false;
 
   onLoad() {
     this.sprite = this.getComponent(Sprite);
@@ -100,7 +108,9 @@ export class SpriteUVRepeatController extends Component {
       this.lastHue !== this.layerHue ||
       this.lastSaturation !== this.layerSaturation ||
       this.lastValue !== this.layerValue ||
-      this.lastContrast !== this.layerContrast
+      this.lastContrast !== this.layerContrast ||
+      !this.lastTintColor.equals(this.layerTintColor) ||
+      this.lastColorInvert !== this.layerColorInvert
     ) {
       // 更新混合模式名稱
       this.layerBlendModeName = BLEND_MODE_NAMES[this.layerBlendMode] || 'Unknown';
@@ -128,6 +138,17 @@ export class SpriteUVRepeatController extends Component {
       material.setProperty('layerSaturation', this.layerSaturation);
       material.setProperty('layerValue', this.layerValue);
       material.setProperty('layerContrast', this.layerContrast);
+      
+      // 設置 Tint Color (Color 的 RGBA 是 0-255，需要轉換為 0-1 給 shader，再由 shader 轉回 0-255)
+      material.setProperty('layerTintColor', [
+        this.layerTintColor.r,
+        this.layerTintColor.g,
+        this.layerTintColor.b,
+        this.layerTintColor.a
+      ]);
+      
+      // 設置 Color Invert
+      material.setProperty('layerColorInvert', this.layerColorInvert ? 1.0 : 0.0);
 
       // 記錄當前值
       this.lastBlendMode = this.layerBlendMode;
@@ -138,6 +159,8 @@ export class SpriteUVRepeatController extends Component {
       this.lastSaturation = this.layerSaturation;
       this.lastValue = this.layerValue;
       this.lastContrast = this.layerContrast;
+      this.lastTintColor = this.layerTintColor.clone();
+      this.lastColorInvert = this.layerColorInvert;
     } catch (e) {
       // 沈默處理
     }
