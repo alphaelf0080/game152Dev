@@ -28,8 +28,8 @@ CCEffect %{
         # 第二層（頂層）紋理 - 獨立 UV 系統
         layerTexture: { value: white }
         layerTilingOffset: { value: [1.0, 1.0, 0.0, 0.0] }
-        layerOpacity: { value: 1.0 }
-        useLayer: { value: 0.0 }
+        layerOpacity: { value: 100.0, editor: { displayName: 'Layer Opacity', range: [0, 100], step: 1 } }
+        useLayer: { value: 1.0 }
         layerBlendMode: { 
           value: 0.0, 
           editor: { 
@@ -40,6 +40,10 @@ CCEffect %{
           } 
         }
         layerBlendIntensity: { value: 1.0, editor: { displayName: 'Layer Blend Intensity', range: [0, 1], step: 0.01 } }
+        layerHue: { value: 0.0, editor: { displayName: 'Layer Hue', range: [-180, 180], step: 1 } }
+        layerSaturation: { value: 0.0, editor: { displayName: 'Layer Saturation', range: [-100, 100], step: 1 } }
+        layerValue: { value: 0.0, editor: { displayName: 'Layer Value', range: [-100, 100], step: 1 } }
+        layerContrast: { value: 0.0, editor: { displayName: 'Layer Contrast', range: [-50, 100], step: 1 } }
 }%
 
 CCProgram sprite-vs %{
@@ -97,7 +101,80 @@ CCProgram sprite-fs %{
     float useLayer;           // 是否使用第二層
     float layerBlendMode;     // 第二層混合模式
     float layerBlendIntensity; // 第二層混合強度
+    float layerHue;           // 第二層色相 (-180 ~ 180)
+    float layerSaturation;    // 第二層飽和度 (-100 ~ 100, 0 = 正常)
+    float layerValue;         // 第二層明度 (-100 ~ 100, 0 = 正常)
+    float layerContrast;      // 第二層對比度 (-50 ~ 100, 0 = 正常)
   };
+
+  // RGB 轉 HSV
+  vec3 rgb2hsv(vec3 rgb) {
+    float maxc = max(rgb.r, max(rgb.g, rgb.b));
+    float minc = min(rgb.r, min(rgb.g, rgb.b));
+    float v = maxc;
+    float delta = maxc - minc;
+    float s = (maxc != 0.0) ? delta / maxc : 0.0;
+    float h = 0.0;
+    
+    if (delta != 0.0) {
+      if (maxc == rgb.r) {
+        h = mod((rgb.g - rgb.b) / delta, 6.0);
+      } else if (maxc == rgb.g) {
+        h = (rgb.b - rgb.r) / delta + 2.0;
+      } else {
+        h = (rgb.r - rgb.g) / delta + 4.0;
+      }
+      h = h / 6.0;
+      if (h < 0.0) h += 1.0;
+    }
+    
+    return vec3(h, s, v);
+  }
+
+  // HSV 轉 RGB
+  vec3 hsv2rgb(vec3 hsv) {
+    float c = hsv.z * hsv.y;
+    float x = c * (1.0 - abs(mod(hsv.x * 6.0, 2.0) - 1.0));
+    float m = hsv.z - c;
+    
+    vec3 rgb;
+    if (hsv.x < 1.0 / 6.0) rgb = vec3(c, x, 0.0);
+    else if (hsv.x < 2.0 / 6.0) rgb = vec3(x, c, 0.0);
+    else if (hsv.x < 3.0 / 6.0) rgb = vec3(0.0, c, x);
+    else if (hsv.x < 4.0 / 6.0) rgb = vec3(0.0, x, c);
+    else if (hsv.x < 5.0 / 6.0) rgb = vec3(x, 0.0, c);
+    else rgb = vec3(c, 0.0, x);
+    
+    return rgb + m;
+  }
+
+  // 調整第二層的 HSV 和對比度
+  vec3 adjustLayerHSVC(vec3 color, float hue, float saturation, float value, float contrast) {
+    // 轉換到 HSV
+    vec3 hsv = rgb2hsv(color);
+    
+    // 調整色相（-180~180 到 -0.5~0.5）
+    hsv.x = mod(hsv.x + hue / 360.0, 1.0);
+    
+    // 調整飽和度（-100~100，0 = 正常，負值降低飽和度，正值增加飽和度）
+    hsv.y = hsv.y * (1.0 + saturation / 100.0);
+    hsv.y = clamp(hsv.y, 0.0, 1.0);
+    
+    // 調整明度（-100~100，0 = 正常，負值變暗，正值變亮）
+    hsv.z = hsv.z * (1.0 + value / 100.0);
+    hsv.z = clamp(hsv.z, 0.0, 1.0);
+    
+    // 轉換回 RGB
+    vec3 rgb = hsv2rgb(hsv);
+    
+    // 調整對比度（-50~100，0 = 正常）
+    // contrast 正值: 增加對比度
+    // contrast 負值: 降低對比度
+    float contrastFactor = 1.0 + (contrast / 100.0);
+    rgb = mix(vec3(0.5), rgb, contrastFactor);
+    
+    return clamp(rgb, 0.0, 1.0);
+  }
 
   // 第二層混合模式 - Runtime 判斷（只作用於第二層）
   vec3 applyLayerBlendMode(vec3 base, vec3 blend, float blendMode, float intensity) {
@@ -193,13 +270,20 @@ CCProgram sprite-fs %{
       
       vec4 layerColor = texture(layerTexture, uv1);
       
+      // 調整第二層的 HSV 和對比度
+      vec3 adjustedLayerColor = adjustLayerHSVC(layerColor.rgb, layerHue, layerSaturation, layerValue, layerContrast);
+      
+      // 計算第二層的有效透明度（0-100 轉換為 0-1）
+      float effectiveOpacity = layerOpacity / 100.0;
+      
       // 應用第二層混合模式（只作用於第二層）
-      vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, layerColor.rgb, layerBlendMode, layerBlendIntensity);
+      vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, adjustedLayerColor, layerBlendMode, layerBlendIntensity);
       
-      // Alpha 混合（基於 layerColor 的 alpha 和 layerOpacity）
-      float finalAlpha = mix(baseColor.a, layerColor.a, layerColor.a * layerOpacity);
+      // 混合 RGB 和 Alpha - layerOpacity 控制第二層的覆蓋強度
+      vec3 finalRGB = mix(baseColor.rgb, blendedRGB, effectiveOpacity);
+      float finalAlpha = mix(baseColor.a, 1.0, effectiveOpacity);
       
-      finalColor = vec4(blendedRGB, finalAlpha);
+      finalColor = vec4(finalRGB, finalAlpha);
     }
 
     ALPHA_TEST(finalColor);
