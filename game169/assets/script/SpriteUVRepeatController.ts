@@ -27,6 +27,19 @@ const BLEND_MODE_NAMES: { [key: number]: string } = {
 @executeInEditMode()
 @requireComponent(Sprite)
 export class SpriteUVRepeatController extends Component {
+  // 第一層（基本層）HSV 調整
+  @property({ displayName: '基本層色相', range: [-180, 180], step: 1 })
+  public baseHue: number = 0;
+
+  @property({ displayName: '基本層飽和度', range: [-100, 100], step: 1 })
+  public baseSaturation: number = 0;
+
+  @property({ displayName: '基本層明度', range: [-100, 100], step: 1 })
+  public baseValue: number = 0;
+
+  @property({ displayName: '基本層對比度', range: [-50, 100], step: 1 })
+  public baseContrast: number = 0;
+
   @property({ displayName: '啟用第二層' })
   public useLayer: boolean = true;
 
@@ -81,6 +94,10 @@ export class SpriteUVRepeatController extends Component {
   public layerColorInvert: boolean = false;
 
   private sprite: Sprite | null = null;
+  private lastBaseHue: number = -999;
+  private lastBaseSaturation: number = -999;
+  private lastBaseValue: number = -999;
+  private lastBaseContrast: number = -999;
   private lastBlendMode: number = -1;
   private lastBlendIntensity: number = -1;
   private lastUVScale: Vec2 = new Vec2(1, 1);
@@ -105,6 +122,10 @@ export class SpriteUVRepeatController extends Component {
   update() {
     // 檢查是否有屬性變化
     if (
+      this.lastBaseHue !== this.baseHue ||
+      this.lastBaseSaturation !== this.baseSaturation ||
+      this.lastBaseValue !== this.baseValue ||
+      this.lastBaseContrast !== this.baseContrast ||
       this.lastBlendMode !== this.layerBlendMode ||
       this.lastBlendIntensity !== this.layerBlendIntensity ||
       !this.lastUVScale.equals(this.layerUVScale) ||
@@ -135,6 +156,12 @@ export class SpriteUVRepeatController extends Component {
       if (!material) return;
 
       // 更新材質屬性
+      // 基本層 HSV
+      material.setProperty('baseHue', this.baseHue);
+      material.setProperty('baseSaturation', this.baseSaturation);
+      material.setProperty('baseValue', this.baseValue);
+      material.setProperty('baseContrast', this.baseContrast);
+      
       material.setProperty('useLayer', this.useLayer ? 1.0 : 0.0);
       material.setProperty('layerBlendMode', Number(this.layerBlendMode));
       material.setProperty('layerBlendIntensity', this.layerBlendIntensity);
@@ -158,6 +185,11 @@ export class SpriteUVRepeatController extends Component {
       material.setProperty('layerColorInvert', this.layerColorInvert ? 1.0 : 0.0);
 
       // 記錄當前值
+      this.lastBaseHue = this.baseHue;
+      this.lastBaseSaturation = this.baseSaturation;
+      this.lastBaseValue = this.baseValue;
+      this.lastBaseContrast = this.baseContrast;
+      
       this.lastBlendMode = this.layerBlendMode;
       this.lastBlendIntensity = this.layerBlendIntensity;
       this.lastUVScale = this.layerUVScale.clone();
