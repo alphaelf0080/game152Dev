@@ -138,7 +138,8 @@ export class SpriteUVRepeatController extends Component {
       material.setProperty('useLayer', this.useLayer ? 1.0 : 0.0);
       material.setProperty('layerBlendMode', Number(this.layerBlendMode));
       material.setProperty('layerBlendIntensity', this.layerBlendIntensity);
-      material.setProperty('layerUVScale', this.layerUVScale);
+      // 將 Vec2 轉換為 vec4 (xy=scale, zw=0)
+      material.setProperty('layerUVScale', [this.layerUVScale.x, this.layerUVScale.y, 0, 0]);
       material.setProperty('layerOpacity', this.layerOpacity);
       material.setProperty('layerHue', this.layerHue);
       material.setProperty('layerSaturation', this.layerSaturation);
