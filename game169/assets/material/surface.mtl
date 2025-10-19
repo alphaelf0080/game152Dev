@@ -40,7 +40,7 @@
         "__uuid__": "ec65b7da-379c-4941-bde1-d8dd533cfdd0@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "layerOpacity": 30,
+      "layerOpacity": 50,
       "layerBlendMode": 1,
       "layerValue": 90,
       "layerContrast": -4

@@ -43455,7 +43455,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 720,
+      "width": 720.0000000000001,
       "height": 1600
     },
     "_anchorPoint": {
