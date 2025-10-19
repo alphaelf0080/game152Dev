@@ -4,7 +4,7 @@
  * 支援 Cocos Creator 3.8 的 Inspector 編輯
  */
 
-import { _decorator, Component, Sprite, Color } from 'cc';
+import { _decorator, Component, Sprite, Color, Vec2 } from 'cc';
 const { ccclass, property, executeInEditMode, requireComponent } = _decorator;
 
 // 混合模式名稱映射
@@ -53,6 +53,9 @@ export class SpriteUVRepeatController extends Component {
   @property({ displayName: '混合強度', range: [0, 1], step: 0.01 })
   public layerBlendIntensity: number = 1.0;
 
+  @property({ displayName: '第二層UV縮放' })
+  public layerUVScale: Vec2 = new Vec2(1, 1);
+
   @property({ displayName: '第二層透明度', range: [0, 100], step: 1 })
   public layerOpacity: number = 100.0;
 
@@ -80,6 +83,7 @@ export class SpriteUVRepeatController extends Component {
   private sprite: Sprite | null = null;
   private lastBlendMode: number = -1;
   private lastBlendIntensity: number = -1;
+  private lastUVScale: Vec2 = new Vec2(1, 1);
   private lastOpacity: number = -1;
   private lastUseLayer: boolean = false;
   private lastHue: number = -999;
@@ -103,6 +107,7 @@ export class SpriteUVRepeatController extends Component {
     if (
       this.lastBlendMode !== this.layerBlendMode ||
       this.lastBlendIntensity !== this.layerBlendIntensity ||
+      !this.lastUVScale.equals(this.layerUVScale) ||
       this.lastOpacity !== this.layerOpacity ||
       this.lastUseLayer !== this.useLayer ||
       this.lastHue !== this.layerHue ||
@@ -133,6 +138,7 @@ export class SpriteUVRepeatController extends Component {
       material.setProperty('useLayer', this.useLayer ? 1.0 : 0.0);
       material.setProperty('layerBlendMode', Number(this.layerBlendMode));
       material.setProperty('layerBlendIntensity', this.layerBlendIntensity);
+      material.setProperty('layerUVScale', this.layerUVScale);
       material.setProperty('layerOpacity', this.layerOpacity);
       material.setProperty('layerHue', this.layerHue);
       material.setProperty('layerSaturation', this.layerSaturation);
@@ -153,6 +159,7 @@ export class SpriteUVRepeatController extends Component {
       // 記錄當前值
       this.lastBlendMode = this.layerBlendMode;
       this.lastBlendIntensity = this.layerBlendIntensity;
+      this.lastUVScale = this.layerUVScale.clone();
       this.lastOpacity = this.layerOpacity;
       this.lastUseLayer = this.useLayer;
       this.lastHue = this.layerHue;
