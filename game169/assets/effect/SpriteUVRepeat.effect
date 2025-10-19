@@ -28,7 +28,6 @@ CCEffect %{
         # 第二層（頂層）紋理 - 獨立 UV 系統
         layerTexture: { value: white }
         layerTilingOffset: { value: [1.0, 1.0, 0.0, 0.0] }
-        layerUVScale: { value: [1.0, 1.0, 0.0, 0.0], editor: { displayName: 'Layer UV Scale' } }
         layerOpacity: { value: 100.0, editor: { displayName: 'Layer Opacity', range: [0, 100], step: 1 } }
         useLayer: { value: 1.0 }
         layerBlendMode: { 
@@ -100,7 +99,6 @@ CCProgram sprite-fs %{
   uniform Constant {
     vec4 tilingOffset;        // 第一層 UV 控制
     vec4 layerTilingOffset;   // 第二層 UV 控制（獨立）
-    vec4 layerTintColor;      // 第二層染色顏色 (RGB 顏色 + Alpha 混合強度)
     float layerOpacity;       // 第二層透明度
     float useLayer;           // 是否使用第二層
     float layerBlendMode;     // 第二層混合模式
@@ -109,8 +107,8 @@ CCProgram sprite-fs %{
     float layerSaturation;    // 第二層飽和度 (-100 ~ 100, 0 = 正常)
     float layerValue;         // 第二層明度 (-100 ~ 100, 0 = 正常)
     float layerContrast;      // 第二層對比度 (-50 ~ 100, 0 = 正常)
+    vec4 layerTintColor;      // 第二層染色顏色 (RGB 顏色 + Alpha 混合強度)
     float layerColorInvert;   // 第二層反色 (0 = 正常, 1 = 反色)
-    vec4 layerUVScale;        // 第二層 UV 縮放 (xy=scale, zw=unused, 預設 [1.0, 1.0, 0.0, 0.0])
   };
 
   // RGB 轉 HSV
@@ -272,10 +270,6 @@ CCProgram sprite-fs %{
     if (useLayer > 0.5) {
       // 第二層使用完全獨立的 UV 系統，不受 tilingOffset 影響
       vec2 uv1 = v_uv1 * layerTilingOffset.xy + layerTilingOffset.zw;
-      
-      // 應用 UV 縮放 (中心點縮放，避免偏移)
-      uv1 = (uv1 - 0.5) * layerUVScale.xy + 0.5;
-      
       uv1 = fract(uv1);
       
       vec4 layerColor = texture(layerTexture, uv1);
