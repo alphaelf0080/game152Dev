@@ -2,16 +2,16 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "3183bc76-ea8a-4f64-afd5-d0258072745a",
+  "uuid": "f496a3ea-6774-4f20-8854-3396f7a2519b",
   "files": [
-    ".json",
-    ".png"
+    ".jpg",
+    ".json"
   ],
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "3183bc76-ea8a-4f64-afd5-d0258072745a@6c48a",
-      "displayName": "btn_turbo_d",
+      "uuid": "f496a3ea-6774-4f20-8854-3396f7a2519b@6c48a",
+      "displayName": "跑馬燈多國語系",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "3183bc76-ea8a-4f64-afd5-d0258072745a",
+        "imageUuidOrDatabaseUri": "f496a3ea-6774-4f20-8854-3396f7a2519b",
         "visible": false
       },
       "ver": "1.0.22",
@@ -34,9 +34,9 @@
     }
   },
   "userData": {
-    "hasAlpha": true,
+    "hasAlpha": false,
     "type": "texture",
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "3183bc76-ea8a-4f64-afd5-d0258072745a@6c48a"
+    "redirect": "f496a3ea-6774-4f20-8854-3396f7a2519b@6c48a"
   }
 }

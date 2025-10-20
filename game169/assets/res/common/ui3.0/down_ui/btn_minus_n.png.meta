@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b",
+  "uuid": "4e64f83a-794c-4c3a-928f-ef286a4bce60",
   "files": [
     ".json",
     ".png"
@@ -10,20 +10,20 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b@6c48a",
+      "uuid": "4e64f83a-794c-4c3a-928f-ef286a4bce60@6c48a",
       "displayName": "btn_minus_n",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
-        "imageUuidOrDatabaseUri": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b",
-        "isUuid": true,
-        "visible": false,
         "minfilter": "linear",
         "magfilter": "linear",
-        "mipfilter": "nearest",
-        "anisotropy": 0
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "4e64f83a-794c-4c3a-928f-ef286a4bce60",
+        "visible": false
       },
       "ver": "1.0.22",
       "imported": true,
@@ -34,7 +34,7 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b@f9941",
+      "uuid": "4e64f83a-794c-4c3a-928f-ef286a4bce60@f9941",
       "displayName": "btn_minus_n",
       "id": "f9941",
       "name": "spriteFrame",
@@ -54,7 +54,7 @@
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
-        "packable": true,
+        "packable": false,
         "pixelsToUnit": 100,
         "pivotX": 0.5,
         "pivotY": 0.5,
@@ -114,7 +114,7 @@
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b@6c48a",
+        "imageUuidOrDatabaseUri": "4e64f83a-794c-4c3a-928f-ef286a4bce60@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -126,13 +126,9 @@
     }
   },
   "userData": {
+    "hasAlpha": true,
     "type": "sprite-frame",
     "fixAlphaTransparencyArtifacts": false,
-    "hasAlpha": true,
-    "redirect": "2f2ac9b5-aa1c-4cd7-be14-9baa5742a05b@6c48a",
-    "compressSettings": {
-      "useCompressTexture": true,
-      "presetId": "69Jb0bOnVIsbv9KvKNUcBi"
-    }
+    "redirect": "4e64f83a-794c-4c3a-928f-ef286a4bce60@6c48a"
   }
 }

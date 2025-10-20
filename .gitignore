@@ -98,28 +98,14 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+
+
 
 # Game output files
 # 只過濾遊戲輸出的 JSON，保留 Cocos Creator 配置文件
-game_output/**/*.json
-test_json_output/**/*.json
-json_output/**/*.json
-gameServer/game_output/**/*.json
-**/resources/**/*.json
-assets/resources/**/*.json
 
 # Cocos Creator
-library/
-local/
-temp/
-build/
-build-templates/
 
 # IDE
 .vscode/
