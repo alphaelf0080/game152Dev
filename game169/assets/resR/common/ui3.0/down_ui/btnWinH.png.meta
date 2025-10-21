@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "452efa1a-6d32-4922-b753-02c30d39d029",
+  "uuid": "ba3cddd7-5bf3-4493-90e9-81ce4808172b",
   "files": [
     ".json",
     ".png"
@@ -10,20 +10,20 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a",
-      "displayName": "ReelFrame_base",
+      "uuid": "ba3cddd7-5bf3-4493-90e9-81ce4808172b@6c48a",
+      "displayName": "btnWinH",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "ba3cddd7-5bf3-4493-90e9-81ce4808172b",
+        "isUuid": true,
+        "visible": false,
         "minfilter": "linear",
         "magfilter": "linear",
         "mipfilter": "none",
-        "anisotropy": 0,
-        "isUuid": true,
-        "imageUuidOrDatabaseUri": "452efa1a-6d32-4922-b753-02c30d39d029",
-        "visible": false
+        "anisotropy": 0
       },
       "ver": "1.0.22",
       "imported": true,
@@ -34,24 +34,24 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "452efa1a-6d32-4922-b753-02c30d39d029@f9941",
-      "displayName": "ReelFrame_base",
+      "uuid": "ba3cddd7-5bf3-4493-90e9-81ce4808172b@f9941",
+      "displayName": "btnWinH",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
         "trimType": "auto",
         "trimThreshold": 1,
         "rotated": false,
-        "offsetX": 0,
-        "offsetY": 0,
-        "trimX": 0,
-        "trimY": 0,
-        "width": 720,
-        "height": 147,
-        "rawWidth": 720,
-        "rawHeight": 147,
-        "borderTop": 114,
-        "borderBottom": 21,
+        "offsetX": -88,
+        "offsetY": -1,
+        "trimX": 9,
+        "trimY": 16,
+        "width": 46,
+        "height": 34,
+        "rawWidth": 240,
+        "rawHeight": 64,
+        "borderTop": 0,
+        "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
@@ -61,17 +61,17 @@
         "meshType": 0,
         "vertices": {
           "rawPosition": [
-            -360,
-            -73.5,
+            -23,
+            -17,
             0,
-            360,
-            -73.5,
+            23,
+            -17,
             0,
-            -360,
-            73.5,
+            -23,
+            17,
             0,
-            360,
-            73.5,
+            23,
+            17,
             0
           ],
           "indexes": [
@@ -83,38 +83,38 @@
             3
           ],
           "uv": [
-            0,
-            147,
-            720,
-            147,
-            0,
-            0,
-            720,
-            0
+            9,
+            48,
+            55,
+            48,
+            9,
+            14,
+            55,
+            14
           ],
           "nuv": [
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            1,
-            1
+            0.0375,
+            0.21875,
+            0.22916666666666666,
+            0.21875,
+            0.0375,
+            0.75,
+            0.22916666666666666,
+            0.75
           ],
           "minPos": [
-            -360,
-            -73.5,
+            -23,
+            -17,
             0
           ],
           "maxPos": [
-            360,
-            73.5,
+            23,
+            17,
             0
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a",
+        "imageUuidOrDatabaseUri": "ba3cddd7-5bf3-4493-90e9-81ce4808172b@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -126,9 +126,9 @@
     }
   },
   "userData": {
-    "hasAlpha": true,
     "type": "sprite-frame",
+    "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a"
+    "redirect": "ba3cddd7-5bf3-4493-90e9-81ce4808172b@6c48a"
   }
 }

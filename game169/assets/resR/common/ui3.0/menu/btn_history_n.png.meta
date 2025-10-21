@@ -2,7 +2,7 @@
   "ver": "1.0.27",
   "importer": "image",
   "imported": true,
-  "uuid": "452efa1a-6d32-4922-b753-02c30d39d029",
+  "uuid": "02f34be2-43b5-45bf-9415-e33326b98942",
   "files": [
     ".json",
     ".png"
@@ -10,20 +10,20 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a",
-      "displayName": "ReelFrame_base",
+      "uuid": "02f34be2-43b5-45bf-9415-e33326b98942@6c48a",
+      "displayName": "btn_history_n",
       "id": "6c48a",
       "name": "texture",
       "userData": {
         "wrapModeS": "clamp-to-edge",
         "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "02f34be2-43b5-45bf-9415-e33326b98942",
+        "isUuid": true,
+        "visible": false,
         "minfilter": "linear",
         "magfilter": "linear",
         "mipfilter": "none",
-        "anisotropy": 0,
-        "isUuid": true,
-        "imageUuidOrDatabaseUri": "452efa1a-6d32-4922-b753-02c30d39d029",
-        "visible": false
+        "anisotropy": 0
       },
       "ver": "1.0.22",
       "imported": true,
@@ -34,8 +34,8 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "452efa1a-6d32-4922-b753-02c30d39d029@f9941",
-      "displayName": "ReelFrame_base",
+      "uuid": "02f34be2-43b5-45bf-9415-e33326b98942@f9941",
+      "displayName": "btn_history_n",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
@@ -44,14 +44,14 @@
         "rotated": false,
         "offsetX": 0,
         "offsetY": 0,
-        "trimX": 0,
-        "trimY": 0,
-        "width": 720,
-        "height": 147,
-        "rawWidth": 720,
-        "rawHeight": 147,
-        "borderTop": 114,
-        "borderBottom": 21,
+        "trimX": 8,
+        "trimY": 8,
+        "width": 74,
+        "height": 74,
+        "rawWidth": 90,
+        "rawHeight": 90,
+        "borderTop": 0,
+        "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
@@ -61,17 +61,17 @@
         "meshType": 0,
         "vertices": {
           "rawPosition": [
-            -360,
-            -73.5,
+            -37,
+            -37,
             0,
-            360,
-            -73.5,
+            37,
+            -37,
             0,
-            -360,
-            73.5,
+            -37,
+            37,
             0,
-            360,
-            73.5,
+            37,
+            37,
             0
           ],
           "indexes": [
@@ -83,38 +83,38 @@
             3
           ],
           "uv": [
-            0,
-            147,
-            720,
-            147,
-            0,
-            0,
-            720,
-            0
+            8,
+            82,
+            82,
+            82,
+            8,
+            8,
+            82,
+            8
           ],
           "nuv": [
-            0,
-            0,
-            1,
-            0,
-            0,
-            1,
-            1,
-            1
+            0.08888888888888889,
+            0.08888888888888889,
+            0.9111111111111111,
+            0.08888888888888889,
+            0.08888888888888889,
+            0.9111111111111111,
+            0.9111111111111111,
+            0.9111111111111111
           ],
           "minPos": [
-            -360,
-            -73.5,
+            -37,
+            -37,
             0
           ],
           "maxPos": [
-            360,
-            73.5,
+            37,
+            37,
             0
           ]
         },
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a",
+        "imageUuidOrDatabaseUri": "02f34be2-43b5-45bf-9415-e33326b98942@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.12",
@@ -126,9 +126,9 @@
     }
   },
   "userData": {
-    "hasAlpha": true,
     "type": "sprite-frame",
+    "hasAlpha": true,
     "fixAlphaTransparencyArtifacts": false,
-    "redirect": "452efa1a-6d32-4922-b753-02c30d39d029@6c48a"
+    "redirect": "02f34be2-43b5-45bf-9415-e33326b98942@6c48a"
   }
 }
