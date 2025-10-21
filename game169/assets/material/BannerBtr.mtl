@@ -35,7 +35,7 @@
         "__expectedType__": "cc.Texture2D"
       },
       "layerMirrorH": 1,
-      "layerOpacity": 66
+      "layerBlendMode": 3
     }
   ]
 }
