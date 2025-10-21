@@ -1,8 +1,11 @@
 // Sprite UV Repeat Shader with Second Layer
 // 支援第二層獨立紋理，擁有獨立的 UV 系統
-// 新增功能：底層和第二層支援以中心線為軸的鏡像翻轉
-// - 水平鏡像：以垂直中心線為軸，將左半部複製並翻轉到右半部
-// - 垂直鏡像：以水平中心線為軸，將上半部複製並翻轉到下半部
+// 新增功能：
+// - 底層和第二層支援以中心線為軸的鏡像翻轉
+//   * 水平鏡像：以垂直中心線為軸，將左半部複製並翻轉到右半部
+//   * 垂直鏡像：以水平中心線為軸，將上半部複製並翻轉到下半部
+// - 第二層透明度 (layerOpacity) 會與紋理本身的 alpha channel 相乘
+//   * 允許使用帶透明度的紋理並保留其透明效果
 // Cocos Creator 3.8
 
 CCEffect %{
@@ -340,13 +343,15 @@ CCProgram sprite-fs %{
       // 應用 Tint Color 到第二層（layerTintColor 已經是 0-1 範圍，直接使用）
       vec3 tintedLayerColor = mix(adjustedLayerColor, adjustedLayerColor * layerTintColor.rgb, layerTintColor.a);
       
-      // 計算第二層的有效透明度（0-100 轉換為 0-1）
-      float effectiveOpacity = layerOpacity / 100.0;
+      // 計算第二層的有效透明度（layerOpacity 與紋理本身的 alpha channel 相乘）
+      // layerOpacity: 0-100 轉換為 0-1
+      // layerColor.a: 紋理本身的 alpha channel (0-1)
+      float effectiveOpacity = (layerOpacity / 100.0) * layerColor.a;
       
       // 應用第二層混合模式（使用 tinted color）
       vec3 blendedRGB = applyLayerBlendMode(baseColor.rgb, tintedLayerColor, layerBlendMode, layerBlendIntensity);
       
-      // 混合 RGB 和 Alpha - layerOpacity 控制第二層的覆蓋強度
+      // 混合 RGB 和 Alpha - effectiveOpacity 控制第二層的覆蓋強度
       vec3 finalRGB = mix(baseColor.rgb, blendedRGB, effectiveOpacity);
       float finalAlpha = mix(baseColor.a, 1.0, effectiveOpacity);
       
