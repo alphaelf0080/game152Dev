@@ -1,6 +1,8 @@
 // Sprite UV Repeat Shader with Second Layer
 // 支援第二層獨立紋理，擁有獨立的 UV 系統
-// 新增功能：底層和第二層支援水平與垂直鏡射
+// 新增功能：底層和第二層支援以中心線為軸的鏡像翻轉
+// - 水平鏡像：以垂直中心線為軸，將左半部複製並翻轉到右半部
+// - 垂直鏡像：以水平中心線為軸，將上半部複製並翻轉到下半部
 // Cocos Creator 3.8
 
 CCEffect %{
@@ -197,20 +199,30 @@ CCProgram sprite-fs %{
     return clamp(rgb, 0.0, 1.0);
   }
 
-  // UV 鏡射函數
-  // mirrorH: 1.0 = 水平鏡射, 0.0 = 不鏡射
-  // mirrorV: 1.0 = 垂直鏡射, 0.0 = 不鏡射
+  // UV 鏡射函數（以中心線為軸鏡像翻轉）
+  // mirrorH: 1.0 = 以垂直中心線為軸，左右鏡像, 0.0 = 不鏡射
+  // mirrorV: 1.0 = 以水平中心線為軸，上下鏡像, 0.0 = 不鏡射
   vec2 applyMirror(vec2 uv, float mirrorH, float mirrorV) {
     vec2 result = uv;
     
-    // 水平鏡射（如果啟用）
+    // 水平鏡射（以垂直中心線 x=0.5 為軸）
     if (mirrorH > 0.5) {
-      result.x = 1.0 - result.x;
+      // 如果在右半部 (x > 0.5)，則映射到左半部並翻轉
+      if (result.x > 0.5) {
+        result.x = 1.0 - result.x;
+      }
+      // 將 [0, 0.5] 映射到 [0, 1]，使左半部填滿整個寬度
+      result.x = result.x * 2.0;
     }
     
-    // 垂直鏡射（如果啟用）
+    // 垂直鏡射（以水平中心線 y=0.5 為軸）
     if (mirrorV > 0.5) {
-      result.y = 1.0 - result.y;
+      // 如果在下半部 (y > 0.5)，則映射到上半部並翻轉
+      if (result.y > 0.5) {
+        result.y = 1.0 - result.y;
+      }
+      // 將 [0, 0.5] 映射到 [0, 1]，使上半部填滿整個高度
+      result.y = result.y * 2.0;
     }
     
     return result;
