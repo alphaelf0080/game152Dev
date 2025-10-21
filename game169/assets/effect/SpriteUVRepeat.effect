@@ -6,6 +6,9 @@
 //   * 垂直鏡像：以水平中心線為軸，將上半部複製並翻轉到下半部
 // - 第二層透明度 (layerOpacity) 會與紋理本身的 alpha channel 相乘
 //   * 允許使用帶透明度的紋理並保留其透明效果
+// - 第二層 UV 完全獨立，不受第一層和 Sprite 九宮格切割影響
+//   * 使用頂點位置生成 UV，而非紋理坐標
+//   * 可通過 layerTilingOffset 調整縮放和偏移
 // Cocos Creator 3.8
 
 CCEffect %{
@@ -76,6 +79,7 @@ CCProgram sprite-vs %{
   out vec4 v_color;
   out vec2 v_uv0;
   out vec2 v_uv1;
+  out vec3 v_worldPos;
 
   vec4 vert () {
     vec4 pos = vec4(a_position, 1);
@@ -83,11 +87,19 @@ CCProgram sprite-vs %{
     #if USE_LOCAL
       pos = cc_matWorld * pos;
     #endif
+    
+    // 儲存世界空間位置，用於第二層 UV 計算
+    v_worldPos = pos.xyz;
 
     pos = cc_matViewProj * pos;
 
     v_uv0 = a_texCoord;
-    v_uv1 = a_texCoord;  // 第二層也使用相同的原始 UV 坐標
+    // 第二層使用頂點位置生成獨立 UV（不受九宮格和第一層影響）
+    // 將本地坐標轉換為 0-1 範圍的 UV
+    // Sprite 的頂點通常以中心為原點，我們需要找到範圍並歸一化
+    // 使用簡單的映射：假設 sprite 是居中的，使用 a_position 直接作為 UV 基礎
+    // 實際使用時，layerTilingOffset 可以調整縮放和偏移
+    v_uv1 = a_position.xy * 0.01 + 0.5;  // 簡單的歸一化，可通過 tiling 調整
     v_color = a_color;
 
     return pos;
@@ -106,6 +118,7 @@ CCProgram sprite-fs %{
   in vec4 v_color;
   in vec2 v_uv0;
   in vec2 v_uv1;
+  in vec3 v_worldPos;
 
   uniform sampler2D mainTexture;
   uniform sampler2D layerTexture;
