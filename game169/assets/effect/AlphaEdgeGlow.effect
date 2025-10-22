@@ -1,0 +1,121 @@
+// Alpha Edge Glow Shader - 沿著 Alpha 邊緣的發光效果
+// 適用於 Sprite，創建邊緣發光效果
+// Cocos Creator 3.8
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        mainTexture: { value: white }
+        glowColor: { value: [1.0, 1.0, 0.5, 1.0], editor: { displayName: 'Glow Color', type: color } }
+        glowWidth: { value: 0.08, editor: { displayName: 'Glow Width', range: [0.01, 0.3], step: 0.01 } }
+        glowIntensity: { value: 2.0, editor: { displayName: 'Glow Intensity', range: [0.0, 5.0], step: 0.1 } }
+        glowPulseSpeed: { value: 2.0, editor: { displayName: 'Glow Pulse Speed', range: [0.0, 10.0], step: 0.1 } }
+        sampleOffset: { value: 1.0, editor: { displayName: 'Edge Detection', range: [0.5, 3.0], step: 0.1 } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+
+  uniform sampler2D mainTexture;
+
+  uniform Constant {
+    vec4 glowColor;
+    float glowWidth;
+    float glowIntensity;
+    float glowPulseSpeed;
+    float sampleOffset;
+  };
+
+  vec4 frag () {
+    vec4 o = texture(mainTexture, v_uv0);
+    float centerAlpha = o.a;
+    
+    // 計算紋理偏移
+    vec2 texelSize = vec2(sampleOffset / 512.0);
+    
+    // 邊緣檢測：採樣周圍像素
+    float minAlpha = 1.0;
+    minAlpha = min(minAlpha, texture(mainTexture, v_uv0 + vec2(texelSize.x, 0.0)).a);
+    minAlpha = min(minAlpha, texture(mainTexture, v_uv0 + vec2(-texelSize.x, 0.0)).a);
+    minAlpha = min(minAlpha, texture(mainTexture, v_uv0 + vec2(0.0, texelSize.y)).a);
+    minAlpha = min(minAlpha, texture(mainTexture, v_uv0 + vec2(0.0, -texelSize.y)).a);
+    
+    // 邊緣強度
+    float edgeStrength = centerAlpha * (1.0 - minAlpha);
+    
+    // 應用顏色
+    o.rgb *= v_color.rgb;
+    o.a *= v_color.a;
+    
+    ALPHA_TEST(o);
+
+    // 邊緣發光效果
+    if (centerAlpha > 0.01) {
+      // 脈衝動畫
+      float pulse = 1.0;
+      if (glowPulseSpeed > 0.001) {
+        pulse = 0.5 + 0.5 * sin(cc_time.x * glowPulseSpeed);
+      }
+      
+      // 計算發光強度
+      float glowFactor = smoothstep(0.0, glowWidth, edgeStrength);
+      glowFactor *= pulse * glowIntensity;
+      
+      // 添加發光
+      o.rgb += glowColor.rgb * glowFactor;
+    }
+
+    return o;
+  }
+}%
