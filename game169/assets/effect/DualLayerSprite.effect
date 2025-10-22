@@ -199,20 +199,23 @@ CCProgram sprite-fs %{
   }
 
   // Wrap Mode 處理
-  vec2 applyWrapMode(vec2 uv, float wrapMode) {
+  // 返回 vec4: (uv.x, uv.y, 是否在範圍內, unused)
+  vec4 applyWrapModeWithClamp(vec2 uv, float wrapMode) {
     float mode = wrapMode;
     if (mode < 0.5) {
-      // Clamp: 超出範圍保持邊界顏色
-      return clamp(uv, 0.0, 1.0);
+      // Clamp: 檢查是否超出範圍
+      vec2 clampedUV = clamp(uv, 0.0, 1.0);
+      bool inBounds = (uv == clampedUV);
+      return vec4(clampedUV, inBounds ? 1.0 : 0.0, 0.0);
     } else if (mode < 1.5) {
       // Repeat: 無限重複
-      return fract(uv);
+      return vec4(fract(uv), 1.0, 0.0);
     } else {
       // Mirror: 鏡像重複
-      uv = mod(uv, 2.0);
-      if (uv.x > 1.0) uv.x = 2.0 - uv.x;
-      if (uv.y > 1.0) uv.y = 2.0 - uv.y;
-      return uv;
+      vec2 mirrorUV = mod(uv, 2.0);
+      if (mirrorUV.x > 1.0) mirrorUV.x = 2.0 - mirrorUV.x;
+      if (mirrorUV.y > 1.0) mirrorUV.y = 2.0 - mirrorUV.y;
+      return vec4(mirrorUV, 1.0, 0.0);
     }
   }
 
@@ -280,7 +283,8 @@ CCProgram sprite-fs %{
   }
 
   // 處理 UV：縮放 -> 重複 -> 位移 -> Wrap Mode
-  vec2 processUV(vec2 uv, vec2 scale, vec2 repeat, vec2 offset, float wrapMode) {
+  // 返回 vec3: (uv.x, uv.y, 是否在 Clamp 邊界內)
+  vec3 processUVWithClamp(vec2 uv, vec2 scale, vec2 repeat, vec2 offset, float wrapMode) {
     // 1. 應用 UV 縮放（以中心為基準）
     vec2 scaledUV = (uv - 0.5) * scale + 0.5;
     
@@ -291,12 +295,16 @@ CCProgram sprite-fs %{
     vec2 offsetUV = repeatedUV + offset;
     
     // 4. 應用 Wrap Mode
-    return applyWrapMode(offsetUV, wrapMode);
+    vec4 wrapResult = applyWrapModeWithClamp(offsetUV, wrapMode);
+    return vec3(wrapResult.xy, wrapResult.z);
   }
 
   vec4 frag () {
     // ===== 第一層（底層）=====
-    vec2 uv0 = processUV(v_uv0, layer0Scale, layer0Repeat, layer0Offset, layer0WrapMode);
+    vec3 uv0Data = processUVWithClamp(v_uv0, layer0Scale, layer0Repeat, layer0Offset, layer0WrapMode);
+    vec2 uv0 = uv0Data.xy;
+    float inBounds0 = uv0Data.z;
+    
     vec4 layer0Color = texture(mainTexture, uv0);
     layer0Color *= v_color;
     
@@ -305,12 +313,19 @@ CCProgram sprite-fs %{
     
     // 應用第一層不透明度
     float layer0EffectiveOpacity = (layer0Opacity / 100.0) * layer0Color.a;
+    
+    // 如果在 Clamp 模式下超出範圍，設為透明
+    layer0EffectiveOpacity *= inBounds0;
+    
     layer0Color = vec4(layer0Color.rgb, layer0EffectiveOpacity);
 
     // ===== 第二層（頂層）=====
     vec4 finalColor = layer0Color;
     
-    vec2 uv1 = processUV(v_uv1, layer1Scale, layer1Repeat, layer1Offset, layer1WrapMode);
+    vec3 uv1Data = processUVWithClamp(v_uv1, layer1Scale, layer1Repeat, layer1Offset, layer1WrapMode);
+    vec2 uv1 = uv1Data.xy;
+    float inBounds1 = uv1Data.z;
+    
     vec4 layer1Color = texture(layer1Texture, uv1);
     
     // 調整第二層色彩
@@ -318,6 +333,9 @@ CCProgram sprite-fs %{
     
     // 應用第二層不透明度（與 alpha 相乘）
     float layer1EffectiveOpacity = (layer1Opacity / 100.0) * layer1Color.a;
+    
+    // 如果在 Clamp 模式下超出範圍，設為透明
+    layer1EffectiveOpacity *= inBounds1;
     
     // 應用混合模式
     vec3 blendedRGB = applyBlendMode(layer0Color.rgb, layer1Color.rgb, layer1BlendMode, layer1BlendIntensity);
