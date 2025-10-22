@@ -1,11 +1,9 @@
 {
   "ver": "1.0.1",
   "importer": "label-atlas",
-  "imported": true,
+  "imported": false,
   "uuid": "a08140f2-a65f-4494-85f3-dc1ddda8cedb",
-  "files": [
-    ".json"
-  ],
+  "files": [],
   "subMetas": {},
   "userData": {
     "itemWidth": 22,

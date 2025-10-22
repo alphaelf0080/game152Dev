@@ -76,6 +76,13 @@
   - FeatureBuyLabel (Sprite - featurebuyTxt)
   - FeatureBuyDiscount (Sprite - featurebuyDiscount)
 
+##### HelpPage
+- **路徑**: BaseGame > Page > HelpPage
+- **類型**: Sprite (helpBg)
+- **組件**: HelpBg
+- **子組件**: Notice (Sprite) 欠缺
+
+
 
 
 

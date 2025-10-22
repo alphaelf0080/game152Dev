@@ -11,7 +11,6 @@ let MessageConsole: Node = null;
 export class PayTableInit extends Component {
     @property({ type: Font }) HelpAtlas: Font = null;
 
-    @property({ type: Font }) HelpAtlas2: Font = null;
 
     @property({ type: Font }) fontName: Font = new Font();
     PayArray = [];
