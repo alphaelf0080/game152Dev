@@ -1,0 +1,139 @@
+
+loading_btn.png
+size: 1296,212
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+FX_Strat/FX_Strat_01
+  rotate: false
+  xy: 487, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_03
+  rotate: false
+  xy: 519, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_05
+  rotate: false
+  xy: 588, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_07
+  rotate: false
+  xy: 620, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_09
+  rotate: false
+  xy: 689, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_11
+  rotate: false
+  xy: 721, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_13
+  rotate: false
+  xy: 790, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_15
+  rotate: false
+  xy: 822, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_17
+  rotate: false
+  xy: 891, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_19
+  rotate: false
+  xy: 923, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_21
+  rotate: false
+  xy: 992, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_23
+  rotate: false
+  xy: 1024, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_25
+  rotate: false
+  xy: 1093, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_27
+  rotate: false
+  xy: 1125, 2
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+FX_Strat/FX_Strat_29
+  rotate: false
+  xy: 1194, 106
+  size: 99, 102
+  orig: 99, 102
+  offset: 0, 0
+  index: -1
+loading_bg
+  rotate: false
+  xy: 201, 40
+  size: 168, 168
+  orig: 168, 168
+  offset: 0, 0
+  index: -1
+shine_star
+  rotate: false
+  xy: 371, 94
+  size: 114, 114
+  orig: 114, 114
+  offset: 0, 0
+  index: -1
+star btn
+  rotate: false
+  xy: 2, 5
+  size: 197, 203
+  orig: 197, 203
+  offset: 0, 0
+  index: -1
+start
+  rotate: false
+  xy: 371, 32
+  size: 146, 60
+  orig: 146, 60
+  offset: 0, 0
+  index: -1

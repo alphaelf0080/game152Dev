@@ -1,0 +1,447 @@
+
+symbol_01.webp
+size: 1432,1564
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+fx2
+  rotate: false
+  xy: 1182, 384
+  size: 102, 102
+  orig: 102, 102
+  offset: 0, 0
+  index: -1
+movement/symbol_01_00
+  rotate: true
+  xy: 1278, 488
+  size: 136, 142
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_01
+  rotate: false
+  xy: 1109, 83
+  size: 136, 142
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_02
+  rotate: false
+  xy: 971, 16
+  size: 136, 143
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_03
+  rotate: false
+  xy: 1002, 619
+  size: 136, 143
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_04
+  rotate: true
+  xy: 1277, 212
+  size: 136, 141
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_05
+  rotate: false
+  xy: 1139, 228
+  size: 136, 142
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_06
+  rotate: true
+  xy: 1286, 350
+  size: 136, 142
+  orig: 200, 200
+  offset: 32, 29
+  index: -1
+movement/symbol_01_07
+  rotate: false
+  xy: 419, 14
+  size: 136, 144
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_08
+  rotate: false
+  xy: 557, 14
+  size: 136, 144
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_09
+  rotate: false
+  xy: 1140, 619
+  size: 136, 143
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_10
+  rotate: false
+  xy: 1001, 227
+  size: 136, 143
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_11
+  rotate: true
+  xy: 1278, 626
+  size: 136, 143
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_12
+  rotate: false
+  xy: 2, 2
+  size: 137, 144
+  orig: 200, 200
+  offset: 31, 28
+  index: -1
+movement/symbol_01_13
+  rotate: false
+  xy: 141, 2
+  size: 137, 144
+  orig: 200, 200
+  offset: 31, 28
+  index: -1
+movement/symbol_01_14
+  rotate: false
+  xy: 280, 2
+  size: 137, 144
+  orig: 200, 200
+  offset: 31, 28
+  index: -1
+movement/symbol_01_145
+  rotate: false
+  xy: 833, 15
+  size: 136, 144
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_147
+  rotate: true
+  xy: 1025, 964
+  size: 194, 200
+  orig: 200, 200
+  offset: 2, 0
+  index: -1
+movement/symbol_01_149
+  rotate: false
+  xy: 2, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_15
+  rotate: false
+  xy: 695, 14
+  size: 136, 144
+  orig: 200, 200
+  offset: 32, 28
+  index: -1
+movement/symbol_01_151
+  rotate: false
+  xy: 204, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_153
+  rotate: false
+  xy: 406, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_155
+  rotate: false
+  xy: 608, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_157
+  rotate: false
+  xy: 810, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_159
+  rotate: false
+  xy: 1012, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_16
+  rotate: false
+  xy: 803, 361
+  size: 195, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_61
+  rotate: false
+  xy: 803, 361
+  size: 195, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_161
+  rotate: false
+  xy: 1214, 1360
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_163
+  rotate: false
+  xy: 2, 1158
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_165
+  rotate: false
+  xy: 2, 956
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_167
+  rotate: false
+  xy: 2, 754
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_169
+  rotate: false
+  xy: 2, 552
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_171
+  rotate: false
+  xy: 2, 350
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_173
+  rotate: false
+  xy: 2, 148
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_175
+  rotate: false
+  xy: 204, 1158
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_177
+  rotate: false
+  xy: 204, 956
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_179
+  rotate: false
+  xy: 204, 754
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_18
+  rotate: true
+  xy: 621, 963
+  size: 195, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_181
+  rotate: false
+  xy: 204, 552
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_183
+  rotate: false
+  xy: 204, 350
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_185
+  rotate: false
+  xy: 204, 148
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_187
+  rotate: false
+  xy: 1000, 372
+  size: 180, 190
+  orig: 200, 200
+  offset: 10, 5
+  index: -1
+movement/symbol_01_20
+  rotate: true
+  xy: 1227, 1162
+  size: 196, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_22
+  rotate: false
+  xy: 605, 361
+  size: 196, 199
+  orig: 200, 200
+  offset: 0, 1
+  index: -1
+movement/symbol_01_24
+  rotate: false
+  xy: 803, 161
+  size: 196, 198
+  orig: 200, 200
+  offset: 0, 1
+  index: -1
+movement/symbol_01_26
+  rotate: true
+  xy: 621, 764
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_28
+  rotate: true
+  xy: 419, 763
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_30
+  rotate: true
+  xy: 822, 764
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_32
+  rotate: true
+  xy: 1025, 764
+  size: 198, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_34
+  rotate: true
+  xy: 419, 1160
+  size: 198, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_36
+  rotate: true
+  xy: 621, 1160
+  size: 198, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_38
+  rotate: true
+  xy: 823, 1160
+  size: 198, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_40
+  rotate: true
+  xy: 1025, 1160
+  size: 198, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_42
+  rotate: true
+  xy: 1226, 764
+  size: 198, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_44
+  rotate: false
+  xy: 406, 562
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_46
+  rotate: false
+  xy: 406, 361
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_48
+  rotate: false
+  xy: 406, 160
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_50
+  rotate: false
+  xy: 605, 562
+  size: 197, 199
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_52
+  rotate: false
+  xy: 804, 564
+  size: 196, 198
+  orig: 200, 200
+  offset: 0, 1
+  index: -1
+movement/symbol_01_54
+  rotate: false
+  xy: 605, 160
+  size: 196, 199
+  orig: 200, 200
+  offset: 0, 1
+  index: -1
+movement/symbol_01_56
+  rotate: true
+  xy: 1227, 964
+  size: 196, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_58
+  rotate: true
+  xy: 419, 962
+  size: 196, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+movement/symbol_01_60
+  rotate: true
+  xy: 823, 963
+  size: 195, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1

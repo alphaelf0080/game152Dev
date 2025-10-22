@@ -1,0 +1,92 @@
+{
+"skeleton": { "hash": "2K9b3+T6oqAJRDEr/PgbAkL5MCQ", "spine": "3.8.99", "x": -181, "y": 325, "width": 362, "height": 331 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "pot", "parent": "root" }
+],
+"slots": [
+	{ "name": "pot", "bone": "pot", "attachment": "pot" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"pot": {
+				"pot": { "y": 490.5, "width": 362, "height": 331 }
+			}
+		}
+	}
+],
+"animations": {
+	"idle": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 2 }
+				]
+			}
+		}
+	},
+	"slowmotion_begin": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.5 }
+				]
+			}
+		}
+	},
+	"slowmotion_end": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 0.5 }
+				]
+			}
+		}
+	},
+	"slowmotion_loop": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"slowmotion_win": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"win_1": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"win_2": {
+		"bones": {
+			"pot": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 1 }
+				]
+			}
+		}
+	}
+}
+}

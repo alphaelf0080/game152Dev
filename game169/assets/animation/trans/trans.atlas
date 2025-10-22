@@ -1,0 +1,13 @@
+
+trans.webp
+size: 724,1604
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+trans
+  rotate: false
+  xy: 2, 2
+  size: 720, 1600
+  orig: 720, 1600
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,517 @@
+
+spin.png
+size: 1968,1052
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+fx_aura_04
+  rotate: false
+  xy: 1744, 232
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+glow
+  rotate: false
+  xy: 822, 126
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+glow2
+  rotate: true
+  xy: 301, 48
+  size: 278, 54
+  orig: 278, 54
+  offset: 0, 0
+  index: -1
+glow_177
+  rotate: false
+  xy: 1731, 102
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+idle/idle_01
+  rotate: true
+  xy: 2, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_02
+  rotate: true
+  xy: 2, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_03
+  rotate: true
+  xy: 92, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_04
+  rotate: true
+  xy: 92, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_05
+  rotate: true
+  xy: 182, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_06
+  rotate: true
+  xy: 182, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_07
+  rotate: true
+  xy: 272, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_08
+  rotate: true
+  xy: 272, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_09
+  rotate: true
+  xy: 362, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_10
+  rotate: true
+  xy: 362, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_11
+  rotate: true
+  xy: 452, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_12
+  rotate: true
+  xy: 452, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_13
+  rotate: true
+  xy: 542, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_14
+  rotate: true
+  xy: 542, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_15
+  rotate: true
+  xy: 632, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_16
+  rotate: true
+  xy: 632, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_17
+  rotate: true
+  xy: 722, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_18
+  rotate: true
+  xy: 722, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_19
+  rotate: true
+  xy: 812, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_20
+  rotate: true
+  xy: 812, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_21
+  rotate: true
+  xy: 902, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_22
+  rotate: true
+  xy: 902, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_23
+  rotate: true
+  xy: 992, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_24
+  rotate: true
+  xy: 992, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_25
+  rotate: true
+  xy: 1082, 690
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_26
+  rotate: true
+  xy: 1082, 328
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+idle/idle_27
+  rotate: false
+  xy: 1309, 962
+  size: 360, 88
+  orig: 360, 88
+  offset: 0, 0
+  index: -1
+particle3
+  rotate: false
+  xy: 1172, 921
+  size: 134, 129
+  orig: 134, 129
+  offset: 0, 0
+  index: -1
+particle_glow
+  rotate: false
+  xy: 357, 70
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+spin
+  rotate: false
+  xy: 945, 26
+  size: 98, 98
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+spin2
+  rotate: false
+  xy: 1172, 335
+  size: 98, 98
+  orig: 98, 98
+  offset: 0, 0
+  index: -1
+spin_arrow
+  rotate: true
+  xy: 615, 2
+  size: 116, 108
+  orig: 116, 108
+  offset: 0, 0
+  index: -1
+spin_arrow2
+  rotate: true
+  xy: 725, 2
+  size: 116, 108
+  orig: 116, 108
+  offset: 0, 0
+  index: -1
+spin_arrow3
+  rotate: true
+  xy: 835, 8
+  size: 116, 108
+  orig: 116, 108
+  offset: 0, 0
+  index: -1
+spin_aura_c
+  rotate: true
+  xy: 615, 120
+  size: 206, 205
+  orig: 206, 205
+  offset: 0, 0
+  index: -1
+spin_auto
+  rotate: false
+  xy: 357, 15
+  size: 88, 53
+  orig: 88, 53
+  offset: 0, 0
+  index: -1
+spin_bg
+  rotate: false
+  xy: 1573, 10
+  size: 156, 158
+  orig: 156, 158
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_00
+  rotate: true
+  xy: 1024, 166
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_01
+  rotate: true
+  xy: 1024, 166
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_02
+  rotate: true
+  xy: 1045, 4
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_03
+  rotate: true
+  xy: 1156, 166
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_04
+  rotate: true
+  xy: 1177, 4
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_05
+  rotate: false
+  xy: 1671, 920
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_06
+  rotate: true
+  xy: 1833, 890
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_07
+  rotate: false
+  xy: 1309, 830
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_08
+  rotate: true
+  xy: 1172, 759
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_09
+  rotate: false
+  xy: 1471, 830
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_10
+  rotate: false
+  xy: 1633, 788
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_11
+  rotate: false
+  xy: 1795, 758
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_12
+  rotate: false
+  xy: 1309, 698
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_13
+  rotate: false
+  xy: 1471, 698
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_14
+  rotate: false
+  xy: 1633, 656
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_15
+  rotate: true
+  xy: 1172, 597
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_16
+  rotate: false
+  xy: 1795, 626
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_17
+  rotate: true
+  xy: 1172, 435
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_18
+  rotate: true
+  xy: 1288, 273
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_19
+  rotate: true
+  xy: 1304, 464
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_20
+  rotate: false
+  xy: 1436, 566
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_21
+  rotate: false
+  xy: 1598, 524
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_22
+  rotate: false
+  xy: 1436, 434
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_23
+  rotate: false
+  xy: 1760, 494
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_24
+  rotate: false
+  xy: 1598, 392
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_25
+  rotate: false
+  xy: 1420, 302
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_26
+  rotate: false
+  xy: 1760, 362
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_27
+  rotate: false
+  xy: 1582, 260
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_28
+  rotate: false
+  xy: 1420, 170
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_29
+  rotate: true
+  xy: 1309, 8
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+spin_particular/spin_particular_30
+  rotate: true
+  xy: 1441, 8
+  size: 160, 130
+  orig: 160, 130
+  offset: 0, 0
+  index: -1
+sunlight_b
+  rotate: true
+  xy: 2, 25
+  size: 301, 297
+  orig: 301, 297
+  offset: 0, 0
+  index: -1

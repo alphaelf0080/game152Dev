@@ -1,0 +1,48 @@
+
+5kind.webp
+size: 376,484
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+5
+  rotate: true
+  xy: 2, 2
+  size: 134, 158
+  orig: 134, 158
+  offset: 0, 0
+  index: -1
+glowlight
+  rotate: true
+  xy: 274, 255
+  size: 226, 98
+  orig: 242, 101
+  offset: 8, 0
+  index: -1
+light
+  rotate: false
+  xy: 2, 138
+  size: 194, 190
+  orig: 202, 202
+  offset: 7, 6
+  index: -1
+point
+  rotate: true
+  xy: 198, 51
+  size: 202, 166
+  orig: 202, 166
+  offset: 0, 0
+  index: -1
+starlight_1
+  rotate: false
+  xy: 198, 265
+  size: 64, 63
+  orig: 66, 66
+  offset: 1, 2
+  index: -1
+txt
+  rotate: false
+  xy: 2, 330
+  size: 270, 151
+  orig: 514, 438
+  offset: 191, 180
+  index: -1

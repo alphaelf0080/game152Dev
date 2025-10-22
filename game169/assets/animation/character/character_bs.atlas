@@ -1,0 +1,13 @@
+
+character_bs.webp
+size: 368,336
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+pot
+  rotate: false
+  xy: 2, 2
+  size: 362, 331
+  orig: 362, 331
+  offset: 0, 0
+  index: -1

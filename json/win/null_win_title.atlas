@@ -1,0 +1,13 @@
+
+null_win_title.png
+size: 16,16
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+null_win_title
+  rotate: false
+  xy: 2, 2
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1

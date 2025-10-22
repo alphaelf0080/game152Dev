@@ -1,0 +1,41 @@
+
+auto.png
+size: 220,80
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+auto_arrow
+  rotate: true
+  xy: 2, 2
+  size: 73, 63
+  orig: 73, 63
+  offset: 0, 0
+  index: -1
+auto_arrow_off
+  rotate: true
+  xy: 67, 9
+  size: 66, 56
+  orig: 66, 56
+  offset: 0, 0
+  index: -1
+auto_idle
+  rotate: false
+  xy: 183, 35
+  size: 35, 40
+  orig: 35, 40
+  offset: 0, 0
+  index: -1
+auto_stop
+  rotate: false
+  xy: 183, 4
+  size: 27, 29
+  orig: 27, 29
+  offset: 0, 0
+  index: -1
+btn_auto_d
+  rotate: true
+  xy: 125, 9
+  size: 66, 56
+  orig: 66, 56
+  offset: 0, 0
+  index: -1

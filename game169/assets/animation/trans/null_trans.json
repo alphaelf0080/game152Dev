@@ -1,0 +1,73 @@
+{
+"skeleton": { "hash": "8aIzKLwVJp4DlTop07aTz5Fbi18", "spine": "3.8.99", "x": -254, "y": -189.92, "width": 508, "height": 518 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "null_trans", "parent": "root", "y": 69.08 }
+],
+"slots": [
+	{ "name": "trans_txt", "bone": "null_trans" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"trans_txt": {
+				"trans_txt": { "width": 508, "height": 518 }
+			}
+		}
+	}
+],
+"animations": {
+	"begin": {
+		"slots": {
+			"trans_txt": {
+				"attachment": [
+					{ "name": null }
+				]
+			}
+		},
+		"bones": {
+			"null_trans": {
+				"scale": [
+					{ "x": 0, "y": 0 },
+					{ "time": 1 }
+				]
+			}
+		}
+	},
+	"end": {
+		"slots": {
+			"trans_txt": {
+				"attachment": [
+					{ "name": null }
+				]
+			}
+		},
+		"bones": {
+			"null_trans": {
+				"scale": [
+					{},
+					{ "time": 1, "x": 0, "y": 0 }
+				]
+			}
+		}
+	},
+	"loop": {
+		"slots": {
+			"trans_txt": {
+				"attachment": [
+					{ "name": null }
+				]
+			}
+		},
+		"bones": {
+			"null_trans": {
+				"translate": [
+					{ "curve": "stepped" },
+					{ "time": 6 }
+				]
+			}
+		}
+	}
+}
+}

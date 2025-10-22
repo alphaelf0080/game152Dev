@@ -1,0 +1,377 @@
+
+symbo_00.webp
+size: 1984,972
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+drum
+  rotate: false
+  xy: 1082, 82
+  size: 145, 129
+  orig: 145, 129
+  offset: 0, 0
+  index: -1
+drumstick1
+  rotate: true
+  xy: 1915, 886
+  size: 82, 29
+  orig: 82, 29
+  offset: 0, 0
+  index: -1
+drumstick22
+  rotate: true
+  xy: 919, 647
+  size: 82, 28
+  orig: 82, 28
+  offset: 0, 0
+  index: -1
+explosion/explosion_00
+  rotate: false
+  xy: 1173, 702
+  size: 30, 31
+  orig: 104, 104
+  offset: 41, 33
+  index: -1
+explosion/explosion_01
+  rotate: false
+  xy: 1025, 70
+  size: 55, 57
+  orig: 104, 104
+  offset: 25, 20
+  index: -1
+explosion/explosion_02
+  rotate: false
+  xy: 928, 33
+  size: 95, 94
+  orig: 104, 104
+  offset: 5, 4
+  index: -1
+explosion/explosion_03
+  rotate: false
+  xy: 827, 20
+  size: 99, 102
+  orig: 104, 104
+  offset: 5, 0
+  index: -1
+fx2
+  rotate: false
+  xy: 723, 20
+  size: 102, 102
+  orig: 102, 102
+  offset: 0, 0
+  index: -1
+movement/symbol_00_100
+  rotate: false
+  xy: 486, 486
+  size: 238, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_102
+  rotate: false
+  xy: 244, 486
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_104
+  rotate: false
+  xy: 486, 728
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_106
+  rotate: false
+  xy: 2, 2
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_108
+  rotate: false
+  xy: 244, 244
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_110
+  rotate: false
+  xy: 1212, 746
+  size: 238, 222
+  orig: 240, 240
+  offset: 0, 18
+  index: -1
+movement/symbol_00_112
+  rotate: false
+  xy: 728, 731
+  size: 240, 237
+  orig: 240, 240
+  offset: 0, 3
+  index: -1
+movement/symbol_00_114
+  rotate: false
+  xy: 244, 5
+  size: 240, 237
+  orig: 240, 240
+  offset: 0, 3
+  index: -1
+movement/symbol_00_116
+  rotate: false
+  xy: 486, 8
+  size: 235, 234
+  orig: 240, 240
+  offset: 0, 6
+  index: -1
+movement/symbol_00_118
+  rotate: true
+  xy: 1212, 536
+  size: 208, 224
+  orig: 240, 240
+  offset: 14, 16
+  index: -1
+movement/symbol_00_120
+  rotate: false
+  xy: 1632, 532
+  size: 192, 215
+  orig: 240, 240
+  offset: 22, 24
+  index: -1
+movement/symbol_00_122
+  rotate: false
+  xy: 724, 270
+  size: 168, 169
+  orig: 240, 240
+  offset: 34, 37
+  index: -1
+movement/symbol_00_34
+  rotate: true
+  xy: 917, 420
+  size: 143, 185
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_36
+  rotate: false
+  xy: 1826, 561
+  size: 143, 189
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_38
+  rotate: true
+  xy: 1632, 387
+  size: 143, 189
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_40
+  rotate: false
+  xy: 1229, 58
+  size: 144, 159
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_42
+  rotate: false
+  xy: 1544, 223
+  size: 143, 159
+  orig: 240, 240
+  offset: 49, 51
+  index: -1
+movement/symbol_00_44
+  rotate: true
+  xy: 724, 124
+  size: 144, 177
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_46
+  rotate: true
+  xy: 1104, 392
+  size: 142, 184
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_48
+  rotate: true
+  xy: 728, 586
+  size: 143, 189
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_50
+  rotate: true
+  xy: 726, 441
+  size: 143, 189
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_52
+  rotate: false
+  xy: 1375, 70
+  size: 143, 168
+  orig: 240, 240
+  offset: 49, 50
+  index: -1
+movement/symbol_00_54
+  rotate: true
+  xy: 1826, 417
+  size: 142, 153
+  orig: 240, 240
+  offset: 50, 50
+  index: -1
+movement/symbol_00_56
+  rotate: true
+  xy: 903, 129
+  size: 144, 177
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_58
+  rotate: false
+  xy: 1082, 213
+  size: 143, 177
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_60
+  rotate: true
+  xy: 1372, 240
+  size: 142, 170
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_62
+  rotate: true
+  xy: 1520, 79
+  size: 142, 156
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_64
+  rotate: true
+  xy: 1290, 392
+  size: 142, 146
+  orig: 240, 240
+  offset: 49, 51
+  index: -1
+movement/symbol_00_66
+  rotate: false
+  xy: 1834, 117
+  size: 143, 146
+  orig: 240, 240
+  offset: 49, 51
+  index: -1
+movement/symbol_00_68
+  rotate: false
+  xy: 1834, 265
+  size: 143, 150
+  orig: 240, 240
+  offset: 49, 51
+  index: -1
+movement/symbol_00_70
+  rotate: false
+  xy: 1689, 220
+  size: 143, 165
+  orig: 240, 240
+  offset: 49, 51
+  index: -1
+movement/symbol_00_72
+  rotate: true
+  xy: 894, 275
+  size: 143, 184
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_74
+  rotate: true
+  xy: 1438, 384
+  size: 142, 184
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_76
+  rotate: false
+  xy: 1227, 219
+  size: 143, 171
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_78
+  rotate: true
+  xy: 1678, 75
+  size: 143, 154
+  orig: 240, 240
+  offset: 48, 51
+  index: -1
+movement/symbol_00_80
+  rotate: true
+  xy: 970, 565
+  size: 168, 201
+  orig: 240, 240
+  offset: 34, 37
+  index: -1
+movement/symbol_00_82
+  rotate: false
+  xy: 1438, 528
+  size: 192, 216
+  orig: 240, 240
+  offset: 22, 24
+  index: -1
+movement/symbol_00_84
+  rotate: true
+  xy: 1690, 752
+  size: 216, 223
+  orig: 240, 240
+  offset: 12, 17
+  index: -1
+movement/symbol_00_86
+  rotate: true
+  xy: 486, 244
+  size: 240, 236
+  orig: 240, 240
+  offset: 0, 4
+  index: -1
+movement/symbol_00_88
+  rotate: false
+  xy: 2, 728
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_90
+  rotate: false
+  xy: 970, 735
+  size: 240, 233
+  orig: 240, 240
+  offset: 0, 7
+  index: -1
+movement/symbol_00_92
+  rotate: false
+  xy: 1452, 749
+  size: 236, 219
+  orig: 240, 240
+  offset: 2, 21
+  index: -1
+movement/symbol_00_94
+  rotate: false
+  xy: 2, 486
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_96
+  rotate: false
+  xy: 244, 728
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
+movement/symbol_00_98
+  rotate: false
+  xy: 2, 244
+  size: 240, 240
+  orig: 240, 240
+  offset: 0, 0
+  index: -1
