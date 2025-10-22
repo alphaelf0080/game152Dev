@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Label, log, find, UITransform, SpriteFrame, LabelAtlas, resources, Color, Texture2D, TextAsset, error, HorizontalTextAlignment, JsonAsset, JavaScript, js, assetManager, TypeScript, Overflow, UI, Font } from 'cc';
+import { _decorator, Component, Node, Label, log, find, UITransform, SpriteFrame, resources, Color, Texture2D, TextAsset, error, HorizontalTextAlignment, JsonAsset, JavaScript, js, assetManager, TypeScript, Overflow, UI, Font } from 'cc';
 import PayTable from "./pay_table_config.js";
 import { UIController } from './LibCreator/libUIController/UIController';
 import { Data, Mode } from './DataController';
@@ -9,9 +9,9 @@ let MessageConsole: Node = null;
 
 @ccclass('PayTableInit')
 export class PayTableInit extends Component {
-    @property({ type: LabelAtlas }) HelpAtlas = null;
+    @property({ type: Font }) HelpAtlas: Font = null;
 
-    @property({ type: LabelAtlas }) HelpAtlas2 = null;
+    @property({ type: Font }) HelpAtlas2: Font = null;
 
     @property({ type: Font }) fontName: Font = new Font();
     PayArray = [];
