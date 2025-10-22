@@ -106,3 +106,12 @@
 
 
 
+
+
+# assets 資料夾
+
+#### language > 語系 > anm 
+  無素材
+
+#### language > 語系 > UCoin 
+  無素材

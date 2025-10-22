@@ -1,0 +1,108 @@
+// 動態掃光 Shader - 支持速度調整
+// 適用於 Sprite，創建掃過效果
+// Cocos Creator 3.8
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        mainTexture: { value: white }
+        sweepColor: { value: [1.0, 1.0, 1.0, 0.8], editor: { displayName: 'Sweep Color', type: color } }
+        sweepWidth: { value: 0.15, editor: { displayName: 'Sweep Width', range: [0.01, 0.5], step: 0.01 } }
+        sweepSpeed: { value: 2.0, editor: { displayName: 'Sweep Speed', range: [0.1, 10.0], step: 0.1 } }
+        sweepIntensity: { value: 1.5, editor: { displayName: 'Sweep Intensity', range: [0.0, 3.0], step: 0.1 } }
+        enableSweep: { value: 1.0, editor: { displayName: 'Enable Sweep', range: [0.0, 1.0], step: 1.0 } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+
+  uniform sampler2D mainTexture;
+
+  uniform Constant {
+    vec4 sweepColor;
+    float sweepWidth;
+    float sweepSpeed;
+    float sweepIntensity;
+    float enableSweep;
+  };
+
+  vec4 frag () {
+    vec4 o = texture(mainTexture, v_uv0);
+    o.rgb *= v_color.rgb;
+    o.a *= v_color.a;
+    
+    ALPHA_TEST(o);
+
+    // 掃光效果
+    if (enableSweep > 0.5) {
+      // 計算掃光位置（基於時間的波動）
+      float sweepPos = fract(cc_time.x * sweepSpeed);
+      
+      // 計算當前像素到掃光中心的距離
+      float distToSweep = abs(v_uv0.x - sweepPos);
+      
+      // 計算掃光的柔和衰減
+      float sweepFalloff = 1.0 - smoothstep(0.0, sweepWidth, distToSweep);
+      
+      // 在掃光區域邊緣添加高光
+      float highlight = sweepFalloff * sweepFalloff;
+      
+      // 混合掃光顏色
+      vec3 sweepEffect = sweepColor.rgb * highlight * sweepIntensity;
+      o.rgb += sweepEffect * o.a;
+    }
+
+    return o;
+  }
+}%

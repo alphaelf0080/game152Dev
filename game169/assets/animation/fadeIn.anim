@@ -20,7 +20,11 @@
     ],
     "_exoticAnimation": null,
     "_events": [],
-    "_embeddedPlayers": []
+    "_embeddedPlayers": [],
+    "_additiveSettings": {
+      "__id__": 12
+    },
+    "_auxiliaryCurveEntries": []
   },
   {
     "__type__": "cc.animation.ColorTrack",
@@ -222,5 +226,10 @@
     ],
     "preExtrapolation": 1,
     "postExtrapolation": 1
+  },
+  {
+    "__type__": "cc.AnimationClipAdditiveSettings",
+    "enabled": false,
+    "refClip": null
   }
 ]

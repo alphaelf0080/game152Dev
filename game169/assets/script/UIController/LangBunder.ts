@@ -278,7 +278,9 @@ export class LangBunder extends Component {
             // 步驟 5: 特殊處理 - FeatureBuy 動畫
             console.log('[LangBunder] │ [5/5] 設置 FeatureBuy 動畫...');
             const featureStartTime = Date.now();
+
             this.setupFeatureBuyAnimation();
+
             const featureTime = Date.now() - featureStartTime;
             console.log(`[LangBunder] │ ✓ FeatureBuy 設置完成，耗時: ${featureTime}ms`);
             
@@ -641,10 +643,49 @@ export class LangBunder extends Component {
             const skeleton = featureBuyNode.getComponent(sp.Skeleton);
             if (skeleton) {
                 console.log('[LangBunder] │ ✓ Skeleton 組件已找到');
+                console.log('[LangBunder] │   skeletonData:', skeleton.skeletonData);
+                console.log('[LangBunder] │   skeletonData 名稱:', skeleton.skeletonData?.name);
                 
-                // 設置動畫
-                skeleton.setAnimation(0, "idle", true);
-                console.log('[LangBunder] │ ✓ 動畫已設置: idle (循環播放)');
+                // 檢查 skeletonData 是否存在
+                if (!skeleton.skeletonData) {
+                    console.error('[LangBunder] │ ❌ skeletonData 為 null/undefined');
+                    console.error('[LangBunder] └─ FeatureBuy 設置失敗 ─────────────');
+                    return;
+                }
+                
+                // 獲取所有可用的動畫
+                const animations = skeleton.skeletonData.skeletonJson?.animations;
+                if (animations) {
+                    const animationNames = Object.keys(animations);
+                    console.log('[LangBunder] │   可用動畫列表:', animationNames);
+                    
+                    // 檢查 "idle" 動畫是否存在
+                    if (animationNames.indexOf('idle') === -1) {
+                        console.warn('[LangBunder] │ ⚠️  "idle" 動畫不存在');
+                        console.warn('[LangBunder] │   可嘗試使用:', animationNames[0]);
+                        
+                        // 嘗試使用第一個可用動畫
+                        if (animationNames.length > 0) {
+                            try {
+                                skeleton.setAnimation(0, animationNames[0], true);
+                                console.log(`[LangBunder] │ ✓ 動畫已設置: ${animationNames[0]} (循環播放)`);
+                            } catch (error) {
+                                console.error('[LangBunder] │ ❌ 設置動畫失敗:', error);
+                            }
+                        }
+                    } else {
+                        // 設置 "idle" 動畫
+                        try {
+                            skeleton.setAnimation(0, "idle", true);
+                            console.log('[LangBunder] │ ✓ 動畫已設置: idle (循環播放)');
+                        } catch (error) {
+                            console.error('[LangBunder] │ ❌ setAnimation 失敗:', error);
+                        }
+                    }
+                } else {
+                    console.error('[LangBunder] │ ❌ skeletonData.skeletonJson.animations 不存在');
+                }
+                
                 console.log('[LangBunder] └─ FeatureBuy 設置完成 ─────────────');
             } else {
                 console.warn('[LangBunder] │ ⚠️  FeatureBuyAnm 沒有 Skeleton 組件');
