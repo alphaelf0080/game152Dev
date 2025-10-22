@@ -29,9 +29,6 @@
         "__uuid__": "c218afc3-5c3c-4ffc-9092-96cfc76e8d51@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "baseHue": -21,
-      "baseSaturation": -6,
-      "baseValue": 35,
       "layerTexture": {
         "__uuid__": "25c1d0ba-ab09-4c5e-87eb-9c81be85f153@6c48a",
         "__expectedType__": "cc.Texture2D"
@@ -43,8 +40,8 @@
         "z": -0.46,
         "w": 0
       },
-      "layerOpacity": 28,
-      "layerBlendMode": 1
+      "layerOpacity": 20,
+      "layerBlendMode": 3
     }
   ]
 }
