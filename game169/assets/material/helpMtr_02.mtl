@@ -1,0 +1,90 @@
+{
+  "__type__": "cc.Material",
+  "_name": "",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "f0647223-b294-4503-9f08-dcc627031f4b",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {}
+  ],
+  "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    }
+  ],
+  "_props": [
+    {
+      "mainTexture": {
+        "__uuid__": "f8a905b5-e0c1-44d3-a9ab-d9035ffc5ff7@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer0Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer0Offset": {
+        "__type__": "cc.Vec2",
+        "x": 1.04,
+        "y": 1.592
+      },
+      "layer1Texture": {
+        "__uuid__": "2b83027a-f558-46e3-a94c-f2a070f0c5f6@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer1Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer1Offset": {
+        "__type__": "cc.Vec2",
+        "x": -1.05,
+        "y": 1.592
+      },
+      "layer2Texture": {
+        "__uuid__": "f69d5008-3a9e-40fa-b526-53a86f77f7cd@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer2Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer2Offset": {
+        "__type__": "cc.Vec2",
+        "x": 1.04,
+        "y": -0.78
+      },
+      "layer3Texture": {
+        "__uuid__": "8549f612-a8b5-442d-858a-509a7d3b2899@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer3Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer3Offset": {
+        "__type__": "cc.Vec2",
+        "x": -1.05,
+        "y": -0.78
+      },
+      "layer4Opacity": 0,
+      "layer5Opacity": 0,
+      "layer6Opacity": 0,
+      "layer7Opacity": 0
+    }
+  ]
+}

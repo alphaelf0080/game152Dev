@@ -1,0 +1,116 @@
+{
+  "__type__": "cc.Material",
+  "_name": "",
+  "_objFlags": 0,
+  "__editorExtras__": {},
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "f0647223-b294-4503-9f08-dcc627031f4b",
+    "__expectedType__": "cc.EffectAsset"
+  },
+  "_techIdx": 0,
+  "_defines": [
+    {}
+  ],
+  "_states": [
+    {
+      "rasterizerState": {},
+      "depthStencilState": {},
+      "blendState": {
+        "targets": [
+          {}
+        ]
+      }
+    }
+  ],
+  "_props": [
+    {
+      "mainTexture": {
+        "__uuid__": "be015464-776a-4311-abe2-158893a01790@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer0Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer0Offset": {
+        "__type__": "cc.Vec2",
+        "x": 1.04,
+        "y": 1.592
+      },
+      "layer1Texture": {
+        "__uuid__": "00e4785d-cbce-4557-a0b6-15637361d8e3@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer1Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer1Offset": {
+        "__type__": "cc.Vec2",
+        "x": -0.56,
+        "y": 1.72
+      },
+      "layer2Texture": {
+        "__uuid__": "4124f4e0-eae9-46c1-9f73-be7936e778e4@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer2Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer2Offset": {
+        "__type__": "cc.Vec2",
+        "x": -1.53,
+        "y": 1.46
+      },
+      "layer3Texture": {
+        "__uuid__": "713ebce5-3ef9-49f8-ab15-0d6c5bcf227a@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer3Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer3Offset": {
+        "__type__": "cc.Vec2",
+        "x": 1.05,
+        "y": -0.78
+      },
+      "layer4Texture": {
+        "__uuid__": "40be5c5e-423f-44ec-b691-bda3c07d7d56@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer4Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer4Offset": {
+        "__type__": "cc.Vec2",
+        "x": -0.55,
+        "y": -0.65
+      },
+      "layer5Texture": {
+        "__uuid__": "2ea09d3c-ece6-4843-ad86-72dfd6b2f03b@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer5Scale": {
+        "__type__": "cc.Vec2",
+        "x": 5.294,
+        "y": 5.43333
+      },
+      "layer5Offset": {
+        "__type__": "cc.Vec2",
+        "x": -1.53,
+        "y": -0.91
+      },
+      "layer6Opacity": 0,
+      "layer7Opacity": 0
+    }
+  ]
+}
