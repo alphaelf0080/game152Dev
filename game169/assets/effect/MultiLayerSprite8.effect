@@ -1,0 +1,515 @@
+// Multi-Layer Sprite Shader (8 Layers)
+// 支援 8 層 SpriteFrame，每層都可獨立調整 UV 縮放、重複、不透明度、Wrap Mode
+// 基於 DualLayerSprite 擴展而來
+// 功能：
+// - 8 層各有獨立的 SpriteFrame
+// - 每層可獨立調整 UV Scale、Repeat、Offset、Opacity
+// - 支援 Wrap Mode：Clamp (0)、Repeat (1)、Mirror (2)
+// - 每層可獨立調整色彩（Hue、Saturation、Value、Contrast）
+// - Layer 1-7 支援 12 種混合模式
+// - 所有層 Alpha 與 Opacity 相乘
+// - 支援 Clamp 邊界透明化
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        
+        # 第 0 層（底層）
+        mainTexture: { value: white }
+        layer0Scale: { value: [1.0, 1.0] }
+        layer0Repeat: { value: [1.0, 1.0] }
+        layer0Offset: { value: [0.0, 0.0] }
+        layer0WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer0Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer0Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer0Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer0Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer0Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        
+        # 第 1 層
+        layer1Texture: { value: white }
+        layer1Scale: { value: [1.0, 1.0] }
+        layer1Repeat: { value: [1.0, 1.0] }
+        layer1Offset: { value: [0.0, 0.0] }
+        layer1WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer1Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer1Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer1Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer1Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer1Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer1BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer1BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 2 層
+        layer2Texture: { value: white }
+        layer2Scale: { value: [1.0, 1.0] }
+        layer2Repeat: { value: [1.0, 1.0] }
+        layer2Offset: { value: [0.0, 0.0] }
+        layer2WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer2Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer2Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer2Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer2Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer2Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer2BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer2BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 3 層
+        layer3Texture: { value: white }
+        layer3Scale: { value: [1.0, 1.0] }
+        layer3Repeat: { value: [1.0, 1.0] }
+        layer3Offset: { value: [0.0, 0.0] }
+        layer3WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer3Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer3Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer3Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer3Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer3Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer3BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer3BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 4 層
+        layer4Texture: { value: white }
+        layer4Scale: { value: [1.0, 1.0] }
+        layer4Repeat: { value: [1.0, 1.0] }
+        layer4Offset: { value: [0.0, 0.0] }
+        layer4WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer4Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer4Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer4Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer4Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer4Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer4BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer4BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 5 層
+        layer5Texture: { value: white }
+        layer5Scale: { value: [1.0, 1.0] }
+        layer5Repeat: { value: [1.0, 1.0] }
+        layer5Offset: { value: [0.0, 0.0] }
+        layer5WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer5Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer5Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer5Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer5Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer5Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer5BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer5BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 6 層
+        layer6Texture: { value: white }
+        layer6Scale: { value: [1.0, 1.0] }
+        layer6Repeat: { value: [1.0, 1.0] }
+        layer6Offset: { value: [0.0, 0.0] }
+        layer6WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer6Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer6Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer6Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer6Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer6Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer6BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer6BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+        
+        # 第 7 層
+        layer7Texture: { value: white }
+        layer7Scale: { value: [1.0, 1.0] }
+        layer7Repeat: { value: [1.0, 1.0] }
+        layer7Offset: { value: [0.0, 0.0] }
+        layer7WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer7Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        layer7Hue: { value: 0.0, editor: { range: [-180, 180], step: 1 } }
+        layer7Saturation: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer7Value: { value: 0.0, editor: { range: [-100, 100], step: 1 } }
+        layer7Contrast: { value: 0.0, editor: { range: [-50, 100], step: 1 } }
+        layer7BlendMode: { value: 0.0, editor: { range: [0, 11], step: 1 } }
+        layer7BlendIntensity: { value: 1.0, editor: { range: [0, 1], step: 0.01 } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_color;
+  in vec2 v_uv;
+
+  uniform sampler2D mainTexture;
+  uniform sampler2D layer1Texture;
+  uniform sampler2D layer2Texture;
+  uniform sampler2D layer3Texture;
+  uniform sampler2D layer4Texture;
+  uniform sampler2D layer5Texture;
+  uniform sampler2D layer6Texture;
+  uniform sampler2D layer7Texture;
+
+  uniform Constant {
+    vec2 layer0Scale;
+    vec2 layer0Repeat;
+    vec2 layer0Offset;
+    float layer0WrapMode;
+    float layer0Opacity;
+    float layer0Hue;
+    float layer0Saturation;
+    float layer0Value;
+    float layer0Contrast;
+    
+    vec2 layer1Scale;
+    vec2 layer1Repeat;
+    vec2 layer1Offset;
+    float layer1WrapMode;
+    float layer1Opacity;
+    float layer1Hue;
+    float layer1Saturation;
+    float layer1Value;
+    float layer1Contrast;
+    float layer1BlendMode;
+    float layer1BlendIntensity;
+    
+    vec2 layer2Scale;
+    vec2 layer2Repeat;
+    vec2 layer2Offset;
+    float layer2WrapMode;
+    float layer2Opacity;
+    float layer2Hue;
+    float layer2Saturation;
+    float layer2Value;
+    float layer2Contrast;
+    float layer2BlendMode;
+    float layer2BlendIntensity;
+    
+    vec2 layer3Scale;
+    vec2 layer3Repeat;
+    vec2 layer3Offset;
+    float layer3WrapMode;
+    float layer3Opacity;
+    float layer3Hue;
+    float layer3Saturation;
+    float layer3Value;
+    float layer3Contrast;
+    float layer3BlendMode;
+    float layer3BlendIntensity;
+    
+    vec2 layer4Scale;
+    vec2 layer4Repeat;
+    vec2 layer4Offset;
+    float layer4WrapMode;
+    float layer4Opacity;
+    float layer4Hue;
+    float layer4Saturation;
+    float layer4Value;
+    float layer4Contrast;
+    float layer4BlendMode;
+    float layer4BlendIntensity;
+    
+    vec2 layer5Scale;
+    vec2 layer5Repeat;
+    vec2 layer5Offset;
+    float layer5WrapMode;
+    float layer5Opacity;
+    float layer5Hue;
+    float layer5Saturation;
+    float layer5Value;
+    float layer5Contrast;
+    float layer5BlendMode;
+    float layer5BlendIntensity;
+    
+    vec2 layer6Scale;
+    vec2 layer6Repeat;
+    vec2 layer6Offset;
+    float layer6WrapMode;
+    float layer6Opacity;
+    float layer6Hue;
+    float layer6Saturation;
+    float layer6Value;
+    float layer6Contrast;
+    float layer6BlendMode;
+    float layer6BlendIntensity;
+    
+    vec2 layer7Scale;
+    vec2 layer7Repeat;
+    vec2 layer7Offset;
+    float layer7WrapMode;
+    float layer7Opacity;
+    float layer7Hue;
+    float layer7Saturation;
+    float layer7Value;
+    float layer7Contrast;
+    float layer7BlendMode;
+    float layer7BlendIntensity;
+  };
+
+  // RGB 轉 HSV
+  vec3 rgb2hsv(vec3 rgb) {
+    float maxc = max(rgb.r, max(rgb.g, rgb.b));
+    float minc = min(rgb.r, min(rgb.g, rgb.b));
+    float v = maxc;
+    float delta = maxc - minc;
+    float s = (maxc != 0.0) ? delta / maxc : 0.0;
+    float h = 0.0;
+    
+    if (delta != 0.0) {
+      if (maxc == rgb.r) {
+        h = mod((rgb.g - rgb.b) / delta, 6.0);
+      } else if (maxc == rgb.g) {
+        h = (rgb.b - rgb.r) / delta + 2.0;
+      } else {
+        h = (rgb.r - rgb.g) / delta + 4.0;
+      }
+      h = h / 6.0;
+      if (h < 0.0) h += 1.0;
+    }
+    
+    return vec3(h, s, v);
+  }
+
+  // HSV 轉 RGB
+  vec3 hsv2rgb(vec3 hsv) {
+    float c = hsv.z * hsv.y;
+    float x = c * (1.0 - abs(mod(hsv.x * 6.0, 2.0) - 1.0));
+    float m = hsv.z - c;
+    
+    vec3 rgb;
+    if (hsv.x < 1.0 / 6.0) rgb = vec3(c, x, 0.0);
+    else if (hsv.x < 2.0 / 6.0) rgb = vec3(x, c, 0.0);
+    else if (hsv.x < 3.0 / 6.0) rgb = vec3(0.0, c, x);
+    else if (hsv.x < 4.0 / 6.0) rgb = vec3(0.0, x, c);
+    else if (hsv.x < 5.0 / 6.0) rgb = vec3(x, 0.0, c);
+    else rgb = vec3(c, 0.0, x);
+    
+    return rgb + m;
+  }
+
+  // 調整 HSV 和對比度
+  vec3 adjustHSVC(vec3 color, float hue, float saturation, float value, float contrast) {
+    vec3 hsv = rgb2hsv(color);
+    
+    hsv.x = mod(hsv.x + hue / 360.0, 1.0);
+    hsv.y = clamp(hsv.y * (1.0 + saturation / 100.0), 0.0, 1.0);
+    hsv.z = clamp(hsv.z * (1.0 + value / 100.0), 0.0, 1.0);
+    
+    vec3 rgb = hsv2rgb(hsv);
+    float contrastFactor = 1.0 + (contrast / 100.0);
+    rgb = mix(vec3(0.5), rgb, contrastFactor);
+    
+    return clamp(rgb, 0.0, 1.0);
+  }
+
+  // Wrap Mode 處理
+  vec4 applyWrapModeWithClamp(vec2 uv, float wrapMode) {
+    float mode = wrapMode;
+    if (mode < 0.5) {
+      vec2 clampedUV = clamp(uv, 0.0, 1.0);
+      bool inBounds = (uv == clampedUV);
+      return vec4(clampedUV, inBounds ? 1.0 : 0.0, 0.0);
+    } else if (mode < 1.5) {
+      return vec4(fract(uv), 1.0, 0.0);
+    } else {
+      vec2 mirrorUV = mod(uv, 2.0);
+      if (mirrorUV.x > 1.0) mirrorUV.x = 2.0 - mirrorUV.x;
+      if (mirrorUV.y > 1.0) mirrorUV.y = 2.0 - mirrorUV.y;
+      return vec4(mirrorUV, 1.0, 0.0);
+    }
+  }
+
+  // 混合模式
+  vec3 applyBlendMode(vec3 base, vec3 blend, float blendMode, float intensity) {
+    vec3 result = base;
+    const float EPSILON = 0.001;
+    float mode = blendMode;
+    
+    if (mode < 0.5) {
+      result = mix(base, blend, intensity);
+    }
+    else if (mode < 1.5) {
+      result = mix(base, base * blend, intensity);
+    }
+    else if (mode < 2.5) {
+      vec3 screenResult = blend + base * (vec3(1.0) - blend);
+      result = mix(base, screenResult, intensity);
+    }
+    else if (mode < 3.5) {
+      vec3 overlayResult = mix(
+        2.0 * base * blend,
+        vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
+        step(0.5, base)
+      );
+      result = mix(base, overlayResult, intensity);
+    }
+    else if (mode < 4.5) {
+      result = mix(base, min(base, blend), intensity);
+    }
+    else if (mode < 5.5) {
+      result = mix(base, max(base, blend), intensity);
+    }
+    else if (mode < 6.5) {
+      vec3 dodgeResult = base / max(vec3(EPSILON), vec3(1.0) - blend);
+      result = mix(base, dodgeResult, intensity);
+    }
+    else if (mode < 7.5) {
+      vec3 burnResult = vec3(1.0) - (vec3(1.0) - base) / max(vec3(EPSILON), blend);
+      result = mix(base, burnResult, intensity);
+    }
+    else if (mode < 8.5) {
+      vec3 hardLightResult = mix(
+        2.0 * base * blend,
+        vec3(1.0) - 2.0 * (vec3(1.0) - base) * (vec3(1.0) - blend),
+        step(0.5, blend)
+      );
+      result = mix(base, hardLightResult, intensity);
+    }
+    else if (mode < 9.5) {
+      result = mix(base, blend, intensity);
+    }
+    else if (mode < 10.5) {
+      result = mix(base, abs(base - blend), intensity);
+    }
+    else if (mode < 11.5) {
+      vec3 exclusionResult = base + blend - 2.0 * base * blend;
+      result = mix(base, exclusionResult, intensity);
+    }
+    else {
+      result = mix(base, blend, intensity);
+    }
+    
+    return clamp(result, 0.0, 1.0);
+  }
+
+  // 處理 UV
+  vec3 processUVWithClamp(vec2 uv, vec2 scale, vec2 repeat, vec2 offset, float wrapMode) {
+    vec2 scaledUV = (uv - 0.5) * scale + 0.5;
+    vec2 repeatedUV = scaledUV * repeat;
+    vec2 offsetUV = repeatedUV + offset;
+    
+    vec4 wrapResult = applyWrapModeWithClamp(offsetUV, wrapMode);
+    return vec3(wrapResult.xy, wrapResult.z);
+  }
+
+  vec4 frag () {
+    // 第 0 層
+    vec3 uv0Data = processUVWithClamp(v_uv, layer0Scale, layer0Repeat, layer0Offset, layer0WrapMode);
+    vec4 layer0Color = texture(mainTexture, uv0Data.xy);
+    layer0Color *= v_color;
+    layer0Color.rgb = adjustHSVC(layer0Color.rgb, layer0Hue, layer0Saturation, layer0Value, layer0Contrast);
+    layer0Color.a *= (layer0Opacity / 100.0) * uv0Data.z;
+    
+    vec4 result = layer0Color;
+
+    // 第 1 層
+    vec3 uv1Data = processUVWithClamp(v_uv, layer1Scale, layer1Repeat, layer1Offset, layer1WrapMode);
+    vec4 layer1Color = texture(layer1Texture, uv1Data.xy);
+    layer1Color.rgb = adjustHSVC(layer1Color.rgb, layer1Hue, layer1Saturation, layer1Value, layer1Contrast);
+    float layer1Alpha = (layer1Opacity / 100.0) * layer1Color.a * uv1Data.z;
+    
+    vec3 blended1 = applyBlendMode(result.rgb, layer1Color.rgb, layer1BlendMode, layer1BlendIntensity);
+    result.rgb = mix(result.rgb, blended1, layer1Alpha);
+    result.a = mix(result.a, 1.0, layer1Alpha);
+
+    // 第 2 層
+    vec3 uv2Data = processUVWithClamp(v_uv, layer2Scale, layer2Repeat, layer2Offset, layer2WrapMode);
+    vec4 layer2Color = texture(layer2Texture, uv2Data.xy);
+    layer2Color.rgb = adjustHSVC(layer2Color.rgb, layer2Hue, layer2Saturation, layer2Value, layer2Contrast);
+    float layer2Alpha = (layer2Opacity / 100.0) * layer2Color.a * uv2Data.z;
+    
+    vec3 blended2 = applyBlendMode(result.rgb, layer2Color.rgb, layer2BlendMode, layer2BlendIntensity);
+    result.rgb = mix(result.rgb, blended2, layer2Alpha);
+    result.a = mix(result.a, 1.0, layer2Alpha);
+
+    // 第 3 層
+    vec3 uv3Data = processUVWithClamp(v_uv, layer3Scale, layer3Repeat, layer3Offset, layer3WrapMode);
+    vec4 layer3Color = texture(layer3Texture, uv3Data.xy);
+    layer3Color.rgb = adjustHSVC(layer3Color.rgb, layer3Hue, layer3Saturation, layer3Value, layer3Contrast);
+    float layer3Alpha = (layer3Opacity / 100.0) * layer3Color.a * uv3Data.z;
+    
+    vec3 blended3 = applyBlendMode(result.rgb, layer3Color.rgb, layer3BlendMode, layer3BlendIntensity);
+    result.rgb = mix(result.rgb, blended3, layer3Alpha);
+    result.a = mix(result.a, 1.0, layer3Alpha);
+
+    // 第 4 層
+    vec3 uv4Data = processUVWithClamp(v_uv, layer4Scale, layer4Repeat, layer4Offset, layer4WrapMode);
+    vec4 layer4Color = texture(layer4Texture, uv4Data.xy);
+    layer4Color.rgb = adjustHSVC(layer4Color.rgb, layer4Hue, layer4Saturation, layer4Value, layer4Contrast);
+    float layer4Alpha = (layer4Opacity / 100.0) * layer4Color.a * uv4Data.z;
+    
+    vec3 blended4 = applyBlendMode(result.rgb, layer4Color.rgb, layer4BlendMode, layer4BlendIntensity);
+    result.rgb = mix(result.rgb, blended4, layer4Alpha);
+    result.a = mix(result.a, 1.0, layer4Alpha);
+
+    // 第 5 層
+    vec3 uv5Data = processUVWithClamp(v_uv, layer5Scale, layer5Repeat, layer5Offset, layer5WrapMode);
+    vec4 layer5Color = texture(layer5Texture, uv5Data.xy);
+    layer5Color.rgb = adjustHSVC(layer5Color.rgb, layer5Hue, layer5Saturation, layer5Value, layer5Contrast);
+    float layer5Alpha = (layer5Opacity / 100.0) * layer5Color.a * uv5Data.z;
+    
+    vec3 blended5 = applyBlendMode(result.rgb, layer5Color.rgb, layer5BlendMode, layer5BlendIntensity);
+    result.rgb = mix(result.rgb, blended5, layer5Alpha);
+    result.a = mix(result.a, 1.0, layer5Alpha);
+
+    // 第 6 層
+    vec3 uv6Data = processUVWithClamp(v_uv, layer6Scale, layer6Repeat, layer6Offset, layer6WrapMode);
+    vec4 layer6Color = texture(layer6Texture, uv6Data.xy);
+    layer6Color.rgb = adjustHSVC(layer6Color.rgb, layer6Hue, layer6Saturation, layer6Value, layer6Contrast);
+    float layer6Alpha = (layer6Opacity / 100.0) * layer6Color.a * uv6Data.z;
+    
+    vec3 blended6 = applyBlendMode(result.rgb, layer6Color.rgb, layer6BlendMode, layer6BlendIntensity);
+    result.rgb = mix(result.rgb, blended6, layer6Alpha);
+    result.a = mix(result.a, 1.0, layer6Alpha);
+
+    // 第 7 層
+    vec3 uv7Data = processUVWithClamp(v_uv, layer7Scale, layer7Repeat, layer7Offset, layer7WrapMode);
+    vec4 layer7Color = texture(layer7Texture, uv7Data.xy);
+    layer7Color.rgb = adjustHSVC(layer7Color.rgb, layer7Hue, layer7Saturation, layer7Value, layer7Contrast);
+    float layer7Alpha = (layer7Opacity / 100.0) * layer7Color.a * uv7Data.z;
+    
+    vec3 blended7 = applyBlendMode(result.rgb, layer7Color.rgb, layer7BlendMode, layer7BlendIntensity);
+    result.rgb = mix(result.rgb, blended7, layer7Alpha);
+    result.a = mix(result.a, 1.0, layer7Alpha);
+
+    ALPHA_TEST(result);
+    return result;
+  }
+}%
