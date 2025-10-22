@@ -1,39 +1,80 @@
-##Not Yet
-UI>BSUI>FeatureBuyButton , spine
-SettingsPage>SpinBtn>SpinAnm  ,spine
-                     SpinAnmAuto   ,spine
+# Cocos Creator 編輯歷史
 
-            >TurboBtn>TurboAnm  ,spine
-            >AutoButton>AutoAnm  ,spine
+## 待完成 (Not Yet)
 
-Spread
-Multiple>MultipleAnm  ,spine
-        >MultipleNum  ,Spine
-        >MultioleNumAnmOnes  ,Spine
-        >MultioleNumAnmTens  ,Spine
-        >MultioleNumAnmHundreds  ,Spine
-        >MultioleNumAnmThousands  ,Spine
+### UI 組件
 
-Animation>BannerController>FiveLineAnm  ,spine
-        >BannerWin  ,spine
-        >BannerWin>WinBarAnm ,spine 
-        >BannerWin>WinNumAnm>* ,spine
-        >SymbolPayTable>HelpNumber1> ,fnt
+#### Feature Buy Button
+- **路徑**: UI > BSUI > FeatureBuyButton
+- **類型**: Spine
 
+#### Settings Page
 
+##### Spin Button
+- **路徑**: SettingsPage > SpinBtn
+- **子組件**:
+  - SpinAnm (Spine)
+  - SpinAnmAuto (Spine)
 
-BaseGame>Trans ,spine
-        >Trans>TransBtn ,sprite
+##### Turbo Button
+- **路徑**: SettingsPage > TurboBtn
+- **動畫**: TurboAnm (Spine)
 
+##### Auto Button
+- **路徑**: SettingsPage > AutoButton
+- **動畫**: AutoAnm (Spine)
 
+### 傳播效果 (Spread)
 
-BaseGame>Page>FeatureBuyPage ,sprite - infoBg
-             >FeatureBuyPage>FeatureBuyPage1>BuyBtnAnm ,spine
-             >FeatureBuyPage2>FeatureBuyText , sprite txtCost
-             >FeatureBuyPage2>FeatureBuyBackBtn2 ,sprite    
-             >FeatureBuyPagr2>FeatureBuyStartBtn ,sprite
-             >FeatureBuyPagr2>FeatureBuyLabel ,sprite featurebuyTxt
-             >FeatureBuyPagr2>FeatureBuyDiscount ,sprite featurebuyDiscount
+#### Multiple Component
+- **路徑**: Multiple
+- **子組件**:
+  - MultipleAnm (Spine)
+  - MultipleNum (Spine)
+  - MultioleNumAnmOnes (Spine)
+  - MultioleNumAnmTens (Spine)
+  - MultioleNumAnmHundreds (Spine)
+  - MultioleNumAnmThousands (Spine)
+
+### 動畫和橫幅
+
+#### Banner Controller
+- **路徑**: Animation > BannerController
+- **動畫**:
+  - FiveLineAnm (Spine)
+  - BannerWin (Spine)
+  - WinBarAnm (Spine)
+  - WinNumAnm (Spine)
+
+#### Symbol Pay Table
+- **路徑**: Animation > SymbolPayTable
+- **組件**:
+  - HelpNumber1 (Font)
+
+### 基礎遊戲
+
+#### Transition
+- **路徑**: BaseGame > Trans
+- **類型**: Spine
+- **子組件**:
+  - TransBtn (Sprite)
+
+#### Feature Buy Page
+- **路徑**: BaseGame > Page > FeatureBuyPage
+- **類型**: Sprite (infoBg)
+
+##### Feature Buy Page 1
+- **路徑**: BaseGame > Page > FeatureBuyPage > FeatureBuyPage1
+- **組件**: BuyBtnAnm (Spine)
+
+##### Feature Buy Page 2
+- **路徑**: BaseGame > Page > FeatureBuyPage > FeatureBuyPage2
+- **組件**:
+  - FeatureBuyText (Sprite - txtCost)
+  - FeatureBuyBackBtn2 (Sprite)
+  - FeatureBuyStartBtn (Sprite)
+  - FeatureBuyLabel (Sprite - featurebuyTxt)
+  - FeatureBuyDiscount (Sprite - featurebuyDiscount)
 
 
 
