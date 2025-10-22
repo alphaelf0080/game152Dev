@@ -1,0 +1,195 @@
+// Multi-Layer Sprite Shader (4 Layers - Simplified)
+// 簡化版：支援 4 層 SpriteFrame 基本疊加
+// 功能：
+// - 4 層各有獨立的 SpriteFrame
+// - 每層可獨立調整 UV Scale、Repeat、Offset、Opacity
+// - 支援 Wrap Mode：Clamp (0)、Repeat (1)、Mirror (2)
+// - 移除 HSV 色彩調整
+// - 移除混合模式（使用簡單的 Alpha 混合）
+// - 支援 Clamp 邊界透明化
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        
+        # 第 0 層（底層）
+        mainTexture: { value: white }
+        layer0Scale: { value: [1.0, 1.0] }
+        layer0Repeat: { value: [1.0, 1.0] }
+        layer0Offset: { value: [0.0, 0.0] }
+        layer0WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer0Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        
+        # 第 1 層
+        layer1Texture: { value: white }
+        layer1Scale: { value: [1.0, 1.0] }
+        layer1Repeat: { value: [1.0, 1.0] }
+        layer1Offset: { value: [0.0, 0.0] }
+        layer1WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer1Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        
+        # 第 2 層
+        layer2Texture: { value: white }
+        layer2Scale: { value: [1.0, 1.0] }
+        layer2Repeat: { value: [1.0, 1.0] }
+        layer2Offset: { value: [0.0, 0.0] }
+        layer2WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer2Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+        
+        # 第 3 層
+        layer3Texture: { value: white }
+        layer3Scale: { value: [1.0, 1.0] }
+        layer3Repeat: { value: [1.0, 1.0] }
+        layer3Offset: { value: [0.0, 0.0] }
+        layer3WrapMode: { value: 0.0, editor: { range: [0, 2], step: 1 } }
+        layer3Opacity: { value: 100.0, editor: { range: [0, 100], step: 1 } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_color;
+  in vec2 v_uv;
+
+  uniform sampler2D mainTexture;
+  uniform sampler2D layer1Texture;
+  uniform sampler2D layer2Texture;
+  uniform sampler2D layer3Texture;
+
+  uniform Constant {
+    vec2 layer0Scale;
+    vec2 layer0Repeat;
+    vec2 layer0Offset;
+    float layer0WrapMode;
+    float layer0Opacity;
+    
+    vec2 layer1Scale;
+    vec2 layer1Repeat;
+    vec2 layer1Offset;
+    float layer1WrapMode;
+    float layer1Opacity;
+    
+    vec2 layer2Scale;
+    vec2 layer2Repeat;
+    vec2 layer2Offset;
+    float layer2WrapMode;
+    float layer2Opacity;
+    
+    vec2 layer3Scale;
+    vec2 layer3Repeat;
+    vec2 layer3Offset;
+    float layer3WrapMode;
+    float layer3Opacity;
+  };
+
+  // Wrap Mode 處理（帶 Clamp 邊界透明化）
+  vec4 applyWrapModeWithClamp(vec2 uv, float wrapMode) {
+    float mode = wrapMode;
+    if (mode < 0.5) {
+      // Clamp 模式：邊界外透明
+      vec2 clampedUV = clamp(uv, 0.0, 1.0);
+      bool inBounds = (uv == clampedUV);
+      return vec4(clampedUV, inBounds ? 1.0 : 0.0, 0.0);
+    } else if (mode < 1.5) {
+      // Repeat 模式
+      return vec4(fract(uv), 1.0, 0.0);
+    } else {
+      // Mirror 模式
+      vec2 mirrorUV = mod(uv, 2.0);
+      if (mirrorUV.x > 1.0) mirrorUV.x = 2.0 - mirrorUV.x;
+      if (mirrorUV.y > 1.0) mirrorUV.y = 2.0 - mirrorUV.y;
+      return vec4(mirrorUV, 1.0, 0.0);
+    }
+  }
+
+  // 處理 UV 變換
+  vec3 processUV(vec2 uv, vec2 scale, vec2 repeat, vec2 offset, float wrapMode) {
+    vec2 scaledUV = (uv - 0.5) * scale + 0.5;
+    vec2 repeatedUV = scaledUV * repeat;
+    vec2 offsetUV = repeatedUV + offset;
+    
+    vec4 wrapResult = applyWrapModeWithClamp(offsetUV, wrapMode);
+    return vec3(wrapResult.xy, wrapResult.z);
+  }
+
+  vec4 frag () {
+    // 第 0 層（底層）
+    vec3 uv0Data = processUV(v_uv, layer0Scale, layer0Repeat, layer0Offset, layer0WrapMode);
+    vec4 layer0Color = texture(mainTexture, uv0Data.xy);
+    layer0Color *= v_color;
+    layer0Color.a *= (layer0Opacity / 100.0) * uv0Data.z;
+    
+    vec4 result = layer0Color;
+
+    // 第 1 層 - 簡單 Alpha 混合
+    vec3 uv1Data = processUV(v_uv, layer1Scale, layer1Repeat, layer1Offset, layer1WrapMode);
+    vec4 layer1Color = texture(layer1Texture, uv1Data.xy);
+    float layer1Alpha = (layer1Opacity / 100.0) * layer1Color.a * uv1Data.z;
+    result.rgb = mix(result.rgb, layer1Color.rgb, layer1Alpha);
+    result.a = mix(result.a, 1.0, layer1Alpha);
+
+    // 第 2 層
+    vec3 uv2Data = processUV(v_uv, layer2Scale, layer2Repeat, layer2Offset, layer2WrapMode);
+    vec4 layer2Color = texture(layer2Texture, uv2Data.xy);
+    float layer2Alpha = (layer2Opacity / 100.0) * layer2Color.a * uv2Data.z;
+    result.rgb = mix(result.rgb, layer2Color.rgb, layer2Alpha);
+    result.a = mix(result.a, 1.0, layer2Alpha);
+
+    // 第 3 層
+    vec3 uv3Data = processUV(v_uv, layer3Scale, layer3Repeat, layer3Offset, layer3WrapMode);
+    vec4 layer3Color = texture(layer3Texture, uv3Data.xy);
+    float layer3Alpha = (layer3Opacity / 100.0) * layer3Color.a * uv3Data.z;
+    result.rgb = mix(result.rgb, layer3Color.rgb, layer3Alpha);
+    result.a = mix(result.a, 1.0, layer3Alpha);
+
+    ALPHA_TEST(result);
+    return result;
+  }
+}%
