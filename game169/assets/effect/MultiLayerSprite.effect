@@ -115,6 +115,8 @@ CCProgram sprite-vs %{
 
 CCProgram sprite-fs %{
   precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
 
   in vec4 v_color;
   in vec2 v_uv;
