@@ -15,7 +15,9 @@
   "_states": [
     {
       "rasterizerState": {},
-      "depthStencilState": {},
+      "depthStencilState": {
+        "stencilRefBack": -7.6
+      },
       "blendState": {
         "targets": [
           {}
@@ -25,6 +27,7 @@
   ],
   "_props": [
     {
+      "alphaThreshold": -0.4,
       "mainTexture": {
         "__uuid__": "2db31454-8d8c-489c-b411-22ea0d55a448@6c48a",
         "__expectedType__": "cc.Texture2D"
@@ -36,10 +39,14 @@
         "b": 224,
         "a": 255
       },
-      "glowWidth": 0.3,
-      "glowIntensity": 3.8,
-      "glowPulseSpeed": 2.7,
-      "sampleOffset": 3
+      "glowWidth": 1,
+      "glowIntensity": 4.9,
+      "glowPulseSpeed": 0.5,
+      "sampleOffset": 0.6,
+      "distortionStrength": 0.94,
+      "distortionSpeed": 7.3,
+      "distortionFrequency": 30,
+      "shineWidth": 3.9
     }
   ]
 }
