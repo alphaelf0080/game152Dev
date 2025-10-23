@@ -54,6 +54,12 @@ export class SkeletonColorController extends Component {
     @property({ type: FadeColorConfig, displayName: '淡入淡出設定' })
     fadeConfig: FadeColorConfig = new FadeColorConfig();
     
+    @property({ displayName: '自動播放淡入淡出' })
+    autoPlay: boolean = false;
+    
+    @property({ displayName: '循環播放' })
+    loop: boolean = true;
+    
     private isPlayingFadeAnimation: boolean = false;
     private currentFrame: number = 0;
 
@@ -64,12 +70,33 @@ export class SkeletonColorController extends Component {
         if (!this.skeletonComponent) {
             log(`[SkeletonColorController] No sp.Skeleton component found on node: ${this.node.name}`);
         }
+        
+        // 如果設定為自動播放，則啟動動畫
+        if (this.autoPlay) {
+            this.startFadeAnimation();
+        }
     }
 
     update(deltaTime: number) {
         if (this.isPlayingFadeAnimation) {
             this.currentFrame += deltaTime * 60; // Assuming 60 FPS
+            
+            // 檢查是否需要循環
+            if (this.loop && this.currentFrame > this.fadeConfig.fadeOutEndFrame) {
+                this.currentFrame = this.fadeConfig.fadeInStartFrame;
+            }
+            
+            this.updateFadeColor(); // 更新色彩
         }
+    }
+
+    /**
+     * 開始淡入淡出動畫（從頭開始）
+     */
+    public startFadeAnimation() {
+        this.currentFrame = this.fadeConfig.fadeInStartFrame;
+        this.isPlayingFadeAnimation = true;
+        this.updateFadeColor();
     }
 
     /**
@@ -101,6 +128,15 @@ export class SkeletonColorController extends Component {
             const fadeInProgress = (this.currentFrame - config.fadeInStartFrame) / 
                                    (config.fadeInEndFrame - config.fadeInStartFrame);
             targetColor = this.interpolateColor(config.fadeInStartColor, config.fadeInEndColor, fadeInProgress);
+        }
+        // 淡入和淡出之間 - 保持淡入結束色彩
+        else if (this.currentFrame > config.fadeInEndFrame && this.currentFrame < config.fadeOutStartFrame) {
+            targetColor = new Color(
+                config.fadeInEndColor.r,
+                config.fadeInEndColor.g,
+                config.fadeInEndColor.b,
+                config.fadeInEndColor.a
+            );
         }
         // 淡出階段
         else if (this.currentFrame >= config.fadeOutStartFrame && this.currentFrame <= config.fadeOutEndFrame) {
