@@ -4,31 +4,32 @@ const { ccclass, property } = _decorator;
 /**
  * 淡入淡出色彩組態
  */
+@ccclass('FadeColorConfig')
 class FadeColorConfig {
     // Fade In 相關
-    @property
+    @property({ displayName: '淡入開始幀數' })
     fadeInStartFrame: number = 0;
     
-    @property
+    @property({ displayName: '淡入結束幀數' })
     fadeInEndFrame: number = 30;
     
-    @property({ type: Color })
+    @property({ type: Color, displayName: '淡入開始色彩' })
     fadeInStartColor: Color = new Color(255, 255, 255, 0);
     
-    @property({ type: Color })
+    @property({ type: Color, displayName: '淡入結束色彩' })
     fadeInEndColor: Color = new Color(255, 255, 255, 255);
 
     // Fade Out 相關
-    @property
+    @property({ displayName: '淡出開始幀數' })
     fadeOutStartFrame: number = 60;
     
-    @property
+    @property({ displayName: '淡出結束幀數' })
     fadeOutEndFrame: number = 90;
     
-    @property({ type: Color })
+    @property({ type: Color, displayName: '淡出開始色彩' })
     fadeOutStartColor: Color = new Color(255, 255, 255, 255);
     
-    @property({ type: Color })
+    @property({ type: Color, displayName: '淡出結束色彩' })
     fadeOutEndColor: Color = new Color(255, 255, 255, 0);
 }
 
@@ -50,7 +51,7 @@ class FadeColorConfig {
 export class SkeletonColorController extends Component {
     private skeletonComponent: sp.Skeleton | null = null;
     
-    @property({ type: FadeColorConfig })
+    @property({ type: FadeColorConfig, displayName: '淡入淡出設定' })
     fadeConfig: FadeColorConfig = new FadeColorConfig();
     
     private isPlayingFadeAnimation: boolean = false;
