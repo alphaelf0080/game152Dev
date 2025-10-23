@@ -32,6 +32,7 @@ CCEffect %{
         shineIntensity: { value: 2.0, editor: { displayName: 'Edge Shine Intensity', range: [0.0, 10.0], step: 0.1 } }
         shineSpeed: { value: 3.0, editor: { displayName: 'Edge Shine Speed', range: [0.0, 10.0], step: 0.1 } }
         shineWidth: { value: 1.0, editor: { displayName: 'Edge Shine Width (px scale)', range: [0.1, 10.0], step: 0.1 } }
+        edgeBoost: { value: 5.0, editor: { displayName: 'Edge Boost', range: [1.0, 15.0], step: 0.1 } }
 }%
 
 CCProgram sprite-vs %{
@@ -87,6 +88,7 @@ CCProgram sprite-fs %{
     float shineIntensity;
     float shineSpeed;
     float shineWidth;
+    float edgeBoost;
   };
 
   vec4 frag () {

@@ -208,7 +208,7 @@
     "_priority": 2,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 800,
+    "_orthoHeight": 799.9999999999999,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -73804,11 +73804,11 @@
       "a": 255
     },
     "_skeletonData": {
-      "__uuid__": "bcaa479c-d509-4ce4-95f9-dabf221a13a7",
+      "__uuid__": "a9914ae8-1419-4e36-b392-d032dd5cf696",
       "__expectedType__": "sp.SkeletonData"
     },
     "defaultSkin": "default",
-    "defaultAnimation": "loop",
+    "defaultAnimation": "slowmotion",
     "_premultipliedAlpha": false,
     "_timeScale": 1,
     "_preCacheMode": 0,
@@ -73962,7 +73962,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 720,
-      "height": 1600
+      "height": 1599.9999999999998
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
