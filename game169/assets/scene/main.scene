@@ -73798,10 +73798,10 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
+      "r": 41,
+      "g": 0,
       "b": 255,
-      "a": 255
+      "a": 116
     },
     "_skeletonData": {
       "__uuid__": "a9914ae8-1419-4e36-b392-d032dd5cf696",
@@ -73823,7 +73823,7 @@
     "_id": "a8Hz5iHQlDi41pTd5UlIl/"
   },
   {
-    "__type__": "82f04mqDeVCeaRPHZCqzWOh",
+    "__type__": "1bcc6+ASKJCPJ/uh4qhjgLJ",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -73832,13 +73832,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "playDirection": -1,
-    "playbackSpeed": 1,
-    "loop": true,
-    "autoPlay": true,
-    "blendMode": 0,
-    "trackIndex": 0,
-    "_id": "dadQDToXVKjbuaTSMc1aWz"
+    "_id": "aeIpKjIUlDdYqNG1DZMOgr"
   },
   {
     "__type__": "cc.Node",
