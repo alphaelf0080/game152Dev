@@ -1,0 +1,152 @@
+// Sprite Sequence Player Shader
+// 播放圖集序列幀動畫 - 支援 Atlas 和 Plist 定義的連續圖集
+// 可用於播放連續的序列幀動畫，例如：frame_01, frame_02, frame_03...
+// Cocos Creator 3.8
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        mainTexture: { value: white }
+        
+        # 序列幀設置
+        frameCount: { value: 8.0, editor: { displayName: 'Frame Count', tooltip: '總幀數', range: [1, 64], step: 1 } }
+        fps: { value: 12.0, editor: { displayName: 'FPS', tooltip: '每秒幀數', range: [1, 60], step: 1 } }
+        loop: { value: 1.0, editor: { displayName: 'Loop', tooltip: '是否循環播放 (1=循環, 0=播放一次)', range: [0, 1], step: 1 } }
+        playOnStart: { value: 1.0, editor: { displayName: 'Play On Start', tooltip: '是否自動播放', range: [0, 1], step: 1 } }
+        
+        # 圖集佈局設置
+        atlasColumns: { value: 4.0, editor: { displayName: 'Atlas Columns', tooltip: '圖集列數', range: [1, 16], step: 1 } }
+        atlasRows: { value: 2.0, editor: { displayName: 'Atlas Rows', tooltip: '圖集行數', range: [1, 16], step: 1 } }
+        
+        # 播放控制
+        startFrame: { value: 0.0, editor: { displayName: 'Start Frame', tooltip: '起始幀', range: [0, 63], step: 1 } }
+        playbackSpeed: { value: 1.0, editor: { displayName: 'Playback Speed', tooltip: '播放速度倍數', range: [0.1, 5.0], step: 0.1 } }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_color;
+  out vec2 v_uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    pos = cc_matViewProj * pos;
+
+    v_uv0 = a_texCoord;
+    v_color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_color;
+  in vec2 v_uv0;
+
+  uniform sampler2D mainTexture;
+
+  uniform Constant {
+    float frameCount;
+    float fps;
+    float loop;
+    float playOnStart;
+    float atlasColumns;
+    float atlasRows;
+    float startFrame;
+    float playbackSpeed;
+  };
+
+  vec4 frag () {
+    // 如果未啟用播放，直接返回原始紋理
+    if (playOnStart < 0.5) {
+      vec4 o = texture(mainTexture, v_uv0);
+      o.rgb *= v_color.rgb;
+      o.a *= v_color.a;
+      ALPHA_TEST(o);
+      return o;
+    }
+
+    // 計算當前幀索引
+    float timeElapsed = cc_time.x * playbackSpeed;
+    float frameTime = 1.0 / fps;
+    float totalFrames = frameCount;
+    
+    // 計算當前應該顯示的幀
+    float currentFrameFloat = timeElapsed / frameTime;
+    
+    float currentFrame;
+    if (loop > 0.5) {
+      // 循環模式：使用 mod 循環
+      currentFrame = mod(currentFrameFloat, totalFrames);
+    } else {
+      // 單次播放模式：限制在最後一幀
+      currentFrame = min(currentFrameFloat, totalFrames - 1.0);
+    }
+    
+    // 加上起始幀偏移
+    currentFrame = floor(currentFrame + startFrame);
+    
+    // 確保幀索引在有效範圍內
+    currentFrame = mod(currentFrame, totalFrames);
+    
+    // 計算圖集中的位置
+    float frameX = mod(currentFrame, atlasColumns);
+    float frameY = floor(currentFrame / atlasColumns);
+    
+    // 計算單個幀的 UV 尺寸
+    float frameWidth = 1.0 / atlasColumns;
+    float frameHeight = 1.0 / atlasRows;
+    
+    // 計算當前幀的 UV 偏移
+    float offsetX = frameX * frameWidth;
+    float offsetY = frameY * frameHeight;
+    
+    // 調整 UV 坐標到當前幀
+    vec2 frameUV;
+    frameUV.x = offsetX + (v_uv0.x * frameWidth);
+    frameUV.y = offsetY + (v_uv0.y * frameHeight);
+    
+    // 採樣紋理
+    vec4 o = texture(mainTexture, frameUV);
+    o.rgb *= v_color.rgb;
+    o.a *= v_color.a;
+    
+    ALPHA_TEST(o);
+
+    return o;
+  }
+}%

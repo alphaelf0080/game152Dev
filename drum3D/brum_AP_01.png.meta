@@ -1,8 +1,8 @@
 {
-  "ver": "1.0.27",
+  "ver": "1.0.25",
   "importer": "image",
   "imported": true,
-  "uuid": "80d48220-ffda-46c7-b4d9-120f4ca793a1",
+  "uuid": "a8af4e89-113d-4a80-8ea7-26e3a015b069",
   "files": [
     ".json",
     ".png"
@@ -10,8 +10,8 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "80d48220-ffda-46c7-b4d9-120f4ca793a1@6c48a",
-      "displayName": "brum_CO_01",
+      "uuid": "a8af4e89-113d-4a80-8ea7-26e3a015b069@6c48a",
+      "displayName": "brum_AP_01",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,8 +22,8 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "80d48220-ffda-46c7-b4d9-120f4ca793a1",
-        "visible": false
+        "imageUuidOrDatabaseUri": "a8af4e89-113d-4a80-8ea7-26e3a015b069",
+        "visible": true
       },
       "ver": "1.0.22",
       "imported": true,
@@ -34,9 +34,9 @@
     }
   },
   "userData": {
+    "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": false,
     "type": "texture",
-    "fixAlphaTransparencyArtifacts": false,
-    "redirect": "80d48220-ffda-46c7-b4d9-120f4ca793a1@6c48a"
+    "redirect": "a8af4e89-113d-4a80-8ea7-26e3a015b069@6c48a"
   }
 }
