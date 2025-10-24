@@ -1,17 +1,5 @@
-import { _decorator, Component, sp, Color, log, Material, gfx } from 'cc';
+import { _decorator, Component, sp, Color, log } from 'cc';
 const { ccclass, property } = _decorator;
-const { spine } = sp;
-const { BlendFactor } = gfx;
-
-/**
- * 色彩混合模式枚舉（對應 Spine 的 BlendMode）
- */
-export enum ColorBlendMode {
-    NORMAL = 0,      // 正常混合 (sp.spine.BlendMode.Normal)
-    ADDITIVE = 1,    // 加法混合（發光疊加）(sp.spine.BlendMode.Additive)
-    MULTIPLY = 2,    // 乘法混合（變暗）(sp.spine.BlendMode.Multiply)
-    SCREEN = 3       // 屏幕混合（變亮）(sp.spine.BlendMode.Screen)
-}
 
 /**
  * 淡入淡出色彩組態
@@ -84,15 +72,10 @@ export class SkeletonColorController extends Component {
     @property({ displayName: '控制骨骼動畫時間軸', tooltip: '啟用後會直接控制 sp.Skeleton 的動畫播放\n勾選此項後，播放速度和倒播才會影響骨骼動畫' })
     controlSkeletonAnimation: boolean = false;
     
-    // Color Blend Mode 控制
-    @property({ type: ColorBlendMode, displayName: '色彩混合模式', tooltip: '選擇骨骼的色彩混合模式\nNormal: 正常\nAdditive: 發光疊加\nMultiply: 變暗\nScreen: 變亮' })
-    colorBlendMode: ColorBlendMode = ColorBlendMode.NORMAL;
-    
     private isPlayingFadeAnimation: boolean = false;
     private currentFrame: number = 0;
     private lastReversePlay: boolean = false;
     private lastPlaybackSpeed: number = 1.0;
-    private lastColorBlendMode: ColorBlendMode = ColorBlendMode.NORMAL;
     
     // 骨骼動畫控制
     private currentTrackEntry: sp.spine.TrackEntry | null = null;
@@ -109,15 +92,11 @@ export class SkeletonColorController extends Component {
             // 初始化播放控制
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
-            this.lastColorBlendMode = this.colorBlendMode;
             
             // 獲取當前動畫信息
             this.initializeAnimationInfo();
             
             this.applyPlaybackSettings();
-            
-            // 應用初始混合模式
-            this.applyColorBlendMode(this.colorBlendMode);
         }
         
         // 如果設定為自動播放，則啟動動畫
@@ -132,12 +111,6 @@ export class SkeletonColorController extends Component {
             this.applyPlaybackSettings();
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
-        }
-        
-        // 檢測混合模式是否改變
-        if (this.colorBlendMode !== this.lastColorBlendMode) {
-            this.applyColorBlendMode(this.colorBlendMode);
-            this.lastColorBlendMode = this.colorBlendMode;
         }
         
         // 手動控制骨骼動畫時間（倒播模式）
@@ -504,124 +477,5 @@ export class SkeletonColorController extends Component {
     // Color Blend Mode 控制
     // ============================================================
 
-    /**
-     * 僅應用混合模式到 slots（每幀調用）
-     * @param mode 混合模式
-     */
-    private applyColorBlendModeToSlots(mode: ColorBlendMode) {
-        // 不使用這個方法了，改用材質混合
-    }
-
-    /**
-     * 應用色彩混合模式（使用材質混合狀態）
-     * @param mode 混合模式
-     */
-    private applyColorBlendMode(mode: ColorBlendMode) {
-        if (!this.skeletonComponent) {
-            log('[SkeletonColorController] ⚠️ 無法套用混合模式：skeleton 組件未找到');
-            return;
-        }
-
-        // 獲取或創建材質實例
-        let material = this.skeletonComponent.customMaterial;
-        if (!material) {
-            const sharedMat = this.skeletonComponent.getMaterial(0);
-            if (sharedMat) {
-                material = new Material();
-                material.copy(sharedMat);
-                this.skeletonComponent.customMaterial = material;
-            }
-        }
-
-        if (!material) {
-            log('[SkeletonColorController] ⚠️ 無法獲取材質');
-            return;
-        }
-
-        // 根據混合模式設置 premultipliedAlpha 和混合因子
-        let srcBlend: gfx.BlendFactor;
-        let dstBlend: gfx.BlendFactor;
-        let modeName = '';
-
-        switch (mode) {
-            case ColorBlendMode.NORMAL:
-                // 正常混合 (src_alpha, one_minus_src_alpha)
-                srcBlend = BlendFactor.SRC_ALPHA;
-                dstBlend = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                this.skeletonComponent.premultipliedAlpha = true;
-                modeName = 'NORMAL (正常)';
-                break;
-                
-            case ColorBlendMode.ADDITIVE:
-                // 加法混合 (src_alpha, one) - 發光效果
-                srcBlend = BlendFactor.SRC_ALPHA;
-                dstBlend = BlendFactor.ONE;
-                this.skeletonComponent.premultipliedAlpha = false;
-                modeName = 'ADDITIVE (發光疊加)';
-                break;
-                
-            case ColorBlendMode.MULTIPLY:
-                // 乘法混合 (dst_color, one_minus_src_alpha)
-                srcBlend = BlendFactor.DST_COLOR;
-                dstBlend = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                this.skeletonComponent.premultipliedAlpha = true;
-                modeName = 'MULTIPLY (乘法變暗)';
-                break;
-                
-            case ColorBlendMode.SCREEN:
-                // 濾色混合 (one, one_minus_src_color)
-                srcBlend = BlendFactor.ONE;
-                dstBlend = BlendFactor.ONE_MINUS_SRC_COLOR;
-                this.skeletonComponent.premultipliedAlpha = true;
-                modeName = 'SCREEN (濾色變亮)';
-                break;
-                
-            default:
-                srcBlend = BlendFactor.SRC_ALPHA;
-                dstBlend = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                this.skeletonComponent.premultipliedAlpha = true;
-                modeName = 'NORMAL (正常)';
-                break;
-        }
-
-        // 應用混合狀態到材質
-        const pass = material.passes[0];
-        if (pass) {
-            const bs = pass.blendState;
-            const target = bs.targets[0];
-            target.blend = true;
-            target.blendSrc = srcBlend;
-            target.blendDst = dstBlend;
-            target.blendSrcAlpha = srcBlend;
-            target.blendDstAlpha = dstBlend;
-
-            // 更新管線狀態
-            pass.overridePipelineStates(pass.passIndex, bs);
-        }
-
-        // 重新設置材質
-        this.skeletonComponent.customMaterial = material;
-        this.skeletonComponent.markForUpdateRenderData();
-
-        log(`[SkeletonColorController] 🎨 色彩混合模式: ${modeName} (src=${srcBlend}, dst=${dstBlend})`);
-        log(`[SkeletonColorController] ✅ 混合模式已應用到材質`);
-    }
-
-    /**
-     * 設定色彩混合模式
-     * @param mode 混合模式
-     */
-    public setColorBlendMode(mode: ColorBlendMode) {
-        this.colorBlendMode = mode;
-        this.applyColorBlendMode(mode);
-    }
-
-    /**
-     * 取得當前色彩混合模式
-     */
-    public getColorBlendMode(): ColorBlendMode {
-        return this.colorBlendMode;
-    }
 }
-
 
