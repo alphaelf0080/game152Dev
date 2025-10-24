@@ -73838,7 +73838,7 @@
     "autoPlay": true,
     "loop": true,
     "playbackSpeed": 3.8,
-    "reversePlay": false,
+    "reversePlay": true,
     "controlSkeletonAnimation": true,
     "_id": "aeIpKjIUlDdYqNG1DZMOgr"
   },

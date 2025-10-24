@@ -76,6 +76,11 @@ export class SkeletonColorController extends Component {
     private currentFrame: number = 0;
     private lastReversePlay: boolean = false;
     private lastPlaybackSpeed: number = 1.0;
+    
+    // 骨骼動畫控制
+    private currentTrackEntry: sp.spine.TrackEntry | null = null;
+    private animationDuration: number = 0;
+    private currentAnimTime: number = 0;
 
     onLoad() {
         // Get the sp.Skeleton component on the same node
@@ -87,6 +92,10 @@ export class SkeletonColorController extends Component {
             // 初始化播放控制
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
+            
+            // 獲取當前動畫信息
+            this.initializeAnimationInfo();
+            
             this.applyPlaybackSettings();
         }
         
@@ -102,6 +111,11 @@ export class SkeletonColorController extends Component {
             this.applyPlaybackSettings();
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
+        }
+        
+        // 手動控制骨骼動畫時間（倒播模式）
+        if (this.controlSkeletonAnimation && this.reversePlay && this.currentTrackEntry) {
+            this.updateReverseAnimation(deltaTime);
         }
         
         if (this.isPlayingFadeAnimation) {
@@ -297,16 +311,82 @@ export class SkeletonColorController extends Component {
         if (!this.skeletonComponent) return;
 
         if (this.controlSkeletonAnimation) {
-            // 控制骨骼動畫的時間軸
-            // 設定播放速度（倒播時使用負值）
-            const speed = this.reversePlay ? -this.playbackSpeed : this.playbackSpeed;
-            this.skeletonComponent.timeScale = speed;
-            log(`[SkeletonColorController] 播放設定已更新 - 速度: ${this.playbackSpeed}, 方向: ${this.reversePlay ? '倒播' : '正播'}, timeScale: ${speed}`);
+            if (this.reversePlay) {
+                // 倒播模式：暫停自動播放，手動控制時間
+                this.skeletonComponent.paused = false;
+                this.skeletonComponent.timeScale = 0; // 停止自動更新
+                log(`[SkeletonColorController] 播放設定已更新 - 倒播模式啟動 (速度: ${this.playbackSpeed}x)`);
+            } else {
+                // 正播模式：使用正常的 timeScale
+                this.skeletonComponent.paused = false;
+                this.skeletonComponent.timeScale = this.playbackSpeed;
+                log(`[SkeletonColorController] 播放設定已更新 - 正播模式 (速度: ${this.playbackSpeed}x)`);
+            }
         } else {
-            // 不控制骨骼動畫時，確保 timeScale 為正值
+            // 不控制骨骼動畫時，確保正常播放
+            this.skeletonComponent.paused = false;
             this.skeletonComponent.timeScale = 1.0;
-            log(`[SkeletonColorController] 播放設定已更新 - 速度: ${this.playbackSpeed}, 方向: ${this.reversePlay ? '倒播' : '正播'} (僅色彩動畫，骨骼動畫保持正常)`);
+            log(`[SkeletonColorController] 播放設定已更新 - 僅色彩動畫 (速度: ${this.playbackSpeed}, 方向: ${this.reversePlay ? '倒播' : '正播'})`);
         }
+    }
+
+    /**
+     * 初始化動畫信息
+     */
+    private initializeAnimationInfo() {
+        if (!this.skeletonComponent) return;
+
+        // 獲取當前播放的動畫軌道
+        const state = this.skeletonComponent.getState();
+        if (state) {
+            this.currentTrackEntry = state.getCurrent(0);
+            if (this.currentTrackEntry && this.currentTrackEntry.animation) {
+                this.animationDuration = this.currentTrackEntry.animation.duration;
+                this.currentAnimTime = this.animationDuration; // 倒播從結尾開始
+                log(`[SkeletonColorController] 動畫信息已初始化 - 時長: ${this.animationDuration}秒`);
+            }
+        }
+    }
+
+    /**
+     * 更新倒播動畫
+     */
+    private updateReverseAnimation(deltaTime: number) {
+        if (!this.currentTrackEntry || !this.skeletonComponent) return;
+
+        // 重新獲取當前軌道（可能已改變）
+        const state = this.skeletonComponent.getState();
+        if (state) {
+            this.currentTrackEntry = state.getCurrent(0);
+        }
+
+        if (!this.currentTrackEntry) {
+            this.initializeAnimationInfo();
+            return;
+        }
+
+        // 更新動畫時長
+        if (this.currentTrackEntry.animation) {
+            this.animationDuration = this.currentTrackEntry.animation.duration;
+        }
+
+        // 向後更新時間（倒播）
+        this.currentAnimTime -= deltaTime * this.playbackSpeed;
+
+        // 處理循環
+        if (this.currentAnimTime < 0) {
+            if (this.loop || this.currentTrackEntry.loop) {
+                this.currentAnimTime = this.animationDuration;
+            } else {
+                this.currentAnimTime = 0;
+            }
+        }
+
+        // 手動設置動畫時間
+        this.currentTrackEntry.trackTime = this.currentAnimTime;
+        
+        // 強制更新骨骼
+        this.skeletonComponent.updateWorldTransform();
     }
 
     /**
