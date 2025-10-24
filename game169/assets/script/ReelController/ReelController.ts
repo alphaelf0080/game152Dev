@@ -290,13 +290,16 @@ export class ReelController extends Component {
         // 只更新標記為 dirty 的滾輪（需要更新的滾輪）
         const dirtyReels = this.updateManager.getDirtyReels();
         
-        // 效能追蹤（開發時可啟用）
-        // const startTime = performance.now();
+        // 效能追蹤
+        const startTime = performance.now();
+        let rollingReels = 0;
+        let stoppedReels = 0;
         
         for (const reelIndex of dirtyReels) {
             const reel = this._reels[reelIndex];
             if (reel && reel.rolling) {
                 reel.Rolling();  // 執行滾輪滾動邏輯
+                rollingReels++;
                 
                 if (isTurbo) {
                     reel.TurboFunc();  // Turbo 模式加速
@@ -305,15 +308,19 @@ export class ReelController extends Component {
                 // 如果滾輪完成旋轉，清除 dirty 標記
                 if (!reel.rolling) {
                     this.updateManager.clearReelDirty(reelIndex);
+                    stoppedReels++;
                 }
             }
         }
         
-        // 效能追蹤（開發時可啟用）
-        // const endTime = performance.now();
-        // if (endTime - startTime > 1) {
-        //     console.warn(`⚠️ Update took ${(endTime - startTime).toFixed(2)}ms`);
-        // }
+        // 效能追蹤
+        const endTime = performance.now();
+        const elapsed = endTime - startTime;
+        
+        // 只在有顯著耗時時記錄
+        if (elapsed > 2) {
+            console.warn(`⚠️ [Update] 耗時: ${elapsed.toFixed(2)}ms | 旋轉滾輪: ${rollingReels}, 停止滾輪: ${stoppedReels}, Turbo: ${isTurbo}`);
+        }
     }
 
     /**
@@ -660,26 +667,31 @@ export class ReelController extends Component {
      * @param index 滾輪索引
      * @param num -1 表示從 strip 隨機取值，其他值表示從停止腳本取值
      */
-    /**
-     * 更新符號資訊
-     * 從 strips 中抽取 RNG 數據並更新符號
-     * @param index 滾輪索引
-     * @param num -1 表示從 strip 隨機取值，其他值表示從停止腳本取值
-     */
     UpdateSymbolInfo(index: number, num: number) {
-        // console.log(`📊 更新符號資訊: 滾輪=${index}, num=${num}`);
+        const debugMode = false; // 設為 true 時輸出詳細日誌
+        
+        if (debugMode) {
+            console.log(`[UpdateSymbolInfo] 滾輪=${index}, num=${num}`);
+        }
         
         if (num == -1) {
             // 從 strip 中隨機取值（旋轉中）
             let strip = this._strip[index];
             this._curRngRuning[index] = this._curRngRuning[index] - 1;
+            
             if (this._curRngRuning[index] < 0) { 
                 this._curRngRuning[index] = strip.length - 1; 
+                if (debugMode) console.log(`  [滾輪${index}] 循環：RNG 重置到 ${this._curRngRuning[index]}`);
             }
             if (this._curRngRuning[index] >= strip.length) { 
                 this._curRngRuning[index] = this._curRngRuning[index] % strip.length; 
+                if (debugMode) console.log(`  [滾輪${index}] 溢出：RNG 模運算到 ${this._curRngRuning[index]}`);
             }
+            
             let symbol = strip[this._curRngRuning[index]];
+            if (debugMode) {
+                console.log(`  [滾輪${index}] 取符號: 位置=${this._curRngRuning[index]}, 符號ID=${symbol}`);
+            }
 
             this._CurStrip[index].unshift(symbol);
             this._CurStrip[index].pop();
@@ -688,14 +700,19 @@ export class ReelController extends Component {
         } else {
             // 從停止腳本取值（停止時）
             let syb = this._script_tostop[index][num];
+            let extraPay = this.GetSymbolExtraPay(syb, this._script_tostop[index].length <= this._reelRow && this._script_tostop[index].length > 0, this._script_tostop[index].length - 1, index);
+            
+            if (debugMode) {
+                console.log(`  [滾輪${index}] 停止位置=${num}, 符號ID=${syb}, 賠付=${extraPay}`);
+            }
 
             this._CurStrip[index].unshift(syb);
             this._CurStrip[index].pop();
-            this._CurPayStrip[index].unshift(this.GetSymbolExtraPay(syb, this._script_tostop[index].length <= this._reelRow && this._script_tostop[index].length > 0, this._script_tostop[index].length - 1, index));
+            this._CurPayStrip[index].unshift(extraPay);
             this._CurPayStrip[index].pop();
         }
 
-        this._reels[index].GetStrips(this._CurStrip[index])  // 將資料更新進滾輪陣列
+        this._reels[index].GetStrips(this._CurStrip[index])
     }
 
     /**
@@ -703,30 +720,56 @@ export class ReelController extends Component {
      * 根據 RNG 結果計算每個滾輪應該停止的符號序列
      */
     SetAllStrip() {
+        const debugMode = true; // 設為 false 時隱藏詳細日誌
+        
         let rng = Data.Library.MathConsole.getWinData()._rng;
         if (rng == null || rng.length == 0) { 
             console.warn('⚠️ SetAllStrip: RNG 數據為空');
             return; 
         }
 
-        console.log(`📊 設置停止 Strip，RNG: [${rng}]`);
+        console.log(`📊 SetAllStrip: 開始設置停止 Strip`);
+        console.log(`   RNG 陣列: [${rng}]`);
+        console.log(`   滾輪數量: ${rng.length}`);
+        
         this._script_tostop = [];
 
         for (let i = 0; i < rng.length; i++) {
             let tmpAry = [];
             let pos = rng[i] - 2;
-            if (pos < 0) { pos = this._strip[i].length + pos; }
+            
+            if (debugMode) {
+                console.log(`   [滾輪${i}] RNG值=${rng[i]}, 計算起始位置=${pos}`);
+            }
+            
+            if (pos < 0) { 
+                pos = this._strip[i].length + pos;
+                if (debugMode) console.log(`     └─ 位置為負，調整為: ${pos}`);
+            }
+            
             for (let j = 0; j < this._realReelRow; j++) {
                 tmpAry.push(this._strip[i][pos++]);
-                if (pos >= this._strip[i].length) { pos -= this._strip[i].length; }
+                if (pos >= this._strip[i].length) { 
+                    pos -= this._strip[i].length;
+                    if (debugMode) console.log(`     └─ 位置循環，重置為: ${pos}`);
+                }
             }
+            
+            if (debugMode) {
+                console.log(`   [滾輪${i}] 停止序列: [${tmpAry}]`);
+            }
+            
             this._script_tostop.push(tmpAry);
         }
-        console.log('停止腳本:', this._script_tostop);
+
+        console.log(`✅ SetAllStrip 完成`);
+        console.log(`   停止腳本陣列長度: ${this._script_tostop.length}`);
 
         this.alreadySetStrp = true;
-        this._reels.forEach(reel => { reel.AlreadyGetStrip(); })
-        console.log('✅ 所有滾輪已接收停止腳本');
+        this._reels.forEach((reel, idx) => { 
+            reel.AlreadyGetStrip();
+            if (debugMode) console.log(`   ✓ 滾輪${idx} 已接收停止腳本`);
+        });
     }
 
     /**
@@ -872,7 +915,13 @@ export class ReelController extends Component {
      * @param rng RNG 陣列
      */
     Initfovstrip(isChangeNow: boolean, rng: number[]) {
+        const debugMode = true; // 設為 false 時隱藏詳細日誌
+        
         console.log('🔍 Initfovstrip: 初始化可見符號條');
+        console.log(`   isChangeNow: ${isChangeNow}`);
+        console.log(`   RNG: [${rng}]`);
+        console.log(`   Strip 數量: ${this._strip.length}`);
+        
         this._CurStrip = [];
         this._CurPayStrip = [];
         this._curRngRuning = [];
@@ -883,19 +932,40 @@ export class ReelController extends Component {
             let pos = ((rng[i] - 2) + this._strip[i].length) % this._strip[i].length;
             this._curRngRuning.push(pos);
             
+            if (debugMode) {
+                console.log(`   [滾輪${i}] 起始位置: ${pos}, Strip長度: ${this._strip[i].length}`);
+            }
+            
             for (let j = 0; j < this._realReelRow; j++) {
                 pos = pos % this._strip[i].length;
-                fovstrip.push(this._strip[i][pos]);
-                paystrip.push(this.GetSymbolExtraPay(this._strip[i][pos], j - 1 <= this._reelRow, j - 1, i));
+                let symbol = this._strip[i][pos];
+                let pay = this.GetSymbolExtraPay(symbol, j - 1 <= this._reelRow, j - 1, i);
+                
+                fovstrip.push(symbol);
+                paystrip.push(pay);
+                
+                if (debugMode && j < 3) {
+                    console.log(`     [行${j}] 位置: ${pos}, 符號: ${symbol}, 賠付: ${pay}`);
+                }
+                
                 pos++;
             }
+            
             this._CurStrip.push(fovstrip);
             this._CurPayStrip.push(paystrip);
+            
+            if (debugMode) {
+                console.log(`   [滾輪${i}] 完成 - 符號序列: [${fovstrip}]`);
+            }
         }
-        console.log('  ✅ FOV Strip 初始化完成');
+        
+        console.log(`✅ FOV Strip 初始化完成`);
+        console.log(`   CurStrip 數量: ${this._CurStrip.length}`);
+        console.log(`   CurPayStrip 數量: ${this._CurPayStrip.length}`);
+        console.log(`   curRngRuning 數量: ${this._curRngRuning.length}`);
         
         if (isChangeNow) { 
-            console.log('  🔄 立即更新滾輪畫面');
+            console.log(`  🔄 立即更新滾輪畫面`);
             this.UpdateReel(isChangeNow); 
         }
     }
@@ -906,39 +976,71 @@ export class ReelController extends Component {
      * @param isChangeNow 是否立即生效
      */
     UpdateReel(isChangeNow: boolean): void {
+        const debugMode = true; // 設為 false 時隱藏詳細日誌
+        
         console.log('🔄 UpdateReel: 更新滾輪符號顯示');
+        console.log(`   isChangeNow: ${isChangeNow}`);
+        console.log(`   滾輪數量: ${this._reelCol}`);
+        
+        let updateCount = 0;
+        let errorCount = 0;
+        
         for (let i = 0; i < this._reelCol; i++) {
             let paytrip = this._CurPayStrip[i];
+            
+            if (debugMode) {
+                console.log(`   [滾輪${i}] 賠付條長度: ${paytrip.length}`);
+            }
+            
             for (let j = 0; j < paytrip.length; j++) {
                 let symbol = paytrip[j];
                 if (symbol === undefined) { 
-                    console.warn(`  ⚠️ 符號 undefined，使用預設值 ${REEL_CONFIG.DEFAULT_SYMBOL}`);
+                    console.warn(`   ⚠️ [滾輪${i}][行${j}] 符號 undefined，使用預設值 ${REEL_CONFIG.DEFAULT_SYMBOL}`);
                     symbol = REEL_CONFIG.DEFAULT_SYMBOL;
+                    errorCount++;
                 }
+                
                 let idx = i * paytrip.length + j;
                 let a = Math.floor(idx / Data.Library.REEL_CONFIG.REEL_COL_LENGTH);
                 let b = idx % Data.Library.REEL_CONFIG.REEL_COL_LENGTH - 1;
+                
                 if (idx % Data.Library.REEL_CONFIG.REEL_COL_LENGTH != 0 && idx % Data.Library.REEL_CONFIG.REEL_COL_LENGTH != (Data.Library.REEL_CONFIG.REEL_COL_LENGTH - 1)) {
                     Data.Library.StateConsole.SymbolMap[(a * this._reelRow + b)] = symbol;
+                    updateCount++;
+                    
+                    if (debugMode && j < 2) {
+                        console.log(`     [行${j}] SymbolMap[${a * this._reelRow + b}] = ${symbol}`);
+                    }
                 }
             }
         }
 
         // 將 Strip 數據同步到各滾輪並設置符號
         for (let i = 0; i < this._reels.length; i++) {
-            this._reels[i].GetStrips(this._CurStrip[i])
+            this._reels[i].GetStrips(this._CurStrip[i]);
             this._reels[i].SetSymbol(isChangeNow);
+            
+            if (debugMode) {
+                console.log(`   [滾輪${i}] GetStrips 完成`);
+            }
         }
 
         // 保存符號狀態到 LastBsResult
+        let savedCount = 0;
         for (let i = 0; i < this._reels.length; i++) {
             let symbolLen = this._reels[i].symbolAry.length
             for (let j = 0; j < symbolLen; j++) {
                 let index = i * symbolLen + j;
-                Data.Library.MathConsole.LastBsResult.Reel[index] = this._reels[i].symbolAry[j].getComponent(Symbol).SymIndex;
+                let symbolIndex = this._reels[i].symbolAry[j].getComponent(Symbol).SymIndex;
+                Data.Library.MathConsole.LastBsResult.Reel[index] = symbolIndex;
+                savedCount++;
             }
         }
-        console.log('  ✅ 滾輪更新完成');
+        
+        console.log(`✅ UpdateReel 完成`);
+        console.log(`   更新 SymbolMap: ${updateCount} 項`);
+        console.log(`   保存到 LastBsResult: ${savedCount} 個符號`);
+        console.log(`   錯誤修正: ${errorCount} 次`);
     }
 
     /**
