@@ -85,7 +85,27 @@ export class ReelController extends Component {
         ShowWinController.Instance.init(this);
 
         MessageConsole = AllNode.Data.Map.get("MessageController");
-        DropSymbolMap = Data.Library.GameData.DropSymbolMap;
+        
+        // 加載 DropSymbolMap - 帶驗證和錯誤處理
+        if (Data.Library.GameData && Data.Library.GameData.DropSymbolMap) {
+            DropSymbolMap = Data.Library.GameData.DropSymbolMap;
+            console.log('✅ DropSymbolMap 加載成功');
+            console.log(`   CurrIndex: ${DropSymbolMap.CurrIndex}`);
+            console.log(`   DragonTrigger: [${DropSymbolMap.DragonTrigger}]`);
+            console.log(`   Multiplier 長度: ${DropSymbolMap.Multiplier?.length || 0}`);
+            console.log(`   WinLineGroup 長度: ${DropSymbolMap.WinLineGroup?.length || 0}`);
+        } else {
+            console.warn('⚠️ DropSymbolMap 未找到或 GameData 未初始化');
+            console.warn(`   GameData: ${Data.Library.GameData ? '存在' : '不存在'}`);
+            // 創建備用 DropSymbolMap
+            DropSymbolMap = {
+                DragonTrigger: [-1, -1],
+                Multiplier: [],
+                CurrIndex: 0,
+                WinLineGroup: [],
+            };
+            console.log('⚠️ 已創建備用 DropSymbolMap');
+        }
 
         // 使用節點快取系統預載入關鍵節點
         console.log('🔄 開始預載入節點快取...');

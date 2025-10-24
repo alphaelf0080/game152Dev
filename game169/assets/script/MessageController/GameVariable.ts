@@ -22,13 +22,17 @@ export class GameVariable extends Component {
     protected onLoad(): void {
         if (Data.Library.GameData === null) {
             Data.Library.GameData = this;
+            console.log('✅ GameVariable 已註冊到 Data.Library.GameData');
         } else {
+            console.warn('⚠️ GameData 已存在，銷毀重複的 GameVariable 組件');
             this.destroy();
         }
     }
 
     start() {
         MessageConsole = find("MessageController");
+        console.log('✅ GameVariable.start() 初始化完成');
+        console.log(`   DropSymbolMap 已初始化: ${JSON.stringify(this.DropSymbolMap, null, 2)}`);
     }
 
 
