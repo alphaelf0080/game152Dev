@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, sp } from 'cc';
+import { _decorator, Component, Node, sp, Material, BlendFactor } from 'cc';
 const { ccclass, property } = _decorator;
 
 // 注意：TypeScript 可能會報 getComponent 不存在的錯誤
@@ -159,6 +159,7 @@ export class SpineAnimationController extends Component {
     private isPlaying: boolean = false;
     private currentTime: number = 0;
     private animationDuration: number = 0;
+    private lastBlendMode: BlendMode = BlendMode.NORMAL; // 追蹤上一次的混合模式
     
     // ============================================================
     // 生命週期
@@ -224,8 +225,9 @@ export class SpineAnimationController extends Component {
         // 設置 Skin
         this.setSkin(this.skinName);
         
-        // 設置 Blend Mode
+        // 設置 Blend Mode 並初始化追蹤
         this.setBlendMode(this.blendMode);
+        this.lastBlendMode = this.blendMode;
         
         // 如果自動播放
         if (this.autoPlay && this.animationName) {
@@ -236,6 +238,12 @@ export class SpineAnimationController extends Component {
     }
     
     protected update(dt: number): void {
+        // 檢測 Inspector 中的混合模式是否改變
+        if (this.blendMode !== this.lastBlendMode) {
+            this.setBlendMode(this.blendMode);
+            this.lastBlendMode = this.blendMode;
+        }
+        
         if (!this.isPlaying || !this.currentTrackEntry) return;
         
         // 更新當前時間（用於逆播放）
@@ -419,33 +427,71 @@ export class SpineAnimationController extends Component {
         
         this.blendMode = mode;
         
-        // Cocos Creator 的 Spine 使用材質的混合模式
-        const customMat = this.skeleton.customMaterial;
-        if (customMat) {
-            // 根據 BlendMode 設置混合參數
-            switch (mode) {
-                case BlendMode.NORMAL:
-                    console.log('[SpineAnimationController] 🎨 Blend Mode: NORMAL');
-                    // SRC_ALPHA, ONE_MINUS_SRC_ALPHA
-                    break;
-                case BlendMode.ADDITIVE:
-                    console.log('[SpineAnimationController] 🎨 Blend Mode: ADDITIVE');
-                    // SRC_ALPHA, ONE
-                    break;
-                case BlendMode.MULTIPLY:
-                    console.log('[SpineAnimationController] 🎨 Blend Mode: MULTIPLY');
-                    // DST_COLOR, ONE_MINUS_SRC_ALPHA
-                    break;
-                case BlendMode.SCREEN:
-                    console.log('[SpineAnimationController] 🎨 Blend Mode: SCREEN');
-                    // ONE, ONE_MINUS_SRC_COLOR
-                    break;
-            }
+        // 獲取或創建自定義材質
+        let material = this.skeleton.customMaterial;
+        
+        if (!material && this.skeleton.getMaterial(0)) {
+            // 如果沒有自定義材質，從第一個材質克隆一份
+            material = this.skeleton.getMaterial(0);
+            this.skeleton.customMaterial = material;
         }
         
-        // 也可以使用 Spine 原生的混合模式設置
+        if (material) {
+            // 獲取材質的 Pass（渲染通道）
+            const pass = material.passes[0];
+            if (pass) {
+                const blendState = pass.blendState;
+                const target = blendState.targets[0];
+                
+                // 根據 BlendMode 設置 OpenGL 混合參數
+                switch (mode) {
+                    case BlendMode.NORMAL:
+                        console.log('[SpineAnimationController] 🎨 Blend Mode: NORMAL');
+                        target.blendSrc = BlendFactor.SRC_ALPHA;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                        
+                    case BlendMode.ADDITIVE:
+                        console.log('[SpineAnimationController] 🎨 Blend Mode: ADDITIVE (發光疊加)');
+                        target.blendSrc = BlendFactor.SRC_ALPHA;
+                        target.blendDst = BlendFactor.ONE;
+                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
+                        target.blendDstAlpha = BlendFactor.ONE;
+                        break;
+                        
+                    case BlendMode.MULTIPLY:
+                        console.log('[SpineAnimationController] 🎨 Blend Mode: MULTIPLY (變暗)');
+                        target.blendSrc = BlendFactor.DST_COLOR;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        target.blendSrcAlpha = BlendFactor.ONE;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                        
+                    case BlendMode.SCREEN:
+                        console.log('[SpineAnimationController] 🎨 Blend Mode: SCREEN (濾色/變亮)');
+                        target.blendSrc = BlendFactor.ONE;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_COLOR;
+                        target.blendSrcAlpha = BlendFactor.ONE;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                }
+                
+                // 重新應用材質以使更改生效
+                pass.overridePipelineStates(material.passes[0].passIndex, blendState);
+                this.skeleton.setMaterial(material, 0);
+                
+                console.log(`[SpineAnimationController] ✅ Blend Mode 已套用: ${BlendMode[mode]}`);
+            }
+        } else {
+            console.warn('[SpineAnimationController] ⚠️ 無法取得材質，Blend Mode 設置失敗');
+        }
+        
+        // 設置 Spine 的預乘 Alpha 屬性
         if (this.skeleton.premultipliedAlpha !== undefined) {
-            this.skeleton.premultipliedAlpha = (mode === BlendMode.NORMAL);
+            // 對於 Additive 和 Screen 模式，通常不需要預乘 Alpha
+            this.skeleton.premultipliedAlpha = (mode === BlendMode.NORMAL || mode === BlendMode.MULTIPLY);
         }
     }
     
