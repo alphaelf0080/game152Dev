@@ -17,7 +17,7 @@ CCEffect %{
         cullMode: none
       properties:
         alphaThreshold: { value: 0.5 }
-        blendMode: { value: 0.0, editor: { tooltip: '混合模式: 0=Normal, 1=Additive, 2=Multiply, 3=Screen' } }
+        blendMode: { value: 0.0, editor: { displayName: 'Blend Mode', tooltip: '0=Normal, 1=Additive, 2=Multiply, 3=Screen' } }
 }%
 
 CCProgram spine-vs %{

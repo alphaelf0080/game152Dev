@@ -99,14 +99,25 @@ export class SpineBlendModeController extends Component {
             return;
         }
         
-        // 設置 Shader uniform 參數
-        const pass = this.materialInstance.passes[0];
-        if (pass) {
-            // 設置 blendMode uniform (0.0 - 3.0)
-            const handle = pass.getHandle('blendMode');
-            if (handle) {
-                pass.setUniform(handle, mode);
+        // 直接設置材質屬性
+        try {
+            // 方法1: 使用 setProperty
+            this.materialInstance.setProperty('blendMode', mode);
+            log(`[SpineBlendModeController] 🔧 設置 blendMode 屬性: ${mode}`);
+            
+            // 方法2: 透過 pass 設置 uniform
+            const pass = this.materialInstance.passes[0];
+            if (pass) {
+                const handle = pass.getHandle('blendMode');
+                if (handle !== undefined) {
+                    pass.setUniform(handle, mode);
+                    log(`[SpineBlendModeController] 🔧 設置 uniform handle: ${handle} = ${mode}`);
+                } else {
+                    log('[SpineBlendModeController] ⚠️ 找不到 blendMode uniform handle');
+                }
             }
+        } catch (e) {
+            log('[SpineBlendModeController] ❌ 設置 uniform 錯誤:', e);
         }
         
         // 根據混合模式調整 OpenGL 混合狀態

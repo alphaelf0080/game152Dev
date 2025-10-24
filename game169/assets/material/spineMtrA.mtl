@@ -5,7 +5,7 @@
   "__editorExtras__": {},
   "_native": "",
   "_effectAsset": {
-    "__uuid__": "06cee400-f14a-4f3c-8e74-094581f3f479",
+    "__uuid__": "2dc271bb-070d-49b9-82a3-624ece5e24d1",
     "__expectedType__": "cc.EffectAsset"
   },
   "_techIdx": 0,
@@ -24,6 +24,8 @@
     }
   ],
   "_props": [
-    {}
+    {
+      "blendMode": 2
+    }
   ]
 }
