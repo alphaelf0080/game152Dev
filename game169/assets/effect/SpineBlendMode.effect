@@ -10,14 +10,14 @@ CCEffect %{
       blendState:
         targets:
         - blend: true
-          blendSrc: src_alpha
+          blendSrc: one
           blendDst: one_minus_src_alpha
           blendDstAlpha: one_minus_src_alpha
       rasterizerState:
         cullMode: none
       properties:
         alphaThreshold: { value: 0.5 }
-        blendMode: { value: 0.0, editor: { displayName: 'Blend Mode', tooltip: '0=Normal, 1=Additive, 2=Multiply, 3=Screen' } }
+        useAdditive: { value: 0.0, editor: { displayName: 'Use Additive', tooltip: '0=Normal, 1=Additive Mode' } }
 }%
 
 CCProgram spine-vs %{
@@ -73,40 +73,8 @@ CCProgram spine-fs %{
   layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
 
   uniform Constant {
-    float blendMode;
+    float useAdditive;
   };
-
-  vec4 applyBlendMode(vec4 texColor, float mode) {
-    vec4 finalColor = texColor;
-    
-    // 0 = Normal (正常)
-    if (mode < 0.5) {
-      finalColor = texColor * v_light;
-    }
-    // 1 = Additive (加法/發光)
-    else if (mode < 1.5) {
-      // 加法混合：保持原色，增加亮度
-      finalColor.rgb = texColor.rgb * v_light.rgb * texColor.a;
-      finalColor.a = texColor.a * v_light.a;
-    }
-    // 2 = Multiply (乘法/變暗)
-    else if (mode < 2.5) {
-      // 乘法混合：顏色相乘，產生變暗效果
-      finalColor.rgb = texColor.rgb * v_light.rgb;
-      finalColor.a = texColor.a * v_light.a;
-    }
-    // 3 = Screen (濾色/變亮)
-    else {
-      // 濾色混合：1 - (1-A) * (1-B)
-      vec3 invTex = vec3(1.0) - texColor.rgb;
-      vec3 invLight = vec3(1.0) - v_light.rgb;
-      finalColor.rgb = vec3(1.0) - (invTex * invLight);
-      finalColor.rgb *= texColor.a;
-      finalColor.a = texColor.a * v_light.a;
-    }
-    
-    return finalColor;
-  }
 
   vec4 frag () {
     vec4 texColor = CCSampleWithAlphaSeparated(cc_spriteTexture, v_uv);
@@ -116,8 +84,12 @@ CCProgram spine-fs %{
       texColor.r  = texColor.g = texColor.b = gray;
     #endif
 
-    // 應用混合模式
-    vec4 o = applyBlendMode(texColor, blendMode);
+    vec4 o = texColor * v_light;
+    
+    // 如果啟用加法模式，增強亮度
+    if (useAdditive > 0.5) {
+      o.rgb = o.rgb * 2.0; // 雙倍亮度
+    }
 
     ALPHA_TEST(o);
     return o;
