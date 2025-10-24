@@ -1,0 +1,125 @@
+// Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: spine-vs:vert
+      frag: spine-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        alphaThreshold: { value: 0.5 }
+        blendMode: { value: 0.0, editor: { tooltip: '混合模式: 0=Normal, 1=Additive, 2=Multiply, 3=Screen' } }
+}%
+
+CCProgram spine-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 v_light;
+  out vec2 v_uv;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    v_uv = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(v_uv);
+    #endif
+    v_light = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram spine-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 v_light;
+  in vec2 v_uv;
+
+  #pragma builtin(local)
+  layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
+
+  uniform Constant {
+    float blendMode;
+  };
+
+  vec4 applyBlendMode(vec4 texColor, float mode) {
+    vec4 finalColor = texColor;
+    
+    // 0 = Normal (正常)
+    if (mode < 0.5) {
+      finalColor = texColor * v_light;
+    }
+    // 1 = Additive (加法/發光)
+    else if (mode < 1.5) {
+      // 加法混合：保持原色，增加亮度
+      finalColor.rgb = texColor.rgb * v_light.rgb * texColor.a;
+      finalColor.a = texColor.a * v_light.a;
+    }
+    // 2 = Multiply (乘法/變暗)
+    else if (mode < 2.5) {
+      // 乘法混合：顏色相乘，產生變暗效果
+      finalColor.rgb = texColor.rgb * v_light.rgb;
+      finalColor.a = texColor.a * v_light.a;
+    }
+    // 3 = Screen (濾色/變亮)
+    else {
+      // 濾色混合：1 - (1-A) * (1-B)
+      vec3 invTex = vec3(1.0) - texColor.rgb;
+      vec3 invLight = vec3(1.0) - v_light.rgb;
+      finalColor.rgb = vec3(1.0) - (invTex * invLight);
+      finalColor.rgb *= texColor.a;
+      finalColor.a = texColor.a * v_light.a;
+    }
+    
+    return finalColor;
+  }
+
+  vec4 frag () {
+    vec4 texColor = CCSampleWithAlphaSeparated(cc_spriteTexture, v_uv);
+
+    #if IS_GRAY
+      float gray  = 0.2126 * texColor.r + 0.7152 * texColor.g + 0.0722 * texColor.b;
+      texColor.r  = texColor.g = texColor.b = gray;
+    #endif
+
+    // 應用混合模式
+    vec4 o = applyBlendMode(texColor, blendMode);
+
+    ALPHA_TEST(o);
+    return o;
+  }
+}%
