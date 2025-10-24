@@ -1,17 +1,30 @@
-import { _decorator, Component, sp, Material, log } from 'cc';
+import { _decorator, Component, sp, Material, log, Enum } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
- * Spine 加法混合模式控制器（簡化測試版本）
+ * Spine 混合模式枚舉
+ */
+export enum SpineBlendMode {
+    NORMAL = 0,      // 正常混合
+    ADDITIVE = 1,    // 加法混合（發光）
+    MULTIPLY = 2,    // 乘法混合（變暗）
+    SCREEN = 3       // 濾色混合（變亮）
+}
+
+Enum(SpineBlendMode);
+
+/**
+ * Spine 混合模式控制器（使用自定義 Shader）
  * 
  * 功能：
- * - 測試 Spine 的加法混合效果
- * - 簡單的開關控制
+ * - 透過自定義 Shader 實現 Spine 骨骼動畫的混合模式控制
+ * - 支援 4 種混合模式：Normal, Additive, Multiply, Screen
+ * - 可在 Inspector 中即時調整並預覽效果
  * 
  * 使用方式：
  * 1. 將此腳本附加到有 sp.Skeleton 組件的節點上
  * 2. 在 Inspector 中設置 Blend Mode Material（使用 SpineBlendMode.effect）
- * 3. 勾選 Use Additive 測試加法混合效果
+ * 3. 調整 Blend Mode 下拉選單選擇混合模式
  * 
  * @author AI Assistant
  * @date 2025-01-24
@@ -23,14 +36,15 @@ export class SpineBlendModeController extends Component {
     blendModeMaterial: Material | null = null;
     
     @property({ 
-        displayName: '使用加法混合', 
-        tooltip: '勾選後啟用發光效果（Additive Blend）' 
+        type: SpineBlendMode, 
+        displayName: '混合模式', 
+        tooltip: 'Normal: 正常混合\nAdditive: 發光疊加效果\nMultiply: 顏色變暗效果\nScreen: 濾色變亮效果' 
     })
-    useAdditive: boolean = false;
+    blendMode: SpineBlendMode = SpineBlendMode.NORMAL;
     
     private skeletonComponent: sp.Skeleton | null = null;
     private materialInstance: Material | null = null;
-    private lastUseAdditive: boolean = false;
+    private lastBlendMode: SpineBlendMode = SpineBlendMode.NORMAL;
     
     onLoad() {
         // 獲取 Spine 骨骼組件
@@ -45,17 +59,17 @@ export class SpineBlendModeController extends Component {
         this.initializeMaterial();
         
         // 應用初始狀態
-        this.applyAdditive(this.useAdditive);
-        this.lastUseAdditive = this.useAdditive;
+        this.applyBlendMode(this.blendMode);
+        this.lastBlendMode = this.blendMode;
         
         log('[SpineBlendModeController] ✅ 初始化完成');
     }
     
     update() {
         // 檢測狀態是否改變
-        if (this.useAdditive !== this.lastUseAdditive) {
-            this.applyAdditive(this.useAdditive);
-            this.lastUseAdditive = this.useAdditive;
+        if (this.blendMode !== this.lastBlendMode) {
+            this.applyBlendMode(this.blendMode);
+            this.lastBlendMode = this.blendMode;
         }
     }
     
@@ -79,30 +93,25 @@ export class SpineBlendModeController extends Component {
     }
     
     /**
-     * 應用加法混合
+     * 應用混合模式
      */
-    private applyAdditive(enabled: boolean) {
+    private applyBlendMode(mode: SpineBlendMode) {
         if (!this.materialInstance) {
             log('[SpineBlendModeController] ⚠️ 材質實例未初始化');
             return;
         }
         
-        const value = enabled ? 1.0 : 0.0;
-        
         try {
             // 設置 shader uniform
-            this.materialInstance.setProperty('useAdditive', value);
-            log(`[SpineBlendModeController] 🔧 設置 useAdditive: ${value} ${enabled ? '(啟用發光)' : '(正常模式)'}`);
+            this.materialInstance.setProperty('blendMode', mode);
             
-            // 嘗試通過 pass 設置
+            // 透過 pass 設置
             const pass = this.materialInstance.passes[0];
             if (pass) {
-                const handle = pass.getHandle('useAdditive');
+                const handle = pass.getHandle('blendMode');
                 if (handle !== undefined) {
-                    pass.setUniform(handle, value);
-                    log(`[SpineBlendModeController] ✅ Uniform handle: ${handle}, value: ${value}`);
-                } else {
-                    log('[SpineBlendModeController] ⚠️ 找不到 useAdditive uniform handle');
+                    pass.setUniform(handle, mode);
+                    log(`[SpineBlendModeController] ✅ 設置 blendMode: ${mode}`);
                 }
             }
         } catch (e) {
@@ -114,28 +123,30 @@ export class SpineBlendModeController extends Component {
             this.skeletonComponent.markForUpdateRenderData();
         }
         
-        log(`[SpineBlendModeController] 🎨 混合模式已更新: ${enabled ? 'Additive (加法發光)' : 'Normal (正常)'}`);
+        const modeNames = ['NORMAL (正常)', 'ADDITIVE (發光)', 'MULTIPLY (變暗)', 'SCREEN (變亮)'];
+        log(`[SpineBlendModeController] 🎨 混合模式: ${modeNames[mode]}`);
     }
     
     /**
-     * 設置加法混合（公開 API）
+     * 設置混合模式（公開 API）
      */
-    public setAdditive(enabled: boolean) {
-        this.useAdditive = enabled;
-        this.applyAdditive(enabled);
+    public setBlendMode(mode: SpineBlendMode) {
+        this.blendMode = mode;
+        this.applyBlendMode(mode);
     }
     
     /**
-     * 獲取當前狀態
+     * 獲取當前混合模式
      */
-    public isAdditive(): boolean {
-        return this.useAdditive;
+    public getBlendMode(): SpineBlendMode {
+        return this.blendMode;
     }
     
     /**
-     * 切換加法混合
+     * 切換到下一個混合模式
      */
-    public toggleAdditive() {
-        this.setAdditive(!this.useAdditive);
+    public toggleBlendMode() {
+        this.blendMode = (this.blendMode + 1) % 4;
+        this.applyBlendMode(this.blendMode);
     }
 }

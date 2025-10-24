@@ -25,7 +25,7 @@
   ],
   "_props": [
     {
-      "blendMode": 2
+      "useAdditive": 1
     }
   ]
 }

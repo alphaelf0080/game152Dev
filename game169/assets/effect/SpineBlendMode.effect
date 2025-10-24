@@ -17,7 +17,7 @@ CCEffect %{
         cullMode: none
       properties:
         alphaThreshold: { value: 0.5 }
-        useAdditive: { value: 0.0, editor: { displayName: 'Use Additive', tooltip: '0=Normal, 1=Additive Mode' } }
+        blendMode: { value: 0.0, editor: { displayName: 'Blend Mode', tooltip: '0=Normal, 1=Additive, 2=Multiply, 3=Screen' } }
 }%
 
 CCProgram spine-vs %{
@@ -73,7 +73,7 @@ CCProgram spine-fs %{
   layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
 
   uniform Constant {
-    float useAdditive;
+    float blendMode;
   };
 
   vec4 frag () {
@@ -84,11 +84,28 @@ CCProgram spine-fs %{
       texColor.r  = texColor.g = texColor.b = gray;
     #endif
 
-    vec4 o = texColor * v_light;
+    vec4 o;
     
-    // 如果啟用加法模式，增強亮度
-    if (useAdditive > 0.5) {
-      o.rgb = o.rgb * 2.0; // 雙倍亮度
+    // 0 = Normal (正常)
+    if (blendMode < 0.5) {
+      o = texColor * v_light;
+    }
+    // 1 = Additive (加法/發光)
+    else if (blendMode < 1.5) {
+      o = texColor * v_light;
+      o.rgb = o.rgb * 2.0; // 增強亮度
+    }
+    // 2 = Multiply (乘法/變暗)
+    else if (blendMode < 2.5) {
+      o = texColor * v_light;
+      o.rgb = o.rgb * 0.5; // 降低亮度
+    }
+    // 3 = Screen (濾色/變亮)
+    else {
+      vec3 invTex = vec3(1.0) - (texColor.rgb * v_light.rgb);
+      o.rgb = vec3(1.0) - invTex;
+      o.rgb = o.rgb * 1.5; // 增強濾色效果
+      o.a = texColor.a * v_light.a;
     }
 
     ALPHA_TEST(o);
