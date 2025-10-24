@@ -1,5 +1,15 @@
-import { _decorator, Component, sp, Color, log } from 'cc';
+import { _decorator, Component, sp, Color, log, Material, BlendFactor } from 'cc';
 const { ccclass, property } = _decorator;
+
+/**
+ * 色彩混合模式枚舉
+ */
+export enum ColorBlendMode {
+    NORMAL = 0,      // 正常混合
+    ADDITIVE = 1,    // 加法混合（發光疊加）
+    MULTIPLY = 2,    // 乘法混合（變暗）
+    SCREEN = 3       // 屏幕混合（變亮）
+}
 
 /**
  * 淡入淡出色彩組態
@@ -72,10 +82,15 @@ export class SkeletonColorController extends Component {
     @property({ displayName: '控制骨骼動畫時間軸', tooltip: '啟用後會直接控制 sp.Skeleton 的動畫播放\n勾選此項後，播放速度和倒播才會影響骨骼動畫' })
     controlSkeletonAnimation: boolean = false;
     
+    // Color Blend Mode 控制
+    @property({ type: ColorBlendMode, displayName: '色彩混合模式', tooltip: '選擇骨骼的色彩混合模式\nNormal: 正常\nAdditive: 發光疊加\nMultiply: 變暗\nScreen: 變亮' })
+    colorBlendMode: ColorBlendMode = ColorBlendMode.NORMAL;
+    
     private isPlayingFadeAnimation: boolean = false;
     private currentFrame: number = 0;
     private lastReversePlay: boolean = false;
     private lastPlaybackSpeed: number = 1.0;
+    private lastColorBlendMode: ColorBlendMode = ColorBlendMode.NORMAL;
     
     // 骨骼動畫控制
     private currentTrackEntry: sp.spine.TrackEntry | null = null;
@@ -92,11 +107,15 @@ export class SkeletonColorController extends Component {
             // 初始化播放控制
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
+            this.lastColorBlendMode = this.colorBlendMode;
             
             // 獲取當前動畫信息
             this.initializeAnimationInfo();
             
             this.applyPlaybackSettings();
+            
+            // 應用初始混合模式
+            this.applyColorBlendMode(this.colorBlendMode);
         }
         
         // 如果設定為自動播放，則啟動動畫
@@ -111,6 +130,12 @@ export class SkeletonColorController extends Component {
             this.applyPlaybackSettings();
             this.lastReversePlay = this.reversePlay;
             this.lastPlaybackSpeed = this.playbackSpeed;
+        }
+        
+        // 檢測混合模式是否改變
+        if (this.colorBlendMode !== this.lastColorBlendMode) {
+            this.applyColorBlendMode(this.colorBlendMode);
+            this.lastColorBlendMode = this.colorBlendMode;
         }
         
         // 手動控制骨骼動畫時間（倒播模式）
@@ -472,5 +497,100 @@ export class SkeletonColorController extends Component {
             log('[SkeletonColorController] 骨骼動畫已停止');
         }
     }
+
+    // ============================================================
+    // Color Blend Mode 控制
+    // ============================================================
+
+    /**
+     * 應用色彩混合模式
+     * @param mode 混合模式
+     */
+    private applyColorBlendMode(mode: ColorBlendMode) {
+        if (!this.skeletonComponent) {
+            log('[SkeletonColorController] ⚠️ 無法套用混合模式：skeleton 組件未找到');
+            return;
+        }
+
+        // 獲取或創建自定義材質
+        let material = this.skeletonComponent.customMaterial;
+        
+        if (!material && this.skeletonComponent.getMaterial(0)) {
+            // 如果沒有自定義材質，從第一個材質克隆一份
+            material = this.skeletonComponent.getMaterial(0);
+            if (material) {
+                this.skeletonComponent.customMaterial = material;
+            }
+        }
+        
+        if (material) {
+            // 獲取材質的 Pass（渲染通道）
+            const pass = material.passes[0];
+            if (pass) {
+                const blendState = pass.blendState;
+                const target = blendState.targets[0];
+                
+                // 根據混合模式設置 OpenGL 混合參數
+                switch (mode) {
+                    case ColorBlendMode.NORMAL:
+                        log('[SkeletonColorController] 🎨 色彩混合模式: NORMAL (正常)');
+                        target.blendSrc = BlendFactor.SRC_ALPHA;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                        
+                    case ColorBlendMode.ADDITIVE:
+                        log('[SkeletonColorController] 🎨 色彩混合模式: ADDITIVE (發光疊加)');
+                        target.blendSrc = BlendFactor.SRC_ALPHA;
+                        target.blendDst = BlendFactor.ONE;
+                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
+                        target.blendDstAlpha = BlendFactor.ONE;
+                        break;
+                        
+                    case ColorBlendMode.MULTIPLY:
+                        log('[SkeletonColorController] 🎨 色彩混合模式: MULTIPLY (乘法變暗)');
+                        target.blendSrc = BlendFactor.DST_COLOR;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        target.blendSrcAlpha = BlendFactor.ONE;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                        
+                    case ColorBlendMode.SCREEN:
+                        log('[SkeletonColorController] 🎨 色彩混合模式: SCREEN (濾色變亮)');
+                        target.blendSrc = BlendFactor.ONE;
+                        target.blendDst = BlendFactor.ONE_MINUS_SRC_COLOR;
+                        target.blendSrcAlpha = BlendFactor.ONE;
+                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
+                        break;
+                }
+                
+                // 重新應用材質以使更改生效
+                pass.overridePipelineStates(material.passes[0].passIndex, blendState);
+                this.skeletonComponent.setMaterial(material, 0);
+                
+                log(`[SkeletonColorController] ✅ 色彩混合模式已套用: ${ColorBlendMode[mode]}`);
+            }
+        } else {
+            log('[SkeletonColorController] ⚠️ 無法取得材質，混合模式設置失敗');
+        }
+    }
+
+    /**
+     * 設定色彩混合模式
+     * @param mode 混合模式
+     */
+    public setColorBlendMode(mode: ColorBlendMode) {
+        this.colorBlendMode = mode;
+        this.applyColorBlendMode(mode);
+    }
+
+    /**
+     * 取得當前色彩混合模式
+     */
+    public getColorBlendMode(): ColorBlendMode {
+        return this.colorBlendMode;
+    }
 }
+
 
