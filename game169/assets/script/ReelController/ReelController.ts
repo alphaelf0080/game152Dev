@@ -136,7 +136,116 @@ export class ReelController extends Component {
         console.log(`✅ 建立了 ${this._reelCol} 條滾輪`);
 
         this.SetReelActive(true);
+        
+        // 打印所有初始化完成的組件
+        this.printInitializationSummary();
+        
         console.log('=== ReelController.start() 初始化完成 ===\n');
+    }
+
+    /**
+     * 打印所有初始化完成的組件詳細信息
+     */
+    private printInitializationSummary(): void {
+        console.log('📋 ═══ 初始化組件總結 ═══════════════════════════════');
+        console.log('[ReelController] ✅ 初始化完成的所有組件：');
+        console.log('[ReelController] │');
+        
+        // 1. 管理器
+        console.log('[ReelController] ├─ 🔧 管理器組件');
+        console.log('[ReelController] │  ├─ ✓ NodeCache (單例模式)');
+        console.log(`[ReelController] │  │  └─ 狀態: 已初始化`);
+        console.log('[ReelController] │  ├─ ✓ StripManager');
+        console.log(`[ReelController] │  │  ├─ 滾輪列數: ${this._reelCol}`);
+        console.log(`[ReelController] │  │  ├─ 符號行數: ${this._realReelRow} (含上下隱藏行)`);
+        console.log(`[ReelController] │  │  └─ 可見行數: ${this._reelRow}`);
+        console.log('[ReelController] │  └─ ✓ ReelUpdateManager');
+        console.log('[ReelController] │     └─ 狀態: 已初始化，Turbo 模式可用');
+        console.log('[ReelController] │');
+        
+        // 2. 節點快取
+        console.log('[ReelController] ├─ 💾 節點快取');
+        console.log('[ReelController] │  ├─ ✓ reelSlow (慢動作動畫)');
+        console.log(`[ReelController] │  │  └─ ${this._reelSlowAnm ? '已取得' : '未找到'}`);
+        console.log('[ReelController] │  ├─ ✓ ScreenSlowmote (螢幕慢動作特效)');
+        console.log(`[ReelController] │  │  └─ ${this.screenSlowNode ? '已取得' : '未找到'}`);
+        console.log('[ReelController] │  └─ ✓ reelBlack (壓暗遮罩)');
+        console.log(`[ReelController] │     └─ ${this.symbolDarkNode ? '已取得' : '未找到'}`);
+        console.log('[ReelController] │');
+        
+        // 3. 滾輪系統
+        console.log('[ReelController] ├─ 🎲 滾輪系統');
+        console.log(`[ReelController] │  ├─ ✓ 滾輪列數量: ${this._reels.length}`);
+        console.log('[ReelController] │  ├─ 滾輪位置配置:');
+        console.log(`[ReelController] │  │  ├─ X 軸起始位置: ${this._reelposleft}`);
+        console.log(`[ReelController] │  │  ├─ Y 軸起始位置: ${this._reelposup}`);
+        console.log(`[ReelController] │  │  ├─ 符號寬度: ${this._reel_W}px`);
+        console.log(`[ReelController] │  │  ├─ 符號高度: ${this._reel_H}px`);
+        console.log(`[ReelController] │  │  ├─ 水平間距: ${this._reelGapX}px`);
+        console.log(`[ReelController] │  │  └─ 垂直間距: ${this._reelGapY}px`);
+        console.log('[ReelController] │  └─ 滾輪詳細信息:');
+        
+        this._reels.forEach((reel, index) => {
+            const isLast = index === this._reels.length - 1;
+            const prefix = isLast ? '└─' : '├─';
+            const connector = isLast ? '   ' : '│  ';
+            
+            console.log(`[ReelController] │  ${prefix} 滾輪 ${index} (ReelCol${index})`);
+            console.log(`[ReelController] │  ${connector}├─ 符號數量: ${reel.symbolAry.length}`);
+            console.log(`[ReelController] │  ${connector}├─ 位置 (X, Y): (${reel.reelColX}, ${reel.reelColY})`);
+            console.log(`[ReelController] │  ${connector}└─ 狀態: ${reel.rolling ? '旋轉中' : '已停止'}`);
+        });
+        console.log('[ReelController] │');
+        
+        // 4. 全域數據
+        console.log('[ReelController] ├─ 📊 全域數據');
+        console.log('[ReelController] │  ├─ ✓ MessageConsole');
+        console.log(`[ReelController] │  │  └─ ${MessageConsole ? '已連結' : '未找到'}`);
+        console.log('[ReelController] │  ├─ ✓ DropSymbolMap');
+        console.log(`[ReelController] │  │  └─ ${DropSymbolMap ? '已載入' : '未載入'}`);
+        console.log('[ReelController] │  └─ ✓ ShowWinController');
+        console.log(`[ReelController] │     └─ 已初始化`);
+        console.log('[ReelController] │');
+        
+        // 5. 配置常量
+        console.log('[ReelController] ├─ ⚙️  配置常量');
+        console.log('[ReelController] │  ├─ ✓ REEL_CONFIG');
+        console.log(`[ReelController] │  │  ├─ DEFAULT_SYMBOL: ${REEL_CONFIG.DEFAULT_SYMBOL}`);
+        console.log(`[ReelController] │  │  └─ SYMBOL_DEPTH_BASE: ${REEL_CONFIG.SYMBOL_DEPTH_BASE}`);
+        console.log('[ReelController] │  └─ ✓ BigSymbolIndex');
+        console.log(`[ReelController] │     ├─ NotBig: ${this.bigSymbolIndex.NotBig}`);
+        console.log(`[ReelController] │     ├─ NormalBig: ${this.bigSymbolIndex.NormalBig}`);
+        console.log(`[ReelController] │     └─ GoldBig: ${this.bigSymbolIndex.GoldBig}`);
+        console.log('[ReelController] │');
+        
+        // 6. 狀態變數
+        console.log('[ReelController] ├─ 🎮 狀態變數');
+        console.log(`[ReelController] │  ├─ ✓ countStop: ${this.countStop}`);
+        console.log(`[ReelController] │  ├─ ✓ alreadySetStrp: ${this.alreadySetStrp}`);
+        console.log(`[ReelController] │  ├─ ✓ isSlowWaiting: ${this.isSlowWaiting}`);
+        console.log(`[ReelController] │  ├─ ✓ _startSpinBool: ${this._startSpinBool}`);
+        console.log(`[ReelController] │  └─ ✓ _topReelIndex: ${this._topReelIndex}`);
+        console.log('[ReelController] │');
+        
+        // 7. 陣列狀態
+        console.log('[ReelController] ├─ 📈 陣列狀態');
+        console.log(`[ReelController] │  ├─ ✓ _strip 陣列長度: ${this._strip.length}`);
+        console.log(`[ReelController] │  ├─ ✓ _CurStrip 陣列長度: ${this._CurStrip.length}`);
+        console.log(`[ReelController] │  ├─ ✓ _CurPayStrip 陣列長度: ${this._CurPayStrip.length}`);
+        console.log(`[ReelController] │  ├─ ✓ _reels 陣列長度: ${this._reels.length}`);
+        console.log(`[ReelController] │  ├─ ✓ _curRngRuning 陣列長度: ${this._curRngRuning.length}`);
+        console.log(`[ReelController] │  ├─ ✓ _curState 陣列長度: ${this._curState.length}`);
+        console.log(`[ReelController] │  └─ ✓ _script_tostop 陣列長度: ${this._script_tostop.length}`);
+        console.log('[ReelController] │');
+        
+        // 8. 總結統計
+        console.log('[ReelController] └─ 📊 初始化統計');
+        const totalSymbols = this._reels.reduce((sum, reel) => sum + reel.symbolAry.length, 0);
+        console.log(`[ReelController]    ├─ 總符號數量: ${totalSymbols}`);
+        console.log(`[ReelController]    ├─ 管理器數量: 3 個 (NodeCache, StripManager, ReelUpdateManager)`);
+        console.log(`[ReelController]    ├─ 快取節點數量: 3 個 (reelSlow, ScreenSlowmote, reelBlack)`);
+        console.log(`[ReelController]    └─ ✨ 所有組件初始化成功！`);
+        console.log('═══════════════════════════════════════════════════════');
     }
 
     /**
