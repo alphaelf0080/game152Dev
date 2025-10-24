@@ -1,14 +1,15 @@
-import { _decorator, Component, sp, Color, log, Material, BlendFactor } from 'cc';
+import { _decorator, Component, sp, Color, log } from 'cc';
 const { ccclass, property } = _decorator;
+const { spine } = sp;
 
 /**
- * 色彩混合模式枚舉
+ * 色彩混合模式枚舉（對應 Spine 的 BlendMode）
  */
 export enum ColorBlendMode {
-    NORMAL = 0,      // 正常混合
-    ADDITIVE = 1,    // 加法混合（發光疊加）
-    MULTIPLY = 2,    // 乘法混合（變暗）
-    SCREEN = 3       // 屏幕混合（變亮）
+    NORMAL = 0,      // 正常混合 (sp.spine.BlendMode.Normal)
+    ADDITIVE = 1,    // 加法混合（發光疊加）(sp.spine.BlendMode.Additive)
+    MULTIPLY = 2,    // 乘法混合（變暗）(sp.spine.BlendMode.Multiply)
+    SCREEN = 3       // 屏幕混合（變亮）(sp.spine.BlendMode.Screen)
 }
 
 /**
@@ -503,7 +504,7 @@ export class SkeletonColorController extends Component {
     // ============================================================
 
     /**
-     * 應用色彩混合模式
+     * 應用色彩混合模式（使用 Spine 原生 BlendMode API）
      * @param mode 混合模式
      */
     private applyColorBlendMode(mode: ColorBlendMode) {
@@ -512,68 +513,55 @@ export class SkeletonColorController extends Component {
             return;
         }
 
-        // 獲取或創建自定義材質
-        let material = this.skeletonComponent.customMaterial;
+        // 獲取 Spine skeleton 實例
+        const skeleton = this.skeletonComponent.skeleton;
+        if (!skeleton) {
+            log('[SkeletonColorController] ⚠️ 無法獲取 skeleton 實例');
+            return;
+        }
+
+        // 將 ColorBlendMode 映射到 Spine 的 BlendMode
+        let spineBlendMode: sp.spine.BlendMode;
         
-        if (!material && this.skeletonComponent.getMaterial(0)) {
-            // 如果沒有自定義材質，從第一個材質克隆一份
-            material = this.skeletonComponent.getMaterial(0);
-            if (material) {
-                this.skeletonComponent.customMaterial = material;
+        switch (mode) {
+            case ColorBlendMode.NORMAL:
+                spineBlendMode = spine.BlendMode.Normal;
+                log('[SkeletonColorController] 🎨 色彩混合模式: NORMAL (正常)');
+                break;
+                
+            case ColorBlendMode.ADDITIVE:
+                spineBlendMode = spine.BlendMode.Additive;
+                log('[SkeletonColorController] 🎨 色彩混合模式: ADDITIVE (發光疊加)');
+                break;
+                
+            case ColorBlendMode.MULTIPLY:
+                spineBlendMode = spine.BlendMode.Multiply;
+                log('[SkeletonColorController] 🎨 色彩混合模式: MULTIPLY (乘法變暗)');
+                break;
+                
+            case ColorBlendMode.SCREEN:
+                spineBlendMode = spine.BlendMode.Screen;
+                log('[SkeletonColorController] 🎨 色彩混合模式: SCREEN (濾色變亮)');
+                break;
+                
+            default:
+                spineBlendMode = spine.BlendMode.Normal;
+                break;
+        }
+
+        // 對所有 slot 應用混合模式
+        const slots = skeleton.slots;
+        for (let i = 0; i < slots.length; i++) {
+            const slot = slots[i];
+            if (slot && slot.data) {
+                slot.data.blendMode = spineBlendMode;
             }
         }
         
-        if (material) {
-            // 獲取材質的 Pass（渲染通道）
-            const pass = material.passes[0];
-            if (pass) {
-                const blendState = pass.blendState;
-                const target = blendState.targets[0];
-                
-                // 根據混合模式設置 OpenGL 混合參數
-                switch (mode) {
-                    case ColorBlendMode.NORMAL:
-                        log('[SkeletonColorController] 🎨 色彩混合模式: NORMAL (正常)');
-                        target.blendSrc = BlendFactor.SRC_ALPHA;
-                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
-                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                        break;
-                        
-                    case ColorBlendMode.ADDITIVE:
-                        log('[SkeletonColorController] 🎨 色彩混合模式: ADDITIVE (發光疊加)');
-                        target.blendSrc = BlendFactor.SRC_ALPHA;
-                        target.blendDst = BlendFactor.ONE;
-                        target.blendSrcAlpha = BlendFactor.SRC_ALPHA;
-                        target.blendDstAlpha = BlendFactor.ONE;
-                        break;
-                        
-                    case ColorBlendMode.MULTIPLY:
-                        log('[SkeletonColorController] 🎨 色彩混合模式: MULTIPLY (乘法變暗)');
-                        target.blendSrc = BlendFactor.DST_COLOR;
-                        target.blendDst = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                        target.blendSrcAlpha = BlendFactor.ONE;
-                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                        break;
-                        
-                    case ColorBlendMode.SCREEN:
-                        log('[SkeletonColorController] 🎨 色彩混合模式: SCREEN (濾色變亮)');
-                        target.blendSrc = BlendFactor.ONE;
-                        target.blendDst = BlendFactor.ONE_MINUS_SRC_COLOR;
-                        target.blendSrcAlpha = BlendFactor.ONE;
-                        target.blendDstAlpha = BlendFactor.ONE_MINUS_SRC_ALPHA;
-                        break;
-                }
-                
-                // 重新應用材質以使更改生效
-                pass.overridePipelineStates(material.passes[0].passIndex, blendState);
-                this.skeletonComponent.setMaterial(material, 0);
-                
-                log(`[SkeletonColorController] ✅ 色彩混合模式已套用: ${ColorBlendMode[mode]}`);
-            }
-        } else {
-            log('[SkeletonColorController] ⚠️ 無法取得材質，混合模式設置失敗');
-        }
+        // 標記需要更新渲染數據
+        this.skeletonComponent.markForUpdateRenderData();
+        
+        log(`[SkeletonColorController] ✅ 色彩混合模式已套用到 ${slots.length} 個 slots: ${ColorBlendMode[mode]}`);
     }
 
     /**
