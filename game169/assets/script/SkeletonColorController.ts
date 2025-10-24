@@ -41,11 +41,13 @@ class FadeColorConfig {
  * - 基本色彩設定與取得
  * - 色彩淡入淡出動畫 (Fade In/Out)
  * - 四個時間點的色彩控制 (淡入開始/結束, 淡出開始/結束)
+ * - 播放速度控制
+ * - 正播/倒播控制
  * 
  * 用法:
  * - 在包含 sp.Skeleton 的節點上新增此組件
  * - 設定 FadeColorConfig 的四個時間點和對應的色彩
- * - 呼叫 playFadeAnimation(currentFrame) 進行動畫播放
+ * - 調整播放速度和方向
  */
 @ccclass('SkeletonColorController')
 export class SkeletonColorController extends Component {
@@ -60,8 +62,20 @@ export class SkeletonColorController extends Component {
     @property({ displayName: '循環播放' })
     loop: boolean = true;
     
+    // 播放控制
+    @property({ displayName: '播放速度', range: [0.1, 5.0, 0.1], slide: true })
+    playbackSpeed: number = 1.0;
+    
+    @property({ displayName: '倒播', tooltip: '勾選啟用倒播，取消勾選為正播' })
+    reversePlay: boolean = false;
+    
+    @property({ displayName: '控制骨骼動畫時間軸', tooltip: '啟用後會直接控制 sp.Skeleton 的動畫播放' })
+    controlSkeletonAnimation: boolean = false;
+    
     private isPlayingFadeAnimation: boolean = false;
     private currentFrame: number = 0;
+    private lastReversePlay: boolean = false;
+    private lastPlaybackSpeed: number = 1.0;
 
     onLoad() {
         // Get the sp.Skeleton component on the same node
@@ -69,6 +83,11 @@ export class SkeletonColorController extends Component {
         
         if (!this.skeletonComponent) {
             log(`[SkeletonColorController] No sp.Skeleton component found on node: ${this.node.name}`);
+        } else {
+            // 初始化播放控制
+            this.lastReversePlay = this.reversePlay;
+            this.lastPlaybackSpeed = this.playbackSpeed;
+            this.applyPlaybackSettings();
         }
         
         // 如果設定為自動播放，則啟動動畫
@@ -78,6 +97,13 @@ export class SkeletonColorController extends Component {
     }
 
     update(deltaTime: number) {
+        // 檢測播放設定是否改變
+        if (this.reversePlay !== this.lastReversePlay || this.playbackSpeed !== this.lastPlaybackSpeed) {
+            this.applyPlaybackSettings();
+            this.lastReversePlay = this.reversePlay;
+            this.lastPlaybackSpeed = this.playbackSpeed;
+        }
+        
         if (this.isPlayingFadeAnimation) {
             this.currentFrame += deltaTime * 60; // Assuming 60 FPS
             
@@ -259,4 +285,112 @@ export class SkeletonColorController extends Component {
     public getSkeleton(): sp.Skeleton | null {
         return this.skeletonComponent;
     }
+
+    // ============================================================
+    // 播放控制方法
+    // ============================================================
+
+    /**
+     * 應用播放設定（速度和方向）
+     */
+    private applyPlaybackSettings() {
+        if (!this.skeletonComponent) return;
+
+        // 設定播放速度（倒播時使用負值）
+        const speed = this.reversePlay ? -this.playbackSpeed : this.playbackSpeed;
+        
+        if (this.controlSkeletonAnimation) {
+            // 控制骨骼動畫的時間軸
+            this.skeletonComponent.timeScale = speed;
+            log(`[SkeletonColorController] 播放設定已更新 - 速度: ${this.playbackSpeed}, 方向: ${this.reversePlay ? '倒播' : '正播'}, timeScale: ${speed}`);
+        } else {
+            // 只控制色彩動畫的時間軸
+            log(`[SkeletonColorController] 播放設定已更新 - 速度: ${this.playbackSpeed}, 方向: ${this.reversePlay ? '倒播' : '正播'} (僅色彩動畫)`);
+        }
+    }
+
+    /**
+     * 設定播放速度
+     * @param speed 播放速度倍數 (0.1 ~ 5.0)
+     */
+    public setPlaybackSpeed(speed: number) {
+        this.playbackSpeed = Math.max(0.1, Math.min(5.0, speed));
+        this.applyPlaybackSettings();
+    }
+
+    /**
+     * 取得當前播放速度
+     */
+    public getPlaybackSpeed(): number {
+        return this.playbackSpeed;
+    }
+
+    /**
+     * 設定播放方向
+     * @param reverse true 為倒播，false 為正播
+     */
+    public setReversePlay(reverse: boolean) {
+        this.reversePlay = reverse;
+        this.applyPlaybackSettings();
+    }
+
+    /**
+     * 取得當前播放方向
+     * @returns true 為倒播，false 為正播
+     */
+    public isReversePlaying(): boolean {
+        return this.reversePlay;
+    }
+
+    /**
+     * 切換播放方向
+     */
+    public togglePlayDirection() {
+        this.reversePlay = !this.reversePlay;
+        this.applyPlaybackSettings();
+    }
+
+    /**
+     * 設定是否控制骨骼動畫時間軸
+     * @param control true 為控制骨骼動畫，false 為僅控制色彩動畫
+     */
+    public setControlSkeletonAnimation(control: boolean) {
+        this.controlSkeletonAnimation = control;
+        if (!control && this.skeletonComponent) {
+            // 如果不控制骨骼動畫，重置 timeScale
+            this.skeletonComponent.timeScale = 1.0;
+        }
+        this.applyPlaybackSettings();
+    }
+
+    /**
+     * 暫停骨骼動畫
+     */
+    public pauseSkeletonAnimation() {
+        if (this.skeletonComponent && this.controlSkeletonAnimation) {
+            this.skeletonComponent.paused = true;
+            log('[SkeletonColorController] 骨骼動畫已暫停');
+        }
+    }
+
+    /**
+     * 恢復骨骼動畫
+     */
+    public resumeSkeletonAnimation() {
+        if (this.skeletonComponent && this.controlSkeletonAnimation) {
+            this.skeletonComponent.paused = false;
+            log('[SkeletonColorController] 骨骼動畫已恢復');
+        }
+    }
+
+    /**
+     * 停止骨骼動畫
+     */
+    public stopSkeletonAnimation() {
+        if (this.skeletonComponent) {
+            this.skeletonComponent.clearTracks();
+            log('[SkeletonColorController] 骨骼動畫已停止');
+        }
+    }
 }
+
