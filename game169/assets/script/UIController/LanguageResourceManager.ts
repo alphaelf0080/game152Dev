@@ -169,6 +169,13 @@ export class LanguageResourceManager {
     }
     
     /**
+     * 獲取所有已載入的資源鍵名列表
+     */
+    getAllResourceKeys(): string[] {
+        return Array.from(this.resources.keys());
+    }
+    
+    /**
      * 獲取資源統計
      */
     getStats(): { totalResources: number; loadingResources: number; currentLanguage: string } {

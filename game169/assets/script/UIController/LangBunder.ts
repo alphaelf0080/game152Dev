@@ -297,6 +297,9 @@ export class LangBunder extends Component {
             // 打印資源統計
             this.resourceManager.printStats();
             
+            // 打印詳細的資源列表
+            this.printLoadedResources();
+            
             // 打印快取統計
             if (this.nodeCache) {
                 console.log('[LangBunder] │');
@@ -311,6 +314,79 @@ export class LangBunder extends Component {
             console.error(`[LangBunder] 失敗時間: ${totalTime}ms`);
             throw error;
         }
+    }
+    
+    /**
+     * 打印已載入的所有資源詳細列表
+     */
+    private printLoadedResources(): void {
+        if (!this.resourceManager) {
+            console.warn('[LangBunder] ⚠️  ResourceManager 未初始化');
+            return;
+        }
+        
+        console.log('[LangBunder] │');
+        console.log('[LangBunder] │ 📋 已載入的資源詳細列表：');
+        console.log('[LangBunder] │ ┌─ 資源清單 ────────────────────────');
+        
+        // 獲取資源統計
+        const stats = this.resourceManager.getStats();
+        console.log(`[LangBunder] │ │ 語言: ${stats.currentLanguage}`);
+        console.log(`[LangBunder] │ │ 總資源數: ${stats.totalResources}`);
+        console.log('[LangBunder] │ │');
+        
+        // 獲取所有資源鍵名
+        const allResourceKeys = this.resourceManager.getAllResourceKeys();
+        
+        if (allResourceKeys.length === 0) {
+            console.log('[LangBunder] │ │ ⚠️  沒有已載入的資源');
+        } else {
+            // 按照資源類別分組顯示
+            const resourcesByCategory: { [key: string]: string[] } = {};
+            
+            allResourceKeys.forEach(key => {
+                // 提取類別名稱（format: category_assetName）
+                const parts = key.split('_');
+                const category = parts[0];
+                
+                if (!resourcesByCategory[category]) {
+                    resourcesByCategory[category] = [];
+                }
+                resourcesByCategory[category].push(key);
+            });
+            
+            // 顯示按類別分類的資源
+            console.log('[LangBunder] │ │ 按類別分類：');
+            
+            Object.keys(resourcesByCategory)
+                .sort()
+                .forEach((category, categoryIdx) => {
+                    const resources = resourcesByCategory[category];
+                    const isLastCategory = categoryIdx === Object.keys(resourcesByCategory).length - 1;
+                    
+                    console.log(`[LangBunder] │ │ ${isLastCategory ? '└' : '├'} ${category} (${resources.length} 個)`);
+                    
+                    // 顯示前 5 個資源作為示例
+                    const displayCount = Math.min(5, resources.length);
+                    for (let i = 0; i < displayCount; i++) {
+                        const resource = resources[i];
+                        const isLastResource = i === displayCount - 1 && resources.length <= 5;
+                        const isLastForDisplay = i === displayCount - 1;
+                        
+                        const prefix = isLastResource ? '  └' : (isLastForDisplay && resources.length > 5) ? '  ├' : '  │ ├';
+                        console.log(`[LangBunder] │ │ ${prefix} ${resource}`);
+                    }
+                    
+                    // 如果有更多資源，顯示省略標記
+                    if (resources.length > 5) {
+                        console.log(`[LangBunder] │ │ ${isLastCategory ? '  ' : '  │'} ⋮ ... 還有 ${resources.length - 5} 個`);
+                    }
+                });
+        }
+        
+        console.log('[LangBunder] │ │');
+        console.log(`[LangBunder] │ │ 🎯 總計: ${stats.totalResources} 個資源已載入`);
+        console.log('[LangBunder] │ └─ 資源清單完成 ──────────────────────');
     }
     
     // ============================================================
