@@ -73843,7 +73843,7 @@
     "playbackSpeed": 1,
     "reversePlay": false,
     "controlSkeletonAnimation": true,
-    "colorBlendMode": 0,
+    "colorBlendMode": 1,
     "_id": "aeIpKjIUlDdYqNG1DZMOgr"
   },
   {
