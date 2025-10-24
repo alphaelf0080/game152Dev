@@ -504,13 +504,23 @@ export class SkeletonColorController extends Component {
     // ============================================================
 
     /**
-     * 應用色彩混合模式（使用 Spine 原生 BlendMode API）
+     * 應用色彩混合模式（使用 Spine Skeleton 的 premultipliedAlpha + blendMode）
      * @param mode 混合模式
      */
     private applyColorBlendMode(mode: ColorBlendMode) {
         if (!this.skeletonComponent) {
             log('[SkeletonColorController] ⚠️ 無法套用混合模式：skeleton 組件未找到');
             return;
+        }
+
+        // 根據混合模式調整 premultipliedAlpha
+        // Additive 模式需要關閉 premultipliedAlpha
+        if (mode === ColorBlendMode.ADDITIVE) {
+            this.skeletonComponent.premultipliedAlpha = false;
+            log('[SkeletonColorController] 🎨 色彩混合模式: ADDITIVE (發光疊加) - 已關閉 premultipliedAlpha');
+        } else {
+            // 其他模式使用預乘 Alpha
+            this.skeletonComponent.premultipliedAlpha = true;
         }
 
         // 獲取 Spine skeleton 實例
@@ -520,48 +530,56 @@ export class SkeletonColorController extends Component {
             return;
         }
 
-        // 將 ColorBlendMode 映射到 Spine 的 BlendMode
-        let spineBlendMode: sp.spine.BlendMode;
+        // 將 ColorBlendMode 映射到 Spine 的 BlendMode 數值
+        let spineBlendModeValue: number;
         
         switch (mode) {
             case ColorBlendMode.NORMAL:
-                spineBlendMode = spine.BlendMode.Normal;
+                spineBlendModeValue = 0; // spine.BlendMode.Normal
                 log('[SkeletonColorController] 🎨 色彩混合模式: NORMAL (正常)');
                 break;
                 
             case ColorBlendMode.ADDITIVE:
-                spineBlendMode = spine.BlendMode.Additive;
+                spineBlendModeValue = 1; // spine.BlendMode.Additive
                 log('[SkeletonColorController] 🎨 色彩混合模式: ADDITIVE (發光疊加)');
                 break;
                 
             case ColorBlendMode.MULTIPLY:
-                spineBlendMode = spine.BlendMode.Multiply;
+                spineBlendModeValue = 2; // spine.BlendMode.Multiply
                 log('[SkeletonColorController] 🎨 色彩混合模式: MULTIPLY (乘法變暗)');
                 break;
                 
             case ColorBlendMode.SCREEN:
-                spineBlendMode = spine.BlendMode.Screen;
+                spineBlendModeValue = 3; // spine.BlendMode.Screen
                 log('[SkeletonColorController] 🎨 色彩混合模式: SCREEN (濾色變亮)');
                 break;
                 
             default:
-                spineBlendMode = spine.BlendMode.Normal;
+                spineBlendModeValue = 0;
                 break;
         }
 
-        // 對所有 slot 應用混合模式
+        // 對所有 slot 的 data 應用混合模式
         const slots = skeleton.slots;
+        let appliedCount = 0;
         for (let i = 0; i < slots.length; i++) {
             const slot = slots[i];
             if (slot && slot.data) {
-                slot.data.blendMode = spineBlendMode;
+                // 直接設置 blendMode 數值
+                (slot.data as any).blendMode = spineBlendModeValue;
+                appliedCount++;
             }
+        }
+        
+        // 強制更新 skeleton 狀態
+        if (this.skeletonComponent.isAnimationCached()) {
+            this.skeletonComponent.invalidAnimationCache();
         }
         
         // 標記需要更新渲染數據
         this.skeletonComponent.markForUpdateRenderData();
         
-        log(`[SkeletonColorController] ✅ 色彩混合模式已套用到 ${slots.length} 個 slots: ${ColorBlendMode[mode]}`);
+        log(`[SkeletonColorController] ✅ 色彩混合模式已套用到 ${appliedCount}/${slots.length} 個 slots: ${ColorBlendMode[mode]}`);
     }
 
     /**

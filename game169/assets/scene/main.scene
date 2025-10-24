@@ -73843,7 +73843,7 @@
     "playbackSpeed": 1,
     "reversePlay": false,
     "controlSkeletonAnimation": true,
-    "colorBlendMode": 1,
+    "colorBlendMode": 0,
     "_id": "aeIpKjIUlDdYqNG1DZMOgr"
   },
   {
@@ -74120,7 +74120,7 @@
     "playbackSpeed": 1,
     "reversePlay": false,
     "controlSkeletonAnimation": true,
-    "colorBlendMode": 0,
+    "colorBlendMode": 2,
     "_id": "76tcqxGkZMIIEt2MgYjM9u"
   },
   {
