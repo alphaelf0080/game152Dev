@@ -1,6 +1,6 @@
 import { sp, find, Label } from "cc";
 import { CreditMode } from "./LibEnum";
-import { Library } from "./LibData";
+import { LibraryCustomized } from "./LibData";
 
 
 //#region for spine
@@ -127,7 +127,7 @@ export function NumberToCent(number: number): string {
     let numberStr = number.toFixed(2);
     numberStr = numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');  // 添加逗号分隔符
 
-    if (Library.CREDITMODE == CreditMode.Dollar) {
+    if (LibraryCustomized.CREDITMODE == CreditMode.Dollar) {
         return numberStr.slice(0, -3);
     } else {
         return numberStr;  // 添加逗号分隔符
@@ -181,8 +181,8 @@ export function long(credit: ICredit): number {
 export function TestOverFlow(num: number) {
     if (num >= 1000000000000) {
 
-        Library.ErrorData.bklog(Library.ErrorData.Code.Overflow, Library.ErrorData.Type.ALARM);
-        ErrorInLoading(Library.ErrorData.Code.Overflow.toString());
+        LibraryCustomized.ErrorData.bklog(LibraryCustomized.ErrorData.Code.Overflow, LibraryCustomized.ErrorData.Type.ALARM);
+        ErrorInLoading(LibraryCustomized.ErrorData.Code.Overflow.toString());
         return false;
     }
     return true;

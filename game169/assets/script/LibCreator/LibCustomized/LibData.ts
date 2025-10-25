@@ -33,7 +33,12 @@ class REEL_CONFIG_Class {
     REEL_GAP_Y = 0;
 }
 
-export class Library {
+/**
+ * 備用/歷史 Library 類定義 - 已被主項目 DataController.ts 中的 Library 取代
+ * 保留用於參考，但不應在新代碼中使用
+ * @deprecated 使用 Data.Library (from DataController.ts) 代替
+ */
+export class LibraryCustomized {
     static DEF_GAMEID = "";
 
     static RES_LANGUAGE: string = "eng";

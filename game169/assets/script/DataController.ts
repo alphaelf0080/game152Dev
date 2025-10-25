@@ -230,7 +230,11 @@ class REEL_CONFIG_Class {
 }
 
 export namespace Data {
-    @ccclass('Library')
+    /**
+     * 主項目 Library 類 - 核心遊戲配置
+     * 注：已移除 @ccclass 裝飾器避免與 libcommon 的 Library 衝突
+     * 如需要作為 Cocos Component，請使用 libcommon 中的 Library
+     */
     export class Library {
         static DEF_GAMEID = "PSS-ON-00152";
         static RES_LANGUAGE: string = "eng";
