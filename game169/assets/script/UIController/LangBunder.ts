@@ -1,7 +1,7 @@
 import { _decorator, Component, find, Node, Sprite, Button, Label, sp, log } from 'cc';
 import { Data } from '../DataController';
 import { Symbol } from '../ReelController/Symbol';
-import { NodeCache } from './NodeCache';
+import { UINodeCache } from './NodeCache';
 import { LanguageResourceManager } from './LanguageResourceManager';
 import { 
     SUPPORTED_LANGUAGES, 
@@ -68,7 +68,7 @@ export class LangBunder extends Component {
      * 節點快取實例（單例）
      * 提供 O(1) 時間複雜度的節點查找
      */
-    private nodeCache: NodeCache | null = null;
+    private nodeCache: UINodeCache | null = null;
     
     /**
      * 當前使用的語言代碼
@@ -160,7 +160,7 @@ export class LangBunder extends Component {
             this.resourceManager = new LanguageResourceManager();
             
             console.log('[LangBunder] │ 獲取 NodeCache 實例...');
-            this.nodeCache = NodeCache.getInstance();
+            this.nodeCache = UINodeCache.getInstance();
             
             // 保持向後兼容：設置舊版全域變數
             console.log('[LangBunder] │ 設置向後兼容變數...');

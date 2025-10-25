@@ -3,12 +3,15 @@ import { _decorator, Node, find } from 'cc';
 const { ccclass } = _decorator;
 
 /**
- * 節點快取系統
+ * 節點快取系統 (UI 控制器版本)
  * 減少重複的 find() 調用，提升 90% 以上的節點查找效能
+ * 
+ * @deprecated 請使用 ReelController/NodeCache.ts 中的 NodeCache
+ * 此類已改名為 UINodeCache 以避免與 ReelController 的 NodeCache 衝突
  */
-@ccclass('NodeCache')
-export class NodeCache {
-    private static instance: NodeCache | null = null;
+@ccclass('UINodeCache')
+export class UINodeCache {
+    private static instance: UINodeCache | null = null;
     private cache: Map<string, Node> = new Map();
     private missCount: number = 0;
     private hitCount: number = 0;
@@ -16,11 +19,11 @@ export class NodeCache {
     /**
      * 獲取單例實例
      */
-    static getInstance(): NodeCache {
-        if (!NodeCache.instance) {
-            NodeCache.instance = new NodeCache();
+    static getInstance(): UINodeCache {
+        if (!UINodeCache.instance) {
+            UINodeCache.instance = new UINodeCache();
         }
-        return NodeCache.instance;
+        return UINodeCache.instance;
     }
     
     /**
@@ -132,9 +135,9 @@ export class NodeCache {
      * 銷毀單例
      */
     static destroy(): void {
-        if (NodeCache.instance) {
-            NodeCache.instance.clear();
-            NodeCache.instance = null;
+        if (UINodeCache.instance) {
+            UINodeCache.instance.clear();
+            UINodeCache.instance = null;
         }
     }
 }
