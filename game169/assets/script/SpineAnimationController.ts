@@ -90,11 +90,10 @@ export class SpineAnimationController extends Component {
     private _manualAnimName: string = '';
     
     @property({
-        type: PlayDirection,
         displayName: 'Play Direction',
-        tooltip: '播放方向（正播/逆播）'
+        tooltip: '播放方向：1=正播，-1=逆播'
     })
-    playDirection: PlayDirection = PlayDirection.FORWARD;
+    playDirection: number = PlayDirection.FORWARD;
     
     @property({
         displayName: 'Playback Speed',
@@ -349,7 +348,7 @@ export class SpineAnimationController extends Component {
      * 設置播放方向
      * @param direction 播放方向（正播/逆播）
      */
-    setPlayDirection(direction: PlayDirection): void {
+    setPlayDirection(direction: number): void {
         this.playDirection = direction;
         
         if (direction === PlayDirection.REVERSE) {
