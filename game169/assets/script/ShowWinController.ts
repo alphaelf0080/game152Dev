@@ -21,6 +21,8 @@ export class ShowWinController {
 
     init(reelConThis) {  //保存ReelController的this
         DropSymbolMap = Data.Library.GameData.DropSymbolMap;
+        console.log('✅ DropSymbolMap 加載成功');
+
         this.reelController = reelConThis;
     }
 

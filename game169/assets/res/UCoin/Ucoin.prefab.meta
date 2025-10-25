@@ -8,6 +8,7 @@
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "Ucoin"
+    "syncNodeName": "Ucoin",
+    "persistent": false
   }
 }
