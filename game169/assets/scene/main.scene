@@ -2652,7 +2652,10 @@
     "_lineHeight": 40,
     "_overflow": 2,
     "_enableWrapText": false,
-    "_font": null,
+    "_font": {
+      "__uuid__": "232ab724-a35c-44db-aacd-7b9a6c341d9c",
+      "__expectedType__": "cc.LabelAtlas"
+    },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
     "_isItalic": false,
