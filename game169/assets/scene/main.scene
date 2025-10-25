@@ -47987,8 +47987,8 @@
       "__id__": 1236
     },
     "component": "",
-    "_componentId": "84d6bdXI1NJ0JzWg3yfPU/d",
-    "handler": "BigWinSkip",
+    "_componentId": "2e1d0ed7-3b02-43e2-b50e-939ea20e8116/d",
+    "handler": "bigWinSkip",
     "customEventData": ""
   },
   {
@@ -48184,7 +48184,7 @@
     "_id": "829ZAm4wZHjLDrDOB0DtOI"
   },
   {
-    "__type__": "84d6bdXI1NJ0JzWg3yfPU/d",
+    "__type__": "JackPot",
     "_name": "",
     "_objFlags": 0,
     "node": {
