@@ -116,11 +116,10 @@ export class SpineAnimationController extends Component {
     autoPlay: boolean = true;
     
     @property({
-        type: BlendMode,
         displayName: 'Blend Mode',
-        tooltip: 'Blend Mode（混合模式）'
+        tooltip: 'Blend Mode（混合模式）：0=NORMAL, 1=ADDITIVE, 2=MULTIPLY, 3=SCREEN'
     })
-    blendMode: BlendMode = BlendMode.NORMAL;
+    blendMode: number = BlendMode.NORMAL;
     
     @property({
         type: [String],
@@ -158,7 +157,7 @@ export class SpineAnimationController extends Component {
     private isPlaying: boolean = false;
     private currentTime: number = 0;
     private animationDuration: number = 0;
-    private lastBlendMode: BlendMode = BlendMode.NORMAL; // 追蹤上一次的混合模式
+    private lastBlendMode: number = BlendMode.NORMAL; // 追蹤上一次的混合模式
     
     // ============================================================
     // 生命週期
@@ -421,7 +420,7 @@ export class SpineAnimationController extends Component {
      * 設置 Blend Mode
      * @param mode Blend Mode
      */
-    setBlendMode(mode: BlendMode): void {
+    setBlendMode(mode: number): void {
         if (!this.skeleton) return;
         
         this.blendMode = mode;
