@@ -2,9 +2,29 @@ import { _decorator, Component, Node, find, game, input, Input, KeyCode, EventKe
 import { Data } from '../../DataController';
 const { ccclass, property } = _decorator;
 
+/**
+ * 通用庫腳本
+ * 
+ * 主要功能：
+ * 1. 初始化場景節點並建立全局映射（AllNode.Data.Map）
+ * 2. 設置遊戲版本號顯示
+ * 3. 處理首頁按鈕顯示邏輯
+ * 4. 設置鍵盤快捷鍵（空白鍵和 Enter 鍵）
+ * 5. 設置帳號序號顯示
+ * 6. 處理試玩模式（DEMO Mode）
+ * 7. 管理遊戲幀率
+ * 
+ * 使用方式：
+ * - 將此組件掛載到場景中的任意節點上
+ * - onLoad 時會自動初始化所有功能
+ * - 透過 Data.Library.CommonLibScript 訪問全局實例
+ */
 @ccclass('CommonLibScript')
 export class CommonLibScript extends Component {
+    /** 是否已初始化幀率 */
     public initFps = false;
+    
+    /** 試玩模式的 DEMO 文字節點 */
     public demoString: Node | null = null;
     protected override onLoad(): void {
         console.log("[CommonLibScript] ► 初始化開始...");
@@ -110,72 +130,151 @@ export class CommonLibScript extends Component {
         }
     }
 
+    /**
+     * 判斷首頁按鈕是否顯示
+     * - 當 return_type 為 0 時，隱藏首頁返回按鈕和錯誤訊息確認按鈕
+     * - 根據場景層級結構查找按鈕路徑
+     */
     handleHomeJudge() {
-        if (window.psapi?.hostInfo.return_type === 0) { // judge home show
-            const layerPath = find("Canvas/BaseGame/Layer") ? find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage2/HomeButton") : find("Canvas/BaseGame/UI/SettingsPage2/HomeButton")
+        // 檢查 psapi 的返回類型設定
+        if (window.psapi?.hostInfo.return_type === 0) {
+            console.log("[CommonLibScript] return_type = 0, 隱藏首頁按鈕");
+            
+            // 根據場景結構查找首頁按鈕路徑（支援兩種層級結構）
+            const layerPath = find("Canvas/BaseGame/Layer") 
+                ? find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage2/HomeButton") 
+                : find("Canvas/BaseGame/UI/SettingsPage2/HomeButton");
+            
+            // 查找錯誤訊息的確認按鈕
             const ErrorInforButton = find("Canvas/Notice/InfoBg/check");
-            if (layerPath)
+            
+            // 隱藏找到的按鈕
+            if (layerPath) {
                 layerPath.active = false;
-            if (ErrorInforButton)
+                console.log("[CommonLibScript] ✓ 隱藏首頁按鈕");
+            }
+            
+            if (ErrorInforButton) {
                 ErrorInforButton.active = false;
+                console.log("[CommonLibScript] ✓ 隱藏錯誤訊息確認按鈕");
+            }
         }
     }
 
+    /**
+     * 設置鍵盤控制
+     * - 監聽空白鍵和 Enter 鍵來觸發旋轉
+     * - 在特定情況下（API 控制台、載入中）忽略按鍵
+     */
     handleKeyboard() {
-        let Down = function (event: EventKeyboard) {  //add keyboard space to spin
-            // 檢查是否應忽略按鍵
+        // 定義按鍵按下的處理函數
+        let Down = function (event: EventKeyboard) {
+            // 如果 API 控制台的 WebView 正在顯示，忽略按鍵
             if (find("APIConsole")) {
                 if (find("APIConsole/ApiCanvas/WebView")) {
                     if (find("APIConsole/ApiCanvas/WebView").active == true) {
+                        console.log("[CommonLibScript] API 控制台啟用中，忽略按鍵");
                         return;
                     }
                 }
             }
+            
+            // 如果載入器正在顯示，忽略按鍵
             if (find("Canvas/Loader") && find("Canvas/Loader").active === true) {
+                console.log("[CommonLibScript] 載入中，忽略按鍵");
                 return;
             }
+            
+            // 處理空白鍵和 Enter 鍵
             switch (event.keyCode) {
                 case KeyCode.SPACE:
+                    console.log("[CommonLibScript] 按下空白鍵，觸發旋轉");
+                    Data.Library.UIcontroller.ClickSpin();
+                    break;
                 case KeyCode.ENTER:
+                    console.log("[CommonLibScript] 按下 Enter 鍵，觸發旋轉");
                     Data.Library.UIcontroller.ClickSpin();
                     break;
             }
         };
-        input.on(Input.EventType.KEY_DOWN, Down, this)
+        
+        // 註冊鍵盤按下事件監聽器
+        input.on(Input.EventType.KEY_DOWN, Down, this);
+        console.log("[CommonLibScript] ✓ 鍵盤控制已設置");
     }
 
+    /**
+     * 設置帳號序號顯示
+     * - 創建一個顯示帳號序號的文字標籤
+     * - 只在啟用歷史序號且非試玩模式時添加到場景
+     * - 預設為隱藏狀態
+     */
     handleAccountSn() {
-        let label = new Node(); // add accountSN text
-        label.name = "accountSN"
+        console.log("[CommonLibScript] 開始設置帳號序號...");
+        
+        // 創建新的節點用於顯示序號
+        let label = new Node();
+        label.name = "accountSN";
+        
+        // 添加 Label 組件並設置樣式
         label.addComponent(Label);
-        const LabelText = label.getComponent(Label)
-        LabelText.color = new Color(255, 255, 255, 128)
+        const LabelText = label.getComponent(Label);
+        
+        // 設置文字顏色（半透明白色）
+        LabelText.color = new Color(255, 255, 255, 128);
+        
+        // 設置位置和字體大小
         label.setPosition(-260, 620);
         LabelText.fontSize = 30;
+        
+        // 設置黑色描邊效果
         LabelText.enableOutline = true;
         LabelText.outlineColor = new Color(0, 0, 0, 255);
         LabelText.outlineWidth = 2;
+        
+        // 只在啟用歷史序號功能且非試玩模式時，將標籤加入場景
         if (window.psapi?.hostInfo?.history_sn_enable && this.GetURLParameter('pm') !== '1') {
             find("Canvas").addChild(label);
+            console.log("[CommonLibScript] ✓ 帳號序號標籤已添加到場景");
+        } else {
+            console.log("[CommonLibScript] ℹ 帳號序號功能未啟用或處於試玩模式");
         }
+        
+        // 預設隱藏
         label.active = false;
     }
 
+    /**
+     * 每幀更新函數
+     * - 自動調整遊戲幀率為 59 FPS
+     * - 在試玩模式下調整 DEMO 標籤位置
+     * - 處理 WebView 和錯誤訊息的顯示衝突
+     * @param deltaTime 距離上一幀的時間間隔
+     */
     protected override update(deltaTime: number) {
+        // 當幀率穩定後（deltaTime < 0.01），設置為 59 FPS
         if (!this.initFps && deltaTime < 0.01) {
             game.frameRate = 59;
             this.initFps = true;
+            console.log("[CommonLibScript] ✓ 遊戲幀率已設置為 59 FPS");
         }
+        
+        // 試玩模式下動態調整 DEMO 標籤位置
         if (this.GetURLParameter('pm') == '1') {
             let yPos = this.demoString.parent.getPosition().y;
             yPos = -yPos - 640;
+            
+            // 根據下注捲軸或自動頁面是否開啟，調整 Y 座標
             if (AllNode.Data.Map.get("BetSCroll").active || AllNode.Data.Map.get("AutoPage").active)
                 this.demoString.setPosition(100, 70 + yPos);
             else
                 this.demoString.setPosition(100, 265 + yPos);
+            
+            // 當幫助頁面顯示時，隱藏 DEMO 標籤
             this.demoString.active = !AllNode.Data.Map.get("HelpPage").active;
         }
 
+        // 防止 WebView 和錯誤訊息同時顯示
         const webView = AllNode.Data.Map.get("WebView");
         const infoText = AllNode.Data.Map.get("InfoBg/text").parent;
         if (webView?.active && infoText?.active) {
@@ -339,49 +438,95 @@ export class CommonLibScript extends Component {
         };
     }
 
+    /**
+     * 從 URL 獲取指定參數
+     * - 優先使用 psapi 的 getURLParameter 方法
+     * - 如果 psapi 不存在，則手動解析 URL 查詢字串
+     * @param sParam 要查詢的參數名稱
+     * @param defaultlang 當參數不存在時返回的預設值，預設為 'eng'
+     * @returns 參數值或預設值
+     */
     public GetURLParameter(sParam, defaultlang: string = 'eng'): string {
+        // 如果 psapi 已定義，使用其內建方法
         if (typeof window["psapi"] !== 'undefined') {
             return window["psapi"].getURLParameter(sParam);
         }
-        let sPageURL = window.location.search.substring(1);
-        let sURLVariables = sPageURL.split('&');
+        
+        // 手動解析 URL 查詢字串
+        let sPageURL = window.location.search.substring(1); // 移除開頭的 '?'
+        let sURLVariables = sPageURL.split('&'); // 分割各個參數
+        
+        // 遍歷所有參數
         for (let i = 0; i < sURLVariables.length; i++) {
-            let sParameterName = sURLVariables[i].split('=');
+            let sParameterName = sURLVariables[i].split('='); // 分割參數名和值
             if (sParameterName[0] == sParam) {
                 return sParameterName[1];
             }
         }
+        
+        // 如果找不到指定參數，返回預設值
         return defaultlang;
     }
 
+    /**
+     * 根據名稱獲取節點
+     * @param name 節點名稱或路徑
+     * @returns 找到的節點或 undefined
+     */
     getAllNode(name: string) {
         return AllNode.Data.Map.get(name);
     }
 }
 
-
+/**
+ * AllNode 命名空間
+ * 用於儲存和管理場景中的所有節點
+ */
 export namespace AllNode {
     @ccclass('Data')
     export class Data {
         /**
-       * AllSceneNode作靜態儲存,並循環加入,使用前請先至IDE檢查有無重名,如有請用get("parentNodeName / NodeName"),排除的Node請用AllNode.Data.ExcludeNode查看
-       */
+         * 所有場景節點的靜態儲存映射
+         * - 使用 Map 結構儲存節點名稱和節點物件的對應關係
+         * - 循環遍歷場景時會自動加入
+         * 
+         * 使用注意事項：
+         * 1. 使用前請先至 IDE 檢查有無重名節點
+         * 2. 如有重名，請使用完整路徑：get("parentNodeName/NodeName")
+         * 3. 排除的節點請參考 AllNode.Data.ExcludeNode
+         */
         public static Map: Map<string, Node> = new Map();
+        
         /**
-       * ExcludeNode作靜態儲存,不要加入的Node
-       */
+         * 排除節點列表
+         * - 這些節點不會被加入到 Map 中
+         * - 預設排除: symbol（符號）、view（視圖）、scrollBar（捲軸）
+         */
         public static ExcludeNode: Array<string> = ["symbol", "view", "scrollBar"];
     }
 }
 
 
+/**
+ * Logger 工具類
+ * 提供統一的日誌輸出介面，支援除錯模式開關
+ */
 export class Logger {
+    /** 是否啟用除錯模式 */
     static isDebugMode: boolean = false;
 
+    /**
+     * 設置除錯模式
+     * @param mode true 啟用，false 停用
+     */
     static setDebugMode(mode: boolean) {
         this.isDebugMode = mode;
     }
 
+    /**
+     * 獲取調用者資訊（檔案名稱和行號）
+     * @returns 調用者資訊字串
+     */
     private static getCallerInfo(): string {
         const err = new Error();
         const stackLines = err.stack?.split('\n') || [];
@@ -390,36 +535,64 @@ export class Logger {
         return callerLine.trim();
     }
 
+    /**
+     * 輸出一般資訊日誌
+     * @param message 訊息內容
+     * @param args 額外參數
+     */
     static info(message: string, ...args: any[]) {
         if (this.isDebugMode)
             console.log(`[INFO] ${message} \n @${this.getCallerInfo()}`, ...args);
     }
 
+    /**
+     * 輸出除錯日誌
+     * @param message 訊息內容
+     * @param args 額外參數
+     */
     static debug(message: any, ...args: any[]) {
         if (this.isDebugMode) {
             console.log(`[DEBUG] @${this.getCallerInfo()}`, message, ...args);
         }
     }
 
+    /**
+     * 輸出警告日誌
+     * @param message 訊息內容
+     * @param args 額外參數
+     */
     static warn(message: string, ...args: any[]) {
         if (this.isDebugMode)
             console.warn(`[WARN] ${message} \n @${this.getCallerInfo()}`, ...args);
     }
 
+    /**
+     * 輸出錯誤日誌
+     * @param message 訊息內容
+     * @param args 額外參數
+     */
     static error(message: string, ...args: any[]) {
         if (this.isDebugMode)
             console.error(`[ERROR] ${message} \n @${this.getCallerInfo()}`, ...args);
     }
 
+    /**
+     * 輸出載入中日誌
+     * @param message 訊息內容
+     * @param args 額外參數
+     */
     static loading(message: string, ...args: any[]) {
         if (this.isDebugMode) {
             console.log(`[LOADING] ${message} \n @${this.getCallerInfo()}`, ...args);
         }
     }
 }
+
 // 將 Logger 設置為全局可訪問
 globalThis.Logger = Logger;
 
+// 將 Data 設置為全局可訪問
 globalThis.Data = Data;
 
+// 將 AllNode.Data.Map 設置為全局可訪問
 globalThis.AllNode = AllNode?.Data?.Map;
