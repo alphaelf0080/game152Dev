@@ -10,18 +10,18 @@
  */
 
 import { _decorator, Component, Node, find, Label, Sprite, sp, screen, SpriteFrame, Animation, instantiate, UITransform, tween, Button, AudioSource, Color, sys, VideoPlayer, Vec3, WebView, EventTouch, assetManager, AnimationClip } from 'cc';
-import { GameVariable } from 'db://assets/script/MessageController/GameVariable';
-import { MathConsole } from 'db://assets/script/MessageController/MathConsole';
-import { TextAdjust } from 'db://assets/script/UIController/TextAdjust';
-import { APIController } from 'db://assets/script/LibCreator/libLoadingInit/APIController';
-import { PayTableInit } from 'db://assets/script/PayTableInit';
-import { Data, Mode } from 'db://assets/script/DataController';
-import { CommonVariableData, IEventData } from 'db://assets/script/LibCreator/libScript/CommonVariable';
-import { AnimationController } from 'db://assets/script/AnimationController';
-import { AllNode, Logger } from 'db://assets/script/LibCreator/libScript/CommonLibScript';
-import { UCoin } from 'db://assets/script/LibCreator/libScript/JackpotScript/UCoin/UCoin';
-import { AutoPages } from 'db://assets/script/LibCreator/libUIController/AutoBtn';
-import { StateConsole } from 'db://assets/script/MessageController/StateConsole';
+import { GameVariable } from '../../MessageController/GameVariable';
+import { MathConsole } from '../../MessageController/MathConsole';
+import { TextAdjust } from '../../../script/UIController/TextAdjust';
+import { APIController } from '../libLoadingInit/APIController';
+import { PayTableInit } from '../../../script/PayTableInit';
+import { Data, Mode } from '../../../script/DataController';
+import { CommonVariableData, IEventData } from '../libScript/CommonVariable';
+import { AnimationController } from '../../../script/AnimationController';
+import { AllNode, Logger } from '../libScript/CommonLibScript';
+import { UCoin } from '../libScript/JackpotScript/UCoin/UCoin';
+import { AutoPages } from './AutoBtn';
+import { StateConsole } from '../../MessageController/StateConsole';
 
 /**
  * 滾輪陣列介面 - 定義各類型滾輪的節點陣列
@@ -72,35 +72,35 @@ export class UIController extends Component {
 
     /** 加速按鈕 - 啟用狀態圖片 */
     @property({ type: SpriteFrame })
-    public Tubro_act: SpriteFrame
+    public Tubro_act: SpriteFrame = null;
 
     /** 加速按鈕 - 停用狀態圖片 */
     @property({ type: SpriteFrame })
-    public Tubro_off: SpriteFrame
+    public Tubro_off: SpriteFrame = null;
 
     /** 下注增加按鈕 - 啟用狀態圖片 */
     @property({ type: SpriteFrame })
-    public BetAdd_act: SpriteFrame
+    public BetAdd_act: SpriteFrame = null;
 
     /** 下注增加按鈕 - 停用狀態圖片 */
     @property({ type: SpriteFrame })
-    public BetAdd_off: SpriteFrame
+    public BetAdd_off: SpriteFrame = null;
 
     /** 下注減少按鈕 - 啟用狀態圖片 */
     @property({ type: SpriteFrame })
-    public BetLess_act: SpriteFrame
+    public BetLess_act: SpriteFrame = null;
 
     /** 下注減少按鈕 - 停用狀態圖片 */
     @property({ type: SpriteFrame })
-    public BetLess_off: SpriteFrame
+    public BetLess_off: SpriteFrame = null;
 
     /** 音效按鈕 - 啟用狀態圖片 */
     @property({ type: SpriteFrame })
-    public Voice_act: SpriteFrame
+    public Voice_act: SpriteFrame = null;
 
     /** 音效按鈕 - 停用狀態圖片 */
     @property({ type: SpriteFrame })
-    public Voice_off: SpriteFrame
+    public Voice_off: SpriteFrame = null;
 
     /** 說明頁面圖片陣列 */
     @property({ type: [SpriteFrame] })
@@ -112,11 +112,11 @@ export class UIController extends Component {
 
     /** 特殊功能購買按鈕節點 */
     @property({ type: Node })
-    public featureBuyButton: Node;
+    public featureBuyButton: Node = null;
 
     /** 自動遊戲頁面控制器 */
     @property({ type: AutoPages })
-    public AutoPages: AutoPages;
+    public AutoPages: AutoPages = null;
 
     // =================================
     // 🔒 邏輯控制屬性區 (編輯器不可見)
@@ -260,39 +260,123 @@ export class UIController extends Component {
      * 6. 綁定事件監聽器
      */
     protected override start() {
+        console.log("[UIController] 🚀 start() 初始化開始...");
+        
         // 綁定節點查找函數
         this.getNode = AllNode.Data.Map.get.bind(AllNode.Data.Map);
-        if (!this.getNode) throw new Error('getNode 尚未注入');
+        if (!this.getNode) {
+            console.error("[UIController] ❌ getNode 尚未注入");
+            throw new Error('getNode 尚未注入');
+        }
+        console.log("[UIController] ✓ AllNode.Data.Map 已綁定，節點數:", AllNode.Data.Map.size);
 
         this.stateConsole = Data.Library.StateConsole;
+        console.log("[UIController] ✓ StateConsole 已取得");
 
         // 取得主要控制器元件
         this.messageConsole = find("MessageController");
+        if (!this.messageConsole) {
+            console.error("[UIController] ❌ 找不到 MessageController 節點");
+            throw new Error('找不到 MessageController 節點');
+        }
         this.gameData = this.getComponentSafe(this.messageConsole, GameVariable);
         this.mathConsole = this.getComponentSafe(this.messageConsole, MathConsole);
+        console.log("[UIController] ✓ MessageController、GameVariable、MathConsole 已取得");
 
-        // 初始化下注和贏分相關UI元件
-        this.betBtn = this.getNode("BtnBet");
+        // 初始化下注和贏分相關UI元件 - 使用相對路徑
+        console.log("[UIController] → 開始查找下注和贏分相關UI元件...");
+        
+        // 查找 BtnBet - 嘗試多個路徑
+        this.betBtn = this.getNode("BtnBet") 
+            || find("Canvas/BaseGame/BtnBet")
+            || find("Canvas/BaseGame/UI/BtnBet")
+            || find("Canvas/BaseGame/Layer/BtnBet");
+        
+        if (!this.betBtn) {
+            console.error("[UIController] ❌ 找不到 BtnBet 節點！");
+            console.error("[UIController] 可用的節點:", Array.from(AllNode.Data.Map.keys()).filter(n => n.includes("Btn")));
+            throw new Error('找不到 BtnBet 節點，請檢查場景配置');
+        }
+        console.log("[UIController] ✓ BtnBet 已找到");
+        
         this.betText = this.getComponentFromChild(this.betBtn, "Bet", Label);
-        this.winBtn = this.getNode("WinBtn");
+        console.log("[UIController] ✓ betText 已取得");
+        
+        // 查找 WinBtn - 嘗試多個路徑
+        this.winBtn = this.getNode("WinBtn")
+            || find("Canvas/BaseGame/WinBtn")
+            || find("Canvas/BaseGame/UI/WinBtn")
+            || find("Canvas/BaseGame/Layer/WinBtn");
+        
+        if (!this.winBtn) {
+            console.error("[UIController] ❌ 找不到 WinBtn 節點！");
+            throw new Error('找不到 WinBtn 節點，請檢查場景配置');
+        }
+        console.log("[UIController] ✓ WinBtn 已找到");
+        
         this.winText = this.getComponentFromChild(this.winBtn, "Win", Label);
+        console.log("[UIController] ✓ winText 已取得");
 
-        // 初始化信用點數和設定相關UI元件
-        this.creditNode = this.getNode("Credit");
-        this.creditCCyNode = this.getNode("CreditCurrency");
-        this.autoBtn = this.getNode("AutoButton");
-        this.autoBtn.setPosition(630, 110);
-        this.settingsPage = this.getNode("SettingsPage");
-        this.settingsPage2 = this.getNode("SettingsPage2");
-        this.betLessBtn = this.settingsPage.getChildByName("BetLessBtn");
-        this.betPlusBtn = this.settingsPage.getChildByName("BetPlusBtn");
-        this.infoController = this.getNode("InfoController");
-        this.menuBtn = this.settingsPage.getChildByName("MenuButton");
-        this.turboBtn = this.settingsPage.getChildByName("TurboBtn");
-        this.voiceBtn = this.settingsPage2.getChildByName("VoiceButton");
+        // 初始化信用點數和設定相關UI元件 - 使用相對路徑
+        console.log("[UIController] → 開始查找信用點數和設定相關UI元件...");
+        
+        this.creditNode = this.getNode("Credit")
+            || find("Canvas/BaseGame/Credit")
+            || find("Canvas/BaseGame/UI/Credit");
+        if (this.creditNode) console.log("[UIController] ✓ Credit 已找到");
+        
+        this.creditCCyNode = this.getNode("CreditCurrency")
+            || find("Canvas/BaseGame/CreditCurrency")
+            || find("Canvas/BaseGame/UI/CreditCurrency");
+        if (this.creditCCyNode) console.log("[UIController] ✓ CreditCurrency 已找到");
+        
+        this.autoBtn = this.getNode("AutoButton")
+            || find("Canvas/BaseGame/AutoButton")
+            || find("Canvas/BaseGame/UI/AutoButton");
+        if (this.autoBtn) {
+            this.autoBtn.setPosition(630, 110);
+            console.log("[UIController] ✓ AutoButton 已找到並設置位置");
+        }
+        
+        this.settingsPage = this.getNode("SettingsPage")
+            || find("Canvas/BaseGame/SettingsPage")
+            || find("Canvas/BaseGame/UI/SettingsPage");
+        if (this.settingsPage) console.log("[UIController] ✓ SettingsPage 已找到");
+        
+        this.settingsPage2 = this.getNode("SettingsPage2")
+            || find("Canvas/BaseGame/SettingsPage2")
+            || find("Canvas/BaseGame/UI/SettingsPage2");
+        if (this.settingsPage2) console.log("[UIController] ✓ SettingsPage2 已找到");
+        
+        // 從 SettingsPage 查找按鈕 - 使用相對路徑
+        if (this.settingsPage) {
+            this.betLessBtn = this.settingsPage.getChildByName("BetLessBtn");
+            this.betPlusBtn = this.settingsPage.getChildByName("BetPlusBtn");
+            this.menuBtn = this.settingsPage.getChildByName("MenuButton");
+            this.turboBtn = this.settingsPage.getChildByName("TurboBtn");
+            console.log("[UIController] ✓ SettingsPage 子節點已取得");
+        }
+        
+        // 從 SettingsPage2 查找按鈕
+        if (this.settingsPage2) {
+            this.voiceBtn = this.settingsPage2.getChildByName("VoiceButton");
+            console.log("[UIController] ✓ SettingsPage2 子節點已取得");
+        }
+        
+        this.infoController = this.getNode("InfoController")
+            || find("Canvas/BaseGame/InfoController")
+            || find("Canvas/Notice");
+        if (this.infoController) console.log("[UIController] ✓ InfoController 已找到");
 
-        if (this.featureBuyButton == null)
-            this.featureBuyButton = this.getNode("FeatureBuyButton");
+        if (this.featureBuyButton == null) {
+            this.featureBuyButton = this.getNode("FeatureBuyButton")
+                || find("Canvas/BaseGame/FeatureBuyButton")
+                || find("Canvas/BaseGame/UI/FeatureBuyButton");
+            if (this.featureBuyButton) console.log("[UIController] ✓ FeatureBuyButton 已找到");
+        }
+        
+        console.log("[UIController] ✓ 所有UI元件初始化完成");
+        
         let currency = Data.Library.CommonLibScript.GetURLParameter("ccy").toUpperCase();
         let currencyPath = `${currency}/spriteFrame`; // 确保路径正确
 
