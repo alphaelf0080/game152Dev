@@ -25,16 +25,61 @@ export class AnimationController extends Component {
     @property({ type: ReelController }) reelController; // 滾輪控制器
     @property({ type: AudioController }) audioController; // 音效控制器
 
+    // =================================
+    // 🎮 場景節點屬性 (可在編輯器中拖放設定)
+    // =================================
+
+    /** 訊息控制器節點 */
+    @property(Node)
+    public messageConsoleNode: Node = null!;
+
+    /** 轉場動畫節點 */
+    @property(Node)
+    public transAnmNode: Node = null!;
+
+    /** 大獎動畫節點 */
+    @property(Node)
+    public bigWinAnmNode: Node = null!;
+
+    /** 獲勝條節點 */
+    @property(Node)
+    public winBarNode: Node = null!;
+
+    /** 橫幅文字節點 */
+    @property(Node)
+    public bannerTextNode: Node = null!;
+
+    /** 背景動畫節點（主遊戲） */
+    @property(Node)
+    public bkgAnmNode: Node = null!;
+
+    /** 背景動畫節點（免費遊戲） */
+    @property(Node)
+    public bkgAnmFsNode: Node = null!;
+
+    /** 單輪得分節點 */
+    @property(Node)
+    public slotWinNode: Node = null!;
+
+    /** 橫幅節點 */
+    @property(Node)
+    public bannerWinNode: Node = null!;
+
+    /** 音效控制器節點 */
+    @property(Node)
+    public audioControllerNode: Node = null!;
+
+    // =================================
+    // 🔧 內部屬性區 (編輯器不可見)
+    // =================================
+
     TransAnm; // 轉場動畫節點
     BigWinAnm; // 大獎動畫節點
 
-    winBarNode; // 獲勝條節點
     WinBarAnm; // 獲勝條動畫
-    BannerText; // 橫幅文字節點
+    BannerText; // 橫幅文字節點（此屬性已轉移至 @property 區段）
     
-    BkgAnmNode; // 背景動畫節點（主遊戲）
     BkgAnm; // 背景動畫組件（主遊戲）
-    BkgAnmFsNode; // 背景動畫節點（免費遊戲）
     BkgAnmFs; // 背景動畫組件（免費遊戲）
     WinBarType = -1; // 獲勝條類型
     WinBarState = -1; // 獲勝條狀態
@@ -45,7 +90,6 @@ export class AnimationController extends Component {
     five_anm_show = 0; // 五級動畫顯示索引
     five_anm_name: string[] = ["bigwin", "megawin", "superwin", "ultrawin", "ultimatewin"]; // 五級動畫名稱
 
-    SlotWinNode; // 單輪得分節點
     tempRateIndex=null; // 暫存此把押注倍率
 
     /**
@@ -68,19 +112,62 @@ export class AnimationController extends Component {
         MessageConsole = find("MessageController");
         DropSymbolMap = Data.Library.GameData.DropSymbolMap;
 
-        this.TransAnm = find("Canvas/BaseGame/Trans"); // 轉場動畫節點
+        // 初始化訊息控制器
+        if (!this.messageConsoleNode) {
+            this.messageConsoleNode = find("MessageController");
+        }
+        MessageConsole = this.messageConsoleNode;
 
-        this.BigWinAnm = find("Canvas/BaseGame/Layer/Shake/Animation/BigwinAnm"); // 大獎動畫節點
-        this.winBarNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerWin/WinBarAnm"); // 獲勝條節點
-        this.WinBarAnm = find("Canvas/BaseGame/Layer/Shake/Animation/BannerWin/WinBarAnm").getComponent(sp.Skeleton); // 獲勝條骨骼動畫
-        this.BannerText = find("Canvas/BaseGame/Layer/Shake/Animation/BannerController/BannerBgCover/BannerText"); // 橫幅文字
+        // 初始化轉場動畫節點
+        if (!this.transAnmNode) {
+            this.transAnmNode = find("Canvas/BaseGame/Trans");
+        }
+        this.TransAnm = this.transAnmNode;
 
-        this.BkgAnmNode = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnm"); // 主遊戲背景動畫節點
-        this.BkgAnm = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnm").getComponent(sp.Skeleton); // 主遊戲背景骨骼動畫
-        this.BkgAnmFsNode = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnmFs"); // 免費遊戲背景動畫節點
-        this.BkgAnmFs = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnmFs").getComponent(sp.Skeleton); // 免費遊戲背景骨骼動畫
+        // 初始化大獎動畫節點
+        if (!this.bigWinAnmNode) {
+            this.bigWinAnmNode = find("Canvas/BaseGame/Layer/Shake/Animation/BigwinAnm");
+        }
+        this.BigWinAnm = this.bigWinAnmNode;
 
-        this.SlotWinNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerController/OneRoundScore"); // 單輪得分節點
+        // 初始化獲勝條節點
+        if (!this.winBarNode) {
+            this.winBarNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerWin/WinBarAnm");
+        }
+        this.WinBarAnm = this.winBarNode?.getComponent(sp.Skeleton);
+
+        // 初始化橫幅文字節點
+        if (!this.bannerTextNode) {
+            this.bannerTextNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerController/BannerBgCover/BannerText");
+        }
+        this.BannerText = this.bannerTextNode;
+
+        // 初始化背景動畫節點（主遊戲）
+        if (!this.bkgAnmNode) {
+            this.bkgAnmNode = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnm");
+        }
+        this.BkgAnm = this.bkgAnmNode?.getComponent(sp.Skeleton);
+
+        // 初始化背景動畫節點（免費遊戲）
+        if (!this.bkgAnmFsNode) {
+            this.bkgAnmFsNode = find("Canvas/BaseGame/Layer/Shake/UI/BkgAnmFs");
+        }
+        this.BkgAnmFs = this.bkgAnmFsNode?.getComponent(sp.Skeleton);
+
+        // 初始化單輪得分節點
+        if (!this.slotWinNode) {
+            this.slotWinNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerController/OneRoundScore");
+        }
+
+        // 初始化橫幅節點
+        if (!this.bannerWinNode) {
+            this.bannerWinNode = find("Canvas/BaseGame/Layer/Shake/Animation/BannerWin");
+        }
+
+        // 初始化音效控制器節點
+        if (!this.audioControllerNode) {
+            this.audioControllerNode = find("AudioController");
+        }
     }
 
     /**
@@ -273,8 +360,8 @@ export class AnimationController extends Component {
      */
     BkgAnmActive(BkgStr: string) {
         let occur = BkgStr == 'MainGame' ?true :false;
-        this.BkgAnmNode.active = occur; // 主遊戲背景
-        this.BkgAnmFsNode.active = !occur; // 免費遊戲背景
+        this.bkgAnmNode.active = occur; // 主遊戲背景
+        this.bkgAnmFsNode.active = !occur; // 免費遊戲背景
 
         if(occur) {
             Mode.ShowSpine(this.BkgAnm, 0, "idle", true, null);
@@ -350,7 +437,7 @@ export class AnimationController extends Component {
      * @param winScore 獲勝分數
      */
     ShowOneRoundScore(occur: boolean, winScore: number) {
-        this.SlotWinNode.active = occur;
+        this.slotWinNode.active = occur;
         if(occur) {
             //let str = Data.Library.StateConsole.NumberToCent(Data.Library.StateConsole.credit2CentbyCurRate(winScore));
             // 如果還沒暫存倍率，使用當前倍率
@@ -361,7 +448,7 @@ export class AnimationController extends Component {
             Data.Library.BannerData.OneRoundScore(str);
             // 在免費遊戲中不播放淡入動畫
             if(Data.Library.StateConsole.CurScene !== Mode.SCENE_ID.FEATURE0){
-                this.SlotWinNode.getComponent(Animation).play('fadeIn');
+                this.slotWinNode.getComponent(Animation).play('fadeIn');
             }            
         }
     }
