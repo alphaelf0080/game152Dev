@@ -447,6 +447,7 @@ export class CommonLibScript extends Component {
      * @returns 參數值或預設值
      */
     public GetURLParameter(sParam, defaultlang: string = 'eng'): string {
+        console.log('[CommonLibScript] 嘗試獲取 URL 參數:', sParam);
         // 如果 psapi 已定義，使用其內建方法
         if (typeof window["psapi"] !== 'undefined') {
             return window["psapi"].getURLParameter(sParam);
@@ -463,6 +464,8 @@ export class CommonLibScript extends Component {
                 return sParameterName[1];
             }
         }
+
+        console.log('[CommonLibScript] ⚠ 找不到 URL 參數:', sParam, '，返回預設值:', defaultlang);
         
         // 如果找不到指定參數，返回預設值
         return defaultlang;
