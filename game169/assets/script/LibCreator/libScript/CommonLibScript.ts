@@ -7,32 +7,106 @@ export class CommonLibScript extends Component {
     public initFps = false;
     public demoString: Node | null = null;
     protected override onLoad(): void {
-        if (Data.Library.CommonLibScript == null)
+        console.log("[CommonLibScript] ► 初始化開始...");
+        
+        // 設置全局實例
+        if (Data.Library.CommonLibScript == null) {
             Data.Library.CommonLibScript = this;
-        else
+            console.log("[CommonLibScript] ✓ 實例已建立");
+        } else {
+            console.log("[CommonLibScript] ⚠ 實例已存在，銷毀重複實例");
             this.destroy();
-        this.handleNode();    // add Node to AllNode.Data.Map 
-        this.handleHomeJudge(); // judge homebutton show
-        this.handleKeyboard();  // 新增空白 enter spin
-        this.handleAccountSn(); // 新增 單號
+            return;
+        }
+        
+        // 初始化各個處理器
+        console.log("[CommonLibScript] → 開始處理場景節點...");
+        this.handleNode();    // 將節點加入 AllNode.Data.Map 
+        
+        console.log("[CommonLibScript] → 開始判斷首頁按鈕...");
+        this.handleHomeJudge(); // 判斷首頁按鈕是否顯示
+        
+        console.log("[CommonLibScript] → 開始設置鍵盤控制...");
+        this.handleKeyboard();  // 新增空白鍵和 Enter 鍵來旋轉
+        
+        console.log("[CommonLibScript] → 開始設置帳號序號...");
+        this.handleAccountSn(); // 新增帳號序號
+        
+        console.log("[CommonLibScript] → 開始設置試玩模式...");
         this.handleDemoMode();  // 試玩模式
-        this.handleGameVersion(); //遊戲版號
+        
+        console.log("[CommonLibScript] → 開始設置遊戲版號...");
+        this.handleGameVersion(); // 遊戲版號
+        
+        console.log("[CommonLibScript] ✓ 初始化完成");
     }
 
     handleGameVersion() {
-        AllNode.Data.Map.get("GameVersion").getComponent(Label).string = `ver123 build 1234`;
-        if (typeof window["psapi"] !== 'undefined') {
-            AllNode.Data.Map.get("GameVersion").getComponent(Label).string = `ver:${window["psapi"]?.hostInfo?.game_version.rev} build:${window["psapi"]?.hostInfo?.game_version.build}`;
+        console.log("[CommonLibScript] 開始設置遊戲版號...");
+        
+        try {
+            // 先設置默認版本號
+            const gameVersionNode = AllNode.Data.Map.get("GameVersion");
+            if (!gameVersionNode) {
+                console.error("[CommonLibScript] ✗ 找不到 GameVersion 節點！");
+                return;
+            }
+            
+            const label = gameVersionNode.getComponent(Label);
+            if (!label) {
+                console.error("[CommonLibScript] ✗ GameVersion 節點上找不到 Label 組件！");
+                return;
+            }
+            
+            label.string = `ver123 build 1234`;
+            console.log("[CommonLibScript] ✓ 設置默認版本號: ver123 build 1234");
+            
+            // 如果存在 psapi，使用遊戲伺服器版本號
+            if (typeof window["psapi"] !== 'undefined') {
+                const version = window["psapi"]?.hostInfo?.game_version;
+                if (version?.rev && version?.build) {
+                    label.string = `ver:${version.rev} build:${version.build}`;
+                    console.log("[CommonLibScript] ✓ 使用伺服器版本號:", label.string);
+                } else {
+                    console.warn("[CommonLibScript] ⚠ psapi 版本資訊不完整");
+                }
+            } else {
+                console.log("[CommonLibScript] ℹ psapi 未定義，使用本地版本號");
+            }
+        } catch (error) {
+            console.error("[CommonLibScript] ✗ 設置版本號失敗:", error);
         }
     }
 
     handleNode() {
-        //從起始Canvas循環加入所有node
+        // 從起始 Canvas 循環加入所有節點
+        console.log("[CommonLibScript] 開始掃描場景節點...");
+        console.log("[CommonLibScript] AllNode.Data.Map 當前大小:", AllNode.Data.Map.size);
+        
         if (AllNode.Data.Map.size == 0) {
+            console.log("[CommonLibScript] → 查找 Canvas 節點...");
             let canvasNode = find("Canvas");
-            this.traverseNodes(canvasNode);
+            
+            if (canvasNode) {
+                console.log("[CommonLibScript] ✓ 找到 Canvas 節點");
+                this.traverseNodes(canvasNode);
+            } else {
+                console.error("[CommonLibScript] ✗ 找不到 Canvas 節點！");
+            }
+            
+            console.log("[CommonLibScript] → 查找 AudioController 節點...");
             let audioNode = find("AudioController");
-            this.traverseNodes(audioNode);
+            
+            if (audioNode) {
+                console.log("[CommonLibScript] ✓ 找到 AudioController 節點");
+                this.traverseNodes(audioNode);
+            } else {
+                console.warn("[CommonLibScript] ⚠ 找不到 AudioController 節點");
+            }
+            
+            console.log("[CommonLibScript] ✓ 節點掃描完成，總計:", AllNode.Data.Map.size, "個節點");
+        } else {
+            console.log("[CommonLibScript] ⚠ AllNode.Data.Map 已包含節點，跳過初始化");
         }
     }
 
@@ -122,42 +196,120 @@ export class CommonLibScript extends Component {
     };
 
     handleDemoMode() {
-        if (this.GetURLParameter('pm') == '1') { //pm = 1 demo Mode
-            this.demoString = new Node();
-            this.demoString.name = "DEMO";
-            find("Canvas/BaseGame/Page").addChild(this.demoString);
-            this.demoString.addComponent(Label);
-            this.demoString.getComponent(Label).string = CommonLibScript.DEMO_TEXT[Data.Library.RES_LANGUAGE] || CommonLibScript.DEMO_TEXT['eng'];
-            this.demoString.getComponent(Label).isBold = true;
-            this.demoString.getComponent(Label).fontSize = 35;
-            this.demoString.getComponent(UITransform).setAnchorPoint(0.5, 0.5);
-            this.demoString.setPosition(100, 265);
-            AllNode.Data.Map.get("HistoryButton").active = false;
-            AllNode.Data.Map.get("WinBtn").getComponent(Button).enabled = false;
-            AllNode.Data.Map.get("WinBg_Off").getComponent(Sprite).spriteFrame = AllNode.Data.Map.get("WinBg_On").getComponent(Sprite).spriteFrame;
-            AllNode.Data.Map.get("WinBg_Off").setPosition(AllNode.Data.Map.get("WinBg_On").getPosition());
+        const demoParam = this.GetURLParameter('pm');
+        console.log("[CommonLibScript] 檢查試玩模式參數 (pm):", demoParam);
+        
+        if (demoParam == '1') {
+            console.log("[CommonLibScript] ✓ 進入試玩模式");
+            
+            try {
+                this.demoString = new Node();
+                this.demoString.name = "DEMO";
+                
+                const basePage = find("Canvas/BaseGame/Page");
+                if (!basePage) {
+                    console.error("[CommonLibScript] ✗ 找不到 Canvas/BaseGame/Page");
+                    return;
+                }
+                
+                basePage.addChild(this.demoString);
+                this.demoString.addComponent(Label);
+                
+                const demoLabel = this.demoString.getComponent(Label);
+                const language = Data.Library.RES_LANGUAGE;
+                const demoText = CommonLibScript.DEMO_TEXT[language] || CommonLibScript.DEMO_TEXT['eng'];
+                
+                demoLabel.string = demoText;
+                demoLabel.isBold = true;
+                demoLabel.fontSize = 35;
+                
+                console.log("[CommonLibScript] ✓ DEMO 標籤已設置 (語言:", language, ", 文字:", demoText + ")");
+                
+                this.demoString.getComponent(UITransform).setAnchorPoint(0.5, 0.5);
+                this.demoString.setPosition(100, 265);
+                
+                // 隱藏歷史記錄按鈕
+                const historyBtn = AllNode.Data.Map.get("HistoryButton");
+                if (historyBtn) {
+                    historyBtn.active = false;
+                    console.log("[CommonLibScript] ✓ 隱藏 HistoryButton");
+                } else {
+                    console.warn("[CommonLibScript] ⚠ 找不到 HistoryButton");
+                }
+                
+                // 禁用贏得按鈕
+                const winBtn = AllNode.Data.Map.get("WinBtn");
+                if (winBtn) {
+                    winBtn.getComponent(Button).enabled = false;
+                    console.log("[CommonLibScript] ✓ 禁用 WinBtn");
+                } else {
+                    console.warn("[CommonLibScript] ⚠ 找不到 WinBtn");
+                }
+                
+                // 同步贏得背景
+                const winBgOff = AllNode.Data.Map.get("WinBg_Off");
+                const winBgOn = AllNode.Data.Map.get("WinBg_On");
+                
+                if (winBgOff && winBgOn) {
+                    winBgOff.getComponent(Sprite).spriteFrame = winBgOn.getComponent(Sprite).spriteFrame;
+                    winBgOff.setPosition(winBgOn.getPosition());
+                    console.log("[CommonLibScript] ✓ 同步 WinBg 外觀");
+                } else {
+                    console.warn("[CommonLibScript] ⚠ 找不到 WinBg_Off 或 WinBg_On");
+                }
+            } catch (error) {
+                console.error("[CommonLibScript] ✗ 設置試玩模式失敗:", error);
+            }
+        } else {
+            console.log("[CommonLibScript] ℹ 未啟用試玩模式");
         }
     }
 
     /**
-    * 循環加入Node方法
+    * 遞迴遍歷所有子節點並將其加入全局映射
+    * @param node 要遍歷的節點
     */
     traverseNodes(node: Node) {
-        if (node) {
-            if (AllNode.Data.ExcludeNode.indexOf(node.name) === -1) {
-                if (!AllNode.Data.Map.has(node.name)) {
-                    AllNode.Data.Map.set(node.name, node); // 如果key沒有被建立過直接存                   
-                } else {
-                    let tempNode = null;
-                    tempNode = AllNode.Data.Map.get(node.name);
-                    if (!AllNode.Data.Map.get(tempNode.parent.name + "/" + tempNode.name))//要將已建立過的node確認有沒有拉出來幫其建立parent的資料                
-                        AllNode.Data.Map.set(tempNode.parent.name + "/" + tempNode.name, tempNode);
-                    AllNode.Data.Map.set(node.parent.name + "/" + node.name, node);
+        if (!node) {
+            console.warn("[CommonLibScript] ⚠ traverseNodes 收到 null 節點");
+            return;
+        }
+        
+        // 檢查是否需要排除此節點
+        if (AllNode.Data.ExcludeNode.indexOf(node.name) !== -1) {
+            console.log("[CommonLibScript] ⊘ 跳過排除的節點:", node.name);
+            return;
+        }
+        
+        try {
+            // 如果節點還未被記錄，直接加入
+            if (!AllNode.Data.Map.has(node.name)) {
+                AllNode.Data.Map.set(node.name, node);
+                console.log("[CommonLibScript] ✓ 添加節點:", node.name);
+            } else {
+                // 節點已存在，需要使用完整路徑來區分
+                let tempNode = AllNode.Data.Map.get(node.name);
+                const parentPath = tempNode?.parent?.name;
+                
+                if (parentPath && !AllNode.Data.Map.has(parentPath + "/" + tempNode.name)) {
+                    AllNode.Data.Map.set(parentPath + "/" + tempNode.name, tempNode);
+                    console.log("[CommonLibScript] ✓ 添加路徑節點:", parentPath + "/" + tempNode.name);
                 }
+                
+                const currentPath = node.parent?.name + "/" + node.name;
+                AllNode.Data.Map.set(currentPath, node);
+                console.log("[CommonLibScript] ✓ 添加路徑節點:", currentPath);
+            }
+            
+            // 遞迴處理所有子節點
+            if (node.children && node.children.length > 0) {
+                console.log("[CommonLibScript] ↳ 處理", node.name, "的", node.children.length, "個子節點");
                 node.children.forEach(childNode => {
                     this.traverseNodes(childNode);
                 });
             }
+        } catch (error) {
+            console.error("[CommonLibScript] ✗ 遍歷節點失敗:", node.name, error);
         }
     }
     /**
