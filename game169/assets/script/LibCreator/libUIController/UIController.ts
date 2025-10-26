@@ -100,7 +100,7 @@ export class UIController extends Component {
 
     /** 音效按鈕 - 停用狀態圖片 */
     @property(SpriteFrame)
-    public Voice_off: SpriteFrame = null!
+    public Voice_off: SpriteFrame = null!;
 
     /** 說明頁面圖片陣列 */
     @property([SpriteFrame])
