@@ -71,52 +71,52 @@ export class UIController extends Component {
     // =================================
 
     /** 加速按鈕 - 啟用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public Tubro_act: SpriteFrame = null;
+    @property(SpriteFrame)
+    public Tubro_act: SpriteFrame = null!;
 
     /** 加速按鈕 - 停用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public Tubro_off: SpriteFrame = null;
+    @property(SpriteFrame)
+    public Tubro_off: SpriteFrame = null!;
 
     /** 下注增加按鈕 - 啟用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public BetAdd_act: SpriteFrame = null;
+    @property(SpriteFrame)
+    public BetAdd_act: SpriteFrame = null!;
 
     /** 下注增加按鈕 - 停用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public BetAdd_off: SpriteFrame = null;
+    @property(SpriteFrame)
+    public BetAdd_off: SpriteFrame = null!;
 
     /** 下注減少按鈕 - 啟用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public BetLess_act: SpriteFrame = null;
+    @property(SpriteFrame)
+    public BetLess_act: SpriteFrame = null!;
 
     /** 下注減少按鈕 - 停用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public BetLess_off: SpriteFrame = null;
+    @property(SpriteFrame)
+    public BetLess_off: SpriteFrame = null!;
 
     /** 音效按鈕 - 啟用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public Voice_act: SpriteFrame = null;
+    @property(SpriteFrame)
+    public Voice_act: SpriteFrame = null!;
 
     /** 音效按鈕 - 停用狀態圖片 */
-    @property({ type: SpriteFrame })
-    public Voice_off: SpriteFrame = null;
+    @property(SpriteFrame)
+    public Voice_off: SpriteFrame = null!
 
     /** 說明頁面圖片陣列 */
-    @property({ type: [SpriteFrame] })
+    @property([SpriteFrame])
     public HelpPages: SpriteFrame[] = [];
 
     /** 觸發資訊圖片陣列 */
-    @property({ type: [SpriteFrame] })
+    @property([SpriteFrame])
     public TriggerInfo: SpriteFrame[] = [];
 
     /** 特殊功能購買按鈕節點 */
-    @property({ type: Node })
-    public featureBuyButton: Node = null;
+    @property(Node)
+    public featureBuyButton: Node = null!;
 
     /** 自動遊戲頁面控制器 */
-    @property({ type: AutoPages })
-    public AutoPages: AutoPages = null;
+    @property(AutoPages)
+    public AutoPages: AutoPages = null!;
 
     // =================================
     // 🔒 邏輯控制屬性區 (編輯器不可見)
