@@ -26,7 +26,11 @@ export class CommonLibScript extends Component {
     
     /** 試玩模式的 DEMO 文字節點 */
     public demoString: Node | null = null;
-    protected override onLoad(): void {
+    
+    /**
+     * 載入時執行 - 初始化全局實例和各項功能
+     */
+    protected onLoad(): void {
         console.log("[CommonLibScript] ► 初始化開始...");
         
         // 設置全局實例
@@ -34,8 +38,7 @@ export class CommonLibScript extends Component {
             Data.Library.CommonLibScript = this;
             console.log("[CommonLibScript] ✓ 實例已建立");
         } else {
-            console.log("[CommonLibScript] ⚠ 實例已存在，銷毀重複實例");
-            this.destroy();
+            console.log("[CommonLibScript] ⚠ 實例已存在，跳過初始化");
             return;
         }
         
@@ -251,7 +254,7 @@ export class CommonLibScript extends Component {
      * - 處理 WebView 和錯誤訊息的顯示衝突
      * @param deltaTime 距離上一幀的時間間隔
      */
-    protected override update(deltaTime: number) {
+    protected update(deltaTime: number) {
         // 當幀率穩定後（deltaTime < 0.01），設置為 59 FPS
         if (!this.initFps && deltaTime < 0.01) {
             game.frameRate = 59;
