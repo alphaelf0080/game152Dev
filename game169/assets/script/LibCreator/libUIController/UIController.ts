@@ -119,6 +119,46 @@ export class UIController extends Component {
     public AutoPages: AutoPages = null!;
 
     // =================================
+    // 🎮 場景節點屬性 (可在編輯器中拖放設定)
+    // =================================
+
+    /** 訊息控制器節點 - 包含 GameVariable 和 MathConsole */
+    @property(Node)
+    public messageConsoleNode: Node = null!;
+
+    /** 下注按鈕節點 */
+    @property(Node)
+    public betBtnNode: Node = null!;
+
+    /** 贏分按鈕節點 */
+    @property(Node)
+    public winBtnNode: Node = null!;
+
+    /** 信用點數節點 */
+    @property(Node)
+    public creditNodeRef: Node = null!;
+
+    /** 信用貨幣節點 */
+    @property(Node)
+    public creditCurrencyNode: Node = null!;
+
+    /** 自動按鈕節點 */
+    @property(Node)
+    public autoBtnNode: Node = null!;
+
+    /** 設定頁面節點 */
+    @property(Node)
+    public settingsPageNode: Node = null!;
+
+    /** 設定頁面2節點 */
+    @property(Node)
+    public settingsPage2Node: Node = null!;
+
+    /** 資訊控制器節點 */
+    @property(Node)
+    public infoControllerNode: Node = null!;
+
+    // =================================
     // 🔒 邏輯控制屬性區 (編輯器不可見)
     // =================================
 
@@ -274,7 +314,11 @@ export class UIController extends Component {
         console.log("[UIController] ✓ StateConsole 已取得");
 
         // 取得主要控制器元件
-        this.messageConsole = find("MessageController");
+        // 優先使用編輯器設定的屬性，若未設定則使用 find 查找
+        if (!this.messageConsoleNode) {
+            this.messageConsoleNode = find("MessageController");
+        }
+        this.messageConsole = this.messageConsoleNode;
         if (!this.messageConsole) {
             console.error("[UIController] ❌ 找不到 MessageController 節點");
             throw new Error('找不到 MessageController 節點');
@@ -283,14 +327,17 @@ export class UIController extends Component {
         this.mathConsole = this.getComponentSafe(this.messageConsole, MathConsole);
         console.log("[UIController] ✓ MessageController、GameVariable、MathConsole 已取得");
 
-        // 初始化下注和贏分相關UI元件 - 使用相對路徑
+        // 初始化下注和贏分相關UI元件 - 優先使用編輯器屬性
         console.log("[UIController] → 開始查找下注和贏分相關UI元件...");
         
-        // 查找 BtnBet - 嘗試多個路徑
-        this.betBtn = this.getNode("BtnBet") 
-            || find("Canvas/BaseGame/BtnBet")
-            || find("Canvas/BaseGame/UI/BtnBet")
-            || find("Canvas/BaseGame/Layer/BtnBet");
+        // 查找 BtnBet - 優先使用編輯器設定，否則使用相對路徑
+        if (!this.betBtnNode) {
+            this.betBtnNode = this.getNode("BtnBet") 
+                || find("Canvas/BaseGame/BtnBet")
+                || find("Canvas/BaseGame/UI/BtnBet")
+                || find("Canvas/BaseGame/Layer/BtnBet");
+        }
+        this.betBtn = this.betBtnNode;
         
         if (!this.betBtn) {
             console.error("[UIController] ❌ 找不到 BtnBet 節點！");
@@ -302,11 +349,14 @@ export class UIController extends Component {
         this.betText = this.getComponentFromChild(this.betBtn, "Bet", Label);
         console.log("[UIController] ✓ betText 已取得");
         
-        // 查找 WinBtn - 嘗試多個路徑
-        this.winBtn = this.getNode("WinBtn")
-            || find("Canvas/BaseGame/WinBtn")
-            || find("Canvas/BaseGame/UI/WinBtn")
-            || find("Canvas/BaseGame/Layer/WinBtn");
+        // 查找 WinBtn - 優先使用編輯器設定，否則使用相對路徑
+        if (!this.winBtnNode) {
+            this.winBtnNode = this.getNode("WinBtn")
+                || find("Canvas/BaseGame/WinBtn")
+                || find("Canvas/BaseGame/UI/WinBtn")
+                || find("Canvas/BaseGame/Layer/WinBtn");
+        }
+        this.winBtn = this.winBtnNode;
         
         if (!this.winBtn) {
             console.error("[UIController] ❌ 找不到 WinBtn 節點！");
@@ -317,35 +367,50 @@ export class UIController extends Component {
         this.winText = this.getComponentFromChild(this.winBtn, "Win", Label);
         console.log("[UIController] ✓ winText 已取得");
 
-        // 初始化信用點數和設定相關UI元件 - 使用相對路徑
+        // 初始化信用點數和設定相關UI元件 - 優先使用編輯器屬性
         console.log("[UIController] → 開始查找信用點數和設定相關UI元件...");
         
-        this.creditNode = this.getNode("Credit")
-            || find("Canvas/BaseGame/Credit")
-            || find("Canvas/BaseGame/UI/Credit");
+        if (!this.creditNodeRef) {
+            this.creditNodeRef = this.getNode("Credit")
+                || find("Canvas/BaseGame/Credit")
+                || find("Canvas/BaseGame/UI/Credit");
+        }
+        this.creditNode = this.creditNodeRef;
         if (this.creditNode) console.log("[UIController] ✓ Credit 已找到");
         
-        this.creditCCyNode = this.getNode("CreditCurrency")
-            || find("Canvas/BaseGame/CreditCurrency")
-            || find("Canvas/BaseGame/UI/CreditCurrency");
+        if (!this.creditCurrencyNode) {
+            this.creditCurrencyNode = this.getNode("CreditCurrency")
+                || find("Canvas/BaseGame/CreditCurrency")
+                || find("Canvas/BaseGame/UI/CreditCurrency");
+        }
+        this.creditCCyNode = this.creditCurrencyNode;
         if (this.creditCCyNode) console.log("[UIController] ✓ CreditCurrency 已找到");
         
-        this.autoBtn = this.getNode("AutoButton")
-            || find("Canvas/BaseGame/AutoButton")
-            || find("Canvas/BaseGame/UI/AutoButton");
+        if (!this.autoBtnNode) {
+            this.autoBtnNode = this.getNode("AutoButton")
+                || find("Canvas/BaseGame/AutoButton")
+                || find("Canvas/BaseGame/UI/AutoButton");
+        }
+        this.autoBtn = this.autoBtnNode;
         if (this.autoBtn) {
             this.autoBtn.setPosition(630, 110);
             console.log("[UIController] ✓ AutoButton 已找到並設置位置");
         }
         
-        this.settingsPage = this.getNode("SettingsPage")
-            || find("Canvas/BaseGame/SettingsPage")
-            || find("Canvas/BaseGame/UI/SettingsPage");
+        if (!this.settingsPageNode) {
+            this.settingsPageNode = this.getNode("SettingsPage")
+                || find("Canvas/BaseGame/SettingsPage")
+                || find("Canvas/BaseGame/UI/SettingsPage");
+        }
+        this.settingsPage = this.settingsPageNode;
         if (this.settingsPage) console.log("[UIController] ✓ SettingsPage 已找到");
         
-        this.settingsPage2 = this.getNode("SettingsPage2")
-            || find("Canvas/BaseGame/SettingsPage2")
-            || find("Canvas/BaseGame/UI/SettingsPage2");
+        if (!this.settingsPage2Node) {
+            this.settingsPage2Node = this.getNode("SettingsPage2")
+                || find("Canvas/BaseGame/SettingsPage2")
+                || find("Canvas/BaseGame/UI/SettingsPage2");
+        }
+        this.settingsPage2 = this.settingsPage2Node;
         if (this.settingsPage2) console.log("[UIController] ✓ SettingsPage2 已找到");
         
         // 從 SettingsPage 查找按鈕 - 使用相對路徑
@@ -363,9 +428,12 @@ export class UIController extends Component {
             console.log("[UIController] ✓ SettingsPage2 子節點已取得");
         }
         
-        this.infoController = this.getNode("InfoController")
-            || find("Canvas/BaseGame/InfoController")
-            || find("Canvas/Notice");
+        if (!this.infoControllerNode) {
+            this.infoControllerNode = this.getNode("InfoController")
+                || find("Canvas/BaseGame/InfoController")
+                || find("Canvas/Notice");
+        }
+        this.infoController = this.infoControllerNode;
         if (this.infoController) console.log("[UIController] ✓ InfoController 已找到");
 
         if (this.featureBuyButton == null) {
