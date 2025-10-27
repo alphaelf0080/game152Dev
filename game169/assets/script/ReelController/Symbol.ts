@@ -1,5 +1,6 @@
 import { _decorator, Component, Sprite, Node, find, sp, Animation, SpriteFrame, UITransform } from 'cc';
 import { Data } from '../DataController';
+import { CommonLibScript } from '../LibCreator/libScript/CommonLibScript';
 import { SymbolNodeCache } from './SymbolNodeCache';
 import { SymbolAnimationController, SymbolType, SYMBOL_CONFIG } from './SymbolAnimationController';
 const { ccclass, property } = _decorator;
@@ -93,8 +94,37 @@ export class Symbol extends Component {
         console.log(`🎴 Symbol 初始化開始: reelCol=${this.reelCol}, reelIndex=${this.reelIndex}`);
         
         try {
+            // ✅ 等待 CommonLibScript 初始化完成，確保 Data.Library 已準備就緒
+            CommonLibScript.waitForReady().then(() => {
+                console.log(`[Symbol] ✓ CommonLibScript 已準備完成，開始初始化符號...`);
+                this.initializeSymbol();
+            }).catch((error) => {
+                console.error(`[Symbol] ✗ 等待 CommonLibScript 失敗:`, error);
+            });
+            
+        } catch (error) {
+            console.error('❌ Symbol 初始化失敗:', error);
+        }
+    }
+    
+    /**
+     * 初始化符號邏輯（在 CommonLibScript 準備完成後調用）
+     */
+    private initializeSymbol(): void {
+        try {
+            // ✅ 安全檢查 GameData 是否存在
+            if (!Data.Library.GameData) {
+                console.error('[Symbol] ✗ Data.Library.GameData 未初始化');
+                return;
+            }
+            
             // 初始化 DropSymbolMap
             this.dropSymbolMap = Data.Library.GameData.DropSymbolMap;
+            
+            if (!this.dropSymbolMap) {
+                console.error('[Symbol] ✗ DropSymbolMap 為 null');
+                return;
+            }
             
             // 初始化節點快取（全局節點只查找一次）
             this.initializeNodeCache();

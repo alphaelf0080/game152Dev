@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, find, input, Input, EventTouch, Sprite, UITransform, sp, TweenAction, SpriteFrame, Vec3, log, tween, easing, instantiate, debug, AudioSource, Color, Animation } from 'cc';
 
 import { Data, Mode } from './DataController';
-import { AllNode } from './LibCreator/libScript/CommonLibScript';
+import { AllNode, CommonLibScript } from './LibCreator/libScript/CommonLibScript';
 
 import { Symbol } from './ReelController/Symbol';
 import { AnimationController } from './AnimationController';
@@ -19,11 +19,33 @@ export class ShowWinController {
     isShowOneRound: boolean = false;
 
 
-    init(reelConThis) {  //保存ReelController的this
-        DropSymbolMap = Data.Library.GameData.DropSymbolMap;
-        console.log('✅ DropSymbolMap 加載成功');
-
-        this.reelController = reelConThis;
+    async init(reelConThis) {  //保存ReelController的this
+        console.log('[ShowWinController] ⏳ 等待 CommonLibScript 準備...');
+        
+        try {
+            // ✅ 等待 CommonLibScript 初始化完成
+            await CommonLibScript.waitForReady();
+            console.log('[ShowWinController] ✓ CommonLibScript 已準備完成');
+            
+            // ✅ 安全檢查 GameData 是否存在
+            if (!Data.Library.GameData) {
+                console.error('[ShowWinController] ✗ Data.Library.GameData 未初始化');
+                return;
+            }
+            
+            DropSymbolMap = Data.Library.GameData.DropSymbolMap;
+            
+            if (!DropSymbolMap) {
+                console.error('[ShowWinController] ✗ DropSymbolMap 為 null');
+                return;
+            }
+            
+            console.log('✅ DropSymbolMap 加載成功');
+            this.reelController = reelConThis;
+            
+        } catch (error) {
+            console.error('[ShowWinController] ✗ 初始化失敗:', error);
+        }
     }
 
     /*贏分動畫表現*/

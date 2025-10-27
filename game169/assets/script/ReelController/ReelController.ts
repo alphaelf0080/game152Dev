@@ -78,89 +78,106 @@ export class ReelController extends Component {
     start() {
         console.log('=== ReelController.start() 開始初始化 ===');
         
-        // 初始化管理器
-        this.initializeManagers();
-        console.log('✅ 管理器初始化完成');
-        
-        ShowWinController.Instance.init(this);
+        // ✅ 異步初始化以支持 ShowWinController.init() 的 await 機制
+        this.asyncStart();
+    }
+    
+    /**
+     * 異步初始化方法
+     * - 等待 CommonLibScript 和 ShowWinController.init() 完成
+     */
+    private async asyncStart(): Promise<void> {
+        try {
+            // 初始化管理器
+            this.initializeManagers();
+            console.log('✅ 管理器初始化完成');
+            
+            // ✅ await 等待 ShowWinController.init() 完成
+            console.log('[ReelController] ⏳ 等待 ShowWinController 初始化...');
+            await ShowWinController.Instance.init(this);
+            console.log('[ReelController] ✓ ShowWinController 初始化完成');
 
-        MessageConsole = AllNode.Data.Map.get("MessageController");
-        
-        // 加載 DropSymbolMap - 帶驗證和錯誤處理
-        if (Data.Library.GameData && Data.Library.GameData.DropSymbolMap) {
-            DropSymbolMap = Data.Library.GameData.DropSymbolMap;
-            console.log('✅ DropSymbolMap 加載成功');
-            console.log(`   CurrIndex: ${DropSymbolMap.CurrIndex}`);
-            console.log(`   DragonTrigger: [${DropSymbolMap.DragonTrigger}]`);
-            console.log(`   Multiplier 長度: ${DropSymbolMap.Multiplier?.length || 0}`);
-            console.log(`   WinLineGroup 長度: ${DropSymbolMap.WinLineGroup?.length || 0}`);
-        } else {
-            console.warn('⚠️ DropSymbolMap 未找到或 GameData 未初始化');
-            console.warn(`   GameData: ${Data.Library.GameData ? '存在' : '不存在'}`);
-            // 創建備用 DropSymbolMap
-            DropSymbolMap = {
-                DragonTrigger: [-1, -1],
-                Multiplier: [],
-                CurrIndex: 0,
-                WinLineGroup: [],
-            };
-            console.log('⚠️ 已創建備用 DropSymbolMap');
+            MessageConsole = AllNode.Data.Map.get("MessageController");
+            
+            // 加載 DropSymbolMap - 帶驗證和錯誤處理
+            if (Data.Library.GameData && Data.Library.GameData.DropSymbolMap) {
+                DropSymbolMap = Data.Library.GameData.DropSymbolMap;
+                console.log('✅ DropSymbolMap 加載成功');
+                console.log(`   CurrIndex: ${DropSymbolMap.CurrIndex}`);
+                console.log(`   DragonTrigger: [${DropSymbolMap.DragonTrigger}]`);
+                console.log(`   Multiplier 長度: ${DropSymbolMap.Multiplier?.length || 0}`);
+                console.log(`   WinLineGroup 長度: ${DropSymbolMap.WinLineGroup?.length || 0}`);
+            } else {
+                console.warn('⚠️ DropSymbolMap 未找到或 GameData 未初始化');
+                console.warn(`   GameData: ${Data.Library.GameData ? '存在' : '不存在'}`);
+                // 創建備用 DropSymbolMap
+                DropSymbolMap = {
+                    DragonTrigger: [-1, -1],
+                    Multiplier: [],
+                    CurrIndex: 0,
+                    WinLineGroup: [],
+                };
+                console.log('⚠️ 已創建備用 DropSymbolMap');
+            }
+
+            // 使用節點快取系統預載入關鍵節點
+            console.log('🔄 開始預載入節點快取...');
+            this.nodeCache.preloadCriticalNodes(AllNode.Data.Map);
+            this._reelSlowAnm = this.nodeCache.getNode("reelSlow", AllNode.Data.Map);
+            this.screenSlowNode = this.nodeCache.getNode("ScreenSlowmote", AllNode.Data.Map);
+            this.symbolDarkNode = this.nodeCache.getNode("reelBlack", AllNode.Data.Map);
+            console.log('✅ 節點快取預載入完成');
+
+            // 建立符號（Create Symbol）
+            console.log('🔄 開始建立滾輪和符號...');
+            let reelMask = AllNode.Data.Map.get("reelMask");  // 遮罩層
+            let reelAnmNode = find("Canvas/BaseGame/Layer/Shake/Animation/SymbolAnm");  // 一般動畫播放層
+            let scatterAnmNode = AllNode.Data.Map.get('SymbolScatter');  // Scatter動畫播放層
+
+            // 設置滾輪位置
+            this._reelposleft = -280;
+            this._reelposup = 355;
+            console.log(`📍 滾輪位置設定: left=${this._reelposleft}, up=${this._reelposup}`);
+
+            // 建立每一條滾輪
+            // 建立每一條滾輪
+            for (let i = 0; i < this._reelCol; i++) {
+                let posX = this._reelposleft + (this._reel_W + this._reelGapX) * i;
+
+                // 新增每一條滾輪節點
+                let col = new ReelCol();
+                col.name = "ReelCol" + i;
+                col.setPosition(posX, this._reelposup);
+                col.init(this, posX, this._reelposup, i, this._realReelRow);
+
+                reelMask.addChild(col);
+                this._reels.push(col);
+
+                // 新增動畫層級節點
+                let anmCol = new Node();
+                anmCol.name = "AnmCol" + i;
+                anmCol.setPosition(posX, this._reelposup);
+                reelAnmNode.addChild(anmCol)
+
+                // 新增 Scatter/Bonus 動畫層級節點
+                let scatterCol = new Node();
+                scatterCol.name = "ScatterAnmCol" + i;
+                scatterCol.setPosition(posX, this._reelposup);
+                scatterAnmNode.addChild(scatterCol);
+            }
+            
+            console.log(`✅ 建立了 ${this._reelCol} 條滾輪`);
+
+            this.SetReelActive(true);
+            
+            // 打印所有初始化完成的組件
+            this.printInitializationSummary();
+            
+            console.log('=== ReelController.start() 初始化完成 ===\n');
+            
+        } catch (error) {
+            console.error('[ReelController] ✗ 異步初始化失敗:', error);
         }
-
-        // 使用節點快取系統預載入關鍵節點
-        console.log('🔄 開始預載入節點快取...');
-        this.nodeCache.preloadCriticalNodes(AllNode.Data.Map);
-        this._reelSlowAnm = this.nodeCache.getNode("reelSlow", AllNode.Data.Map);
-        this.screenSlowNode = this.nodeCache.getNode("ScreenSlowmote", AllNode.Data.Map);
-        this.symbolDarkNode = this.nodeCache.getNode("reelBlack", AllNode.Data.Map);
-        console.log('✅ 節點快取預載入完成');
-
-        // 建立符號（Create Symbol）
-        console.log('🔄 開始建立滾輪和符號...');
-        let reelMask = AllNode.Data.Map.get("reelMask");  // 遮罩層
-        let reelAnmNode = find("Canvas/BaseGame/Layer/Shake/Animation/SymbolAnm");  // 一般動畫播放層
-        let scatterAnmNode = AllNode.Data.Map.get('SymbolScatter');  // Scatter動畫播放層
-
-        // 設置滾輪位置
-        this._reelposleft = -280;
-        this._reelposup = 355;
-        console.log(`📍 滾輪位置設定: left=${this._reelposleft}, up=${this._reelposup}`);
-
-        // 建立每一條滾輪
-        // 建立每一條滾輪
-        for (let i = 0; i < this._reelCol; i++) {
-            let posX = this._reelposleft + (this._reel_W + this._reelGapX) * i;
-
-            // 新增每一條滾輪節點
-            let col = new ReelCol();
-            col.name = "ReelCol" + i;
-            col.setPosition(posX, this._reelposup);
-            col.init(this, posX, this._reelposup, i, this._realReelRow);
-
-            reelMask.addChild(col);
-            this._reels.push(col);
-
-            // 新增動畫層級節點
-            let anmCol = new Node();
-            anmCol.name = "AnmCol" + i;
-            anmCol.setPosition(posX, this._reelposup);
-            reelAnmNode.addChild(anmCol)
-
-            // 新增 Scatter/Bonus 動畫層級節點
-            let scatterCol = new Node();
-            scatterCol.name = "ScatterAnmCol" + i;
-            scatterCol.setPosition(posX, this._reelposup);
-            scatterAnmNode.addChild(scatterCol);
-        }
-        
-        console.log(`✅ 建立了 ${this._reelCol} 條滾輪`);
-
-        this.SetReelActive(true);
-        
-        // 打印所有初始化完成的組件
-        this.printInitializationSummary();
-        
-        console.log('=== ReelController.start() 初始化完成 ===\n');
     }
 
     /**
