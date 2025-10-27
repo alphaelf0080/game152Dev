@@ -1334,18 +1334,50 @@ export class CustomGraphics extends Component {
     exportScript() {
         const code = this.generateTypeScriptCode();
         
-        // 創建下載連結
-        const blob = new Blob([code], { type: 'text/typescript' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'CustomGraphics.ts';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        console.log('[Graphics Editor] TypeScript 腳本已導出');
+        try {
+            // 創建下載連結
+            const blob = new Blob([code], { type: 'text/typescript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'CustomGraphics.ts';
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 延遲移除以確保下載完成
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            console.log('[Graphics Editor] TypeScript 腳本已導出');
+            this.showExportNotification();
+        } catch (err) {
+            console.error('[Graphics Editor] 導出失敗:', err);
+            // 降級方案：顯示在對話框中讓用戶手動複製
+            this.showCodeInDialog(code);
+        }
+    }
+
+    showExportNotification() {
+        const originalText = this.panel.$.btnExport.textContent;
+        this.panel.$.btnExport.textContent = '✓ 已導出！';
+        setTimeout(() => {
+            this.panel.$.btnExport.textContent = originalText;
+        }, 2000);
+    }
+
+    showCodeInDialog(code: string) {
+        // 如果下載失敗，至少複製到剪貼板
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+                console.log('[Graphics Editor] 代碼已複製到剪貼板（導出降級）');
+                alert('無法直接下載文件，代碼已複製到剪貼板，請手動貼到文件中。');
+            });
+        } else {
+            alert('導出失敗，請使用「複製代碼」按鈕。');
+        }
     }
 
     // ==================== 折線相關方法 ====================
