@@ -117,6 +117,7 @@ export const template = `
                 <ui-code id="codePreview" language="typescript">// TypeScript 代碼將顯示在這裡</ui-code>
                 <ui-button id="btnCopyCode" class="green">複製代碼</ui-button>
                 <ui-button id="btnExport" class="blue">導出為 TypeScript 腳本</ui-button>
+                <ui-button id="btnExportMask" class="purple">導出為 Mask 腳本</ui-button>
                 <ui-button id="btnClearAll" class="red">清空所有繪圖</ui-button>
             </div>
         </div>
@@ -318,6 +319,11 @@ ui-button.blue {
     background: var(--color-info-fill);
 }
 
+ui-button.purple {
+    background: #9b59b6;
+    color: white;
+}
+
 ui-button.red {
     background: var(--color-danger-fill);
 }
@@ -349,6 +355,7 @@ export const $ = {
     btnClosePolyline: '#btnClosePolyline',
     btnCopyCode: '#btnCopyCode',
     btnExport: '#btnExport',
+    btnExportMask: '#btnExportMask',
     btnClearAll: '#btnClearAll',
     canvasWidth: '#canvasWidth',
     canvasHeight: '#canvasHeight',
@@ -929,6 +936,7 @@ class GraphicsEditorLogic {
         this.panel.$.btnClear.addEventListener('click', () => this.undo());
         this.panel.$.btnCopyCode.addEventListener('click', () => this.copyCode());
         this.panel.$.btnExport.addEventListener('click', () => this.exportScript());
+        this.panel.$.btnExportMask.addEventListener('click', () => this.exportMaskScript());
         this.panel.$.btnClearAll.addEventListener('click', () => this.clearAll());
     }
 
@@ -1233,6 +1241,136 @@ export class CustomGraphics extends Component {
         return code;
     }
 
+    generateMaskTypeScriptCode(): string {
+        if (this.shapes.length === 0) {
+            return '// 請先繪製一些圖形';
+        }
+
+        let code = `import { _decorator, Component, Graphics, Mask } from 'cc';
+const { ccclass, property } = _decorator;
+
+/**
+ * Graphics Editor 生成的 Mask（遮罩）代碼
+ * 坐標系統: ${this.getOriginModeName()}
+ * 
+ * 使用說明：
+ * 1. 將此腳本掛載到節點上
+ * 2. 添加 Graphics 組件
+ * 3. 添加 Mask 組件（Type: GRAPHICS_STENCIL）
+ * 4. 在 Mask 節點下添加子節點作為被遮罩的內容
+ */
+@ccclass('CustomMask')
+export class CustomMask extends Component {
+    
+    @property(Graphics)
+    graphics: Graphics | null = null;
+    
+    @property(Mask)
+    mask: Mask | null = null;
+    
+    @property({
+        displayName: '顯示遮罩區域（除錯）',
+        tooltip: '勾選後會用半透明紅色顯示遮罩形狀，方便調試'
+    })
+    debugMode: boolean = false;
+    
+    start() {
+        // 自動獲取組件
+        if (!this.graphics) {
+            this.graphics = this.getComponent(Graphics);
+        }
+        
+        if (!this.mask) {
+            this.mask = this.getComponent(Mask);
+        }
+        
+        // 繪製遮罩
+        this.drawMaskShape();
+    }
+    
+    /**
+     * 繪製遮罩形狀
+     */
+    drawMaskShape() {
+        const g = this.graphics;
+        if (!g) {
+            console.error('[CustomMask] Graphics 組件未找到！');
+            return;
+        }
+        
+        g.clear();
+        
+        // Mask 必須使用白色（除錯模式除外）
+        if (this.debugMode) {
+            // 除錯模式：紅色半透明
+            g.fillColor.set(255, 0, 0, 128);
+        } else {
+            // 正常模式：白色完全不透明
+            g.fillColor.set(255, 255, 255, 255);
+        }
+        
+`;
+
+        this.shapes.forEach((shape: any, i: number) => {
+            const cocosStartX = this.canvasToCocosX(shape.startX);
+            const cocosStartY = this.canvasToCocosY(shape.startY);
+            const cocosEndX = this.canvasToCocosX(shape.endX);
+            const cocosEndY = this.canvasToCocosY(shape.endY);
+
+            code += `        // 遮罩形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
+
+            switch(shape.tool) {
+                case 'rect':
+                    const width = cocosEndX - cocosStartX;
+                    const height = cocosEndY - cocosStartY;
+                    code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    code += `        g.fill();\n`;
+                    break;
+                case 'circle':
+                    const radius = Math.round(Math.sqrt(Math.pow(cocosEndX - cocosStartX, 2) + Math.pow(cocosEndY - cocosStartY, 2)));
+                    code += `        g.circle(${cocosStartX}, ${cocosStartY}, ${radius});\n`;
+                    code += `        g.fill();\n`;
+                    break;
+                case 'line':
+                    // 線條不適合做遮罩，轉換為路徑
+                    code += `        // ⚠️ 注意：單一線條無法形成遮罩區域\n`;
+                    code += `        g.moveTo(${cocosStartX}, ${cocosStartY});\n`;
+                    code += `        g.lineTo(${cocosEndX}, ${cocosEndY});\n`;
+                    break;
+                case 'polyline':
+                    if (shape.points && shape.points.length > 0) {
+                        const firstPoint = shape.points[0];
+                        const cocosFirstX = this.canvasToCocosX(firstPoint.x);
+                        const cocosFirstY = this.canvasToCocosY(firstPoint.y);
+                        code += `        g.moveTo(${cocosFirstX}, ${cocosFirstY});\n`;
+                        
+                        for (let j = 1; j < shape.points.length; j++) {
+                            const point = shape.points[j];
+                            const cocosX = this.canvasToCocosX(point.x);
+                            const cocosY = this.canvasToCocosY(point.y);
+                            code += `        g.lineTo(${cocosX}, ${cocosY});\n`;
+                        }
+                        
+                        // 折線必須閉合才能形成遮罩區域
+                        if (shape.isClosed) {
+                            code += `        g.close(); // 閉合路徑\n`;
+                        } else {
+                            code += `        // ⚠️ 警告：未閉合的折線無法形成遮罩區域\n`;
+                            code += `        // g.close(); // 取消註釋以閉合路徑\n`;
+                        }
+                        code += `        g.fill();\n`;
+                    }
+                    break;
+            }
+            code += '\n';
+        });
+
+        code += `    }
+}
+`;
+        return code;
+    }
+
     getOriginModeName(): string {
         const names: any = {
             'center': '中心 (0,0)',
@@ -1380,7 +1518,56 @@ export class CustomGraphics extends Component {
         }
     }
 
-    exportScriptFallback(code: string) {
+    async exportMaskScript() {
+        const code = this.generateMaskTypeScriptCode();
+        
+        try {
+            // 使用 Editor API 打開文件保存對話框
+            if (typeof Editor !== 'undefined' && Editor.Dialog) {
+                const result = await Editor.Dialog.save({
+                    title: '導出 Mask（遮罩）腳本',
+                    defaultPath: 'CustomMask.ts',
+                    buttonLabel: '保存',
+                    filters: [
+                        { name: 'TypeScript 文件', extensions: ['ts'] },
+                        { name: '所有文件', extensions: ['*'] }
+                    ]
+                });
+                
+                if (result.filePath) {
+                    // 使用文件系統寫入
+                    try {
+                        console.log('[Graphics Editor] 準備寫入 Mask 文件:', result.filePath);
+                        
+                        // 直接通過主進程寫入文件系統
+                        const writeResult = await Editor.Message.request('graphics-editor', 'write-file', result.filePath, code);
+                        
+                        if (writeResult && writeResult.success) {
+                            console.log('[Graphics Editor] ✓ Mask 腳本已保存到:', writeResult.path);
+                            this.showExportNotification('✓ Mask 已導出！', this.panel.$.btnExportMask);
+                        } else {
+                            console.error('[Graphics Editor] ✗ 寫入失敗:', writeResult?.error);
+                            alert('導出 Mask 腳本失敗: ' + (writeResult?.error || '未知錯誤'));
+                        }
+                    } catch (writeErr) {
+                        console.error('[Graphics Editor] ✗ 寫入 Mask 文件失敗:', writeErr);
+                        alert('導出 Mask 腳本失敗: ' + writeErr);
+                    }
+                } else {
+                    console.log('[Graphics Editor] 用戶取消了保存');
+                }
+            } else {
+                // 降級方案：瀏覽器下載
+                this.exportScriptFallback(code, 'CustomMask.ts');
+            }
+        } catch (err) {
+            console.error('[Graphics Editor] 導出 Mask 腳本失敗:', err);
+            // 最終降級方案：瀏覽器下載
+            this.exportScriptFallback(code, 'CustomMask.ts');
+        }
+    }
+
+    exportScriptFallback(code: string, filename: string = 'CustomGraphics.ts') {
         try {
             // 創建下載連結
             const blob = new Blob([code], { type: 'text/typescript' });
@@ -1407,11 +1594,12 @@ export class CustomGraphics extends Component {
         }
     }
 
-    showExportNotification() {
-        const originalText = this.panel.$.btnExport.textContent;
-        this.panel.$.btnExport.textContent = '✓ 已導出！';
+    showExportNotification(message: string = '✓ 已導出！', button: any = null) {
+        const targetButton = button || this.panel.$.btnExport;
+        const originalText = targetButton.textContent;
+        targetButton.textContent = message;
         setTimeout(() => {
-            this.panel.$.btnExport.textContent = originalText;
+            targetButton.textContent = originalText;
         }, 2000);
     }
 
