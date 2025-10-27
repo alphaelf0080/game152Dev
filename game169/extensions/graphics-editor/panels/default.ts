@@ -1331,9 +1331,48 @@ export class CustomGraphics extends Component {
         }, 2000);
     }
 
-    exportScript() {
+    async exportScript() {
         const code = this.generateTypeScriptCode();
         
+        try {
+            // 使用 Editor API 打開文件保存對話框
+            if (typeof Editor !== 'undefined' && Editor.Dialog) {
+                const result = await Editor.Dialog.save({
+                    title: '導出 TypeScript 腳本',
+                    defaultPath: 'CustomGraphics.ts',
+                    buttonLabel: '保存',
+                    filters: [
+                        { name: 'TypeScript 文件', extensions: ['ts'] },
+                        { name: '所有文件', extensions: ['*'] }
+                    ]
+                });
+                
+                if (result.filePath) {
+                    // 使用 Editor 文件系統寫入
+                    try {
+                        await Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
+                        console.log('[Graphics Editor] 腳本已保存到:', result.filePath);
+                        this.showExportNotification();
+                    } catch (writeErr) {
+                        console.error('[Graphics Editor] 寫入文件失敗:', writeErr);
+                        // 嘗試使用降級方案
+                        this.exportScriptFallback(code);
+                    }
+                } else {
+                    console.log('[Graphics Editor] 用戶取消了保存');
+                }
+            } else {
+                // 降級方案：瀏覽器下載
+                this.exportScriptFallback(code);
+            }
+        } catch (err) {
+            console.error('[Graphics Editor] 導出失敗:', err);
+            // 最終降級方案：瀏覽器下載
+            this.exportScriptFallback(code);
+        }
+    }
+
+    exportScriptFallback(code: string) {
         try {
             // 創建下載連結
             const blob = new Blob([code], { type: 'text/typescript' });
@@ -1351,11 +1390,11 @@ export class CustomGraphics extends Component {
                 URL.revokeObjectURL(url);
             }, 100);
             
-            console.log('[Graphics Editor] TypeScript 腳本已導出');
+            console.log('[Graphics Editor] TypeScript 腳本已導出（瀏覽器下載）');
             this.showExportNotification();
         } catch (err) {
-            console.error('[Graphics Editor] 導出失敗:', err);
-            // 降級方案：顯示在對話框中讓用戶手動複製
+            console.error('[Graphics Editor] 下載失敗:', err);
+            // 最終降級：複製到剪貼板
             this.showCodeInDialog(code);
         }
     }
