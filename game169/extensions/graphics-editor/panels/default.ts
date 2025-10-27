@@ -703,12 +703,20 @@ class GraphicsEditorLogic {
                     this.panel.$.canvasWidth.value = img.width;
                     this.panel.$.canvasHeight.value = img.height;
                     
-                    // 重置背景圖偏移
+                    // 以中心 (0,0) 方式載入：背景圖左上角對齊畫布左上角
+                    // 因為畫布尺寸等於圖片尺寸，所以偏移為 0
                     this.bgOffsetX = 0;
                     this.bgOffsetY = 0;
                     
+                    // 強制設置為中心模式
+                    this.originMode = 'center';
+                    this.panel.$.originMode.value = 'center';
+                    
                     this.applyCanvasSize();
+                    this.drawGrid();
                     this.zoomFit();
+                    
+                    console.log('[Graphics Editor] 座標系統已設為中心模式，畫布中心 = 背景圖中心 = (0, 0)');
                 };
                 
                 img.onerror = () => {
