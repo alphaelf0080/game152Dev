@@ -918,8 +918,10 @@ class GraphicsEditorLogic {
         if (!this.isDrawing) return;
 
         this.redraw();
-        this.drawCtx.strokeStyle = this.strokeColor;
-        this.drawCtx.fillStyle = this.fillColor;
+        
+        // 應用透明度的顏色
+        this.drawCtx.strokeStyle = this.getRgbaColor(this.strokeColor, this.strokeAlpha);
+        this.drawCtx.fillStyle = this.getRgbaColor(this.fillColor, this.fillAlpha);
         this.drawCtx.lineWidth = this.lineWidth;
 
         switch(this.currentTool) {
@@ -995,8 +997,11 @@ class GraphicsEditorLogic {
         this.drawCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         
         this.shapes.forEach(shape => {
-            this.drawCtx.strokeStyle = shape.strokeColor;
-            this.drawCtx.fillStyle = shape.fillColor;
+            // 應用透明度的顏色
+            const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
+            const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
+            this.drawCtx.strokeStyle = this.getRgbaColor(shape.strokeColor, strokeAlpha);
+            this.drawCtx.fillStyle = this.getRgbaColor(shape.fillColor, fillAlpha);
             this.drawCtx.lineWidth = shape.lineWidth;
 
             switch(shape.tool) {
@@ -1198,6 +1203,12 @@ export class CustomGraphics extends Component {
         } : {r: 0, g: 0, b: 0};
     }
 
+    getRgbaColor(hex: string, alpha: number): string {
+        const rgb = this.hexToRgb(hex);
+        const alphaValue = alpha / 255; // 轉換為 0-1 範圍
+        return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alphaValue})`;
+    }
+
     undo() {
         if (this.shapes.length > 0) {
             this.shapes.pop();
@@ -1251,9 +1262,10 @@ export class CustomGraphics extends Component {
     drawPolylinePreview() {
         if (this.polylinePoints.length < 1) return;
         
-        this.drawCtx.strokeStyle = this.strokeColor;
+        // 應用透明度
+        this.drawCtx.strokeStyle = this.getRgbaColor(this.strokeColor, this.strokeAlpha);
         this.drawCtx.lineWidth = this.lineWidth;
-        this.drawCtx.fillStyle = this.fillColor;
+        this.drawCtx.fillStyle = this.getRgbaColor(this.fillColor, this.fillAlpha);
 
         // 繪製折線
         if (this.polylinePoints.length > 1) {
