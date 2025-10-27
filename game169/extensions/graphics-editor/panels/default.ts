@@ -78,7 +78,9 @@ export const template = `
             <ui-button id="btnUndo">撤銷</ui-button>
             <ui-button id="btnClear">清空</ui-button>
             <ui-button id="btnDelete" style="display:none;" class="red">刪除選中 (Del)</ui-button>
-            <ui-button id="btnClosePolyline" style="display:none;">完成折線 (ESC)</ui-button>
+            <ui-button id="btnClosePolyline" style="display:none;">完成折線 (Enter)</ui-button>
+            <ui-button id="btnPolylineUndo" style="display:none;">撤銷點 (Ctrl+Z)</ui-button>
+            <ui-button id="btnPolylineRedo" style="display:none;">重做點 (Ctrl+Y)</ui-button>
         </div>
     </div>
 
@@ -355,6 +357,8 @@ export const $ = {
     btnClear: '#btnClear',
     btnDelete: '#btnDelete',
     btnClosePolyline: '#btnClosePolyline',
+    btnPolylineUndo: '#btnPolylineUndo',
+    btnPolylineRedo: '#btnPolylineRedo',
     btnCopyCode: '#btnCopyCode',
     btnExport: '#btnExport',
     btnExportMask: '#btnExportMask',
@@ -410,6 +414,8 @@ class GraphicsEditorLogic {
     // 折線相關
     private isDrawingPolyline: boolean = false;
     private polylinePoints: Array<{x: number, y: number}> = [];
+    private polylineHistory: Array<Array<{x: number, y: number}>> = []; // 折線點的歷史記錄
+    private polylineHistoryIndex: number = -1; // 當前歷史索引
 
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
@@ -812,8 +818,10 @@ class GraphicsEditorLogic {
         this.panel.$.btnLine.addEventListener('click', () => this.selectTool('line', this.panel.$.btnLine));
         this.panel.$.btnPolyline.addEventListener('click', () => this.selectTool('polyline', this.panel.$.btnPolyline));
         
-        // 完成折線
+        // 折線操作
         this.panel.$.btnClosePolyline.addEventListener('click', () => this.closePolyline());
+        this.panel.$.btnPolylineUndo.addEventListener('click', () => this.polylineUndo());
+        this.panel.$.btnPolylineRedo.addEventListener('click', () => this.polylineRedo());
 
         // 顏色
         this.panel.$.fillColor.addEventListener('change', (e: any) => {
@@ -908,11 +916,26 @@ class GraphicsEditorLogic {
 
         // 鍵盤快捷鍵
         document.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                if (this.isDrawingPolyline) {
+            // 折線繪製中的快捷鍵
+            if (this.isDrawingPolyline) {
+                if (e.key === 'Enter') {
                     e.preventDefault();
                     this.closePolyline();
-                } else if (this.selectedShapeIndex !== -1) {
+                    return;
+                } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    this.polylineUndo();
+                    return;
+                } else if (e.key === 'y' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    this.polylineRedo();
+                    return;
+                }
+            }
+            
+            // 通用快捷鍵
+            if (e.key === 'Escape') {
+                if (this.selectedShapeIndex !== -1) {
                     // 取消選取
                     this.deselectShape();
                 }
@@ -1886,14 +1909,89 @@ export class CustomMask extends Component {
     startPolyline() {
         this.isDrawingPolyline = true;
         this.polylinePoints = [];
+        this.polylineHistory = [];
+        this.polylineHistoryIndex = -1;
         this.panel.$.btnClosePolyline.style.display = 'block';
-        console.log('[Graphics Editor] 開始繪製折線，單擊添加點，ESC 鍵或點擊「完成折線」完成');
+        this.panel.$.btnPolylineUndo.style.display = 'block';
+        this.panel.$.btnPolylineRedo.style.display = 'block';
+        this.updatePolylineButtons();
+        console.log('[Graphics Editor] 開始繪製折線，單擊添加點，Enter 鍵或點擊「完成折線」完成，Ctrl+Z/Y 撤銷/重做');
     }
 
     addPolylinePoint(x: number, y: number) {
         this.polylinePoints.push({x, y});
+        
+        // 保存到歷史記錄
+        // 如果當前不在歷史末尾，移除後續歷史
+        if (this.polylineHistoryIndex < this.polylineHistory.length - 1) {
+            this.polylineHistory = this.polylineHistory.slice(0, this.polylineHistoryIndex + 1);
+        }
+        
+        // 深拷貝當前點數組
+        this.polylineHistory.push(JSON.parse(JSON.stringify(this.polylinePoints)));
+        this.polylineHistoryIndex++;
+        
+        this.updatePolylineButtons();
         this.redraw();
         this.drawPolylinePreview();
+    }
+    
+    polylineUndo() {
+        if (!this.isDrawingPolyline) return;
+        
+        if (this.polylineHistoryIndex > 0) {
+            this.polylineHistoryIndex--;
+            this.polylinePoints = JSON.parse(JSON.stringify(this.polylineHistory[this.polylineHistoryIndex]));
+            this.updatePolylineButtons();
+            this.redraw();
+            this.drawPolylinePreview();
+            console.log('[Graphics Editor] 折線撤銷，當前點數:', this.polylinePoints.length);
+        } else if (this.polylineHistoryIndex === 0) {
+            // 回到起始狀態（空）
+            this.polylineHistoryIndex = -1;
+            this.polylinePoints = [];
+            this.updatePolylineButtons();
+            this.redraw();
+            console.log('[Graphics Editor] 折線撤銷到起始狀態');
+        }
+    }
+    
+    polylineRedo() {
+        if (!this.isDrawingPolyline) return;
+        
+        if (this.polylineHistoryIndex < this.polylineHistory.length - 1) {
+            this.polylineHistoryIndex++;
+            this.polylinePoints = JSON.parse(JSON.stringify(this.polylineHistory[this.polylineHistoryIndex]));
+            this.updatePolylineButtons();
+            this.redraw();
+            this.drawPolylinePreview();
+            console.log('[Graphics Editor] 折線重做，當前點數:', this.polylinePoints.length);
+        }
+    }
+    
+    updatePolylineButtons() {
+        if (!this.isDrawingPolyline) return;
+        
+        // 更新撤銷按鈕狀態
+        if (this.polylineHistoryIndex >= 0) {
+            this.panel.$.btnPolylineUndo.removeAttribute('disabled');
+        } else {
+            this.panel.$.btnPolylineUndo.setAttribute('disabled', '');
+        }
+        
+        // 更新重做按鈕狀態
+        if (this.polylineHistoryIndex < this.polylineHistory.length - 1) {
+            this.panel.$.btnPolylineRedo.removeAttribute('disabled');
+        } else {
+            this.panel.$.btnPolylineRedo.setAttribute('disabled', '');
+        }
+        
+        // 更新完成按鈕狀態（至少需要2個點）
+        if (this.polylinePoints.length >= 2) {
+            this.panel.$.btnClosePolyline.removeAttribute('disabled');
+        } else {
+            this.panel.$.btnClosePolyline.setAttribute('disabled', '');
+        }
     }
 
     drawPolylinePreview() {
@@ -1955,7 +2053,11 @@ export class CustomMask extends Component {
         // 重置折線狀態
         this.isDrawingPolyline = false;
         this.polylinePoints = [];
+        this.polylineHistory = [];
+        this.polylineHistoryIndex = -1;
         this.panel.$.btnClosePolyline.style.display = 'none';
+        this.panel.$.btnPolylineUndo.style.display = 'none';
+        this.panel.$.btnPolylineRedo.style.display = 'none';
         
         console.log('[Graphics Editor] 折線已完成，包含', shape.points.length, '個點');
     }
