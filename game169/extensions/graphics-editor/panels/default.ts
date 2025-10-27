@@ -414,12 +414,27 @@ class GraphicsEditorLogic {
     applyCanvasSize() {
         const width = this.canvasWidth;
         const height = this.canvasHeight;
+        
+        // 使用設備像素比來提高清晰度
+        const dpr = window.devicePixelRatio || 1;
 
         [this.bgCanvas, this.gridCanvas, this.drawCanvas].forEach(canvas => {
-            canvas.width = width;
-            canvas.height = height;
+            // 設置實際繪製尺寸（考慮 DPR）
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            
+            // 設置顯示尺寸
             canvas.style.width = width + 'px';
             canvas.style.height = height + 'px';
+            
+            // 縮放繪製上下文以匹配 DPR
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.scale(dpr, dpr);
+                // 啟用圖像平滑和高質量渲染
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+            }
         });
 
         this.drawGrid();
@@ -653,17 +668,8 @@ class GraphicsEditorLogic {
         this.bgCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         
         if (this.bgImage) {
-            const scale = Math.min(
-                this.canvasWidth / this.bgImage.width,
-                this.canvasHeight / this.bgImage.height
-            );
-            
-            const width = this.bgImage.width * scale;
-            const height = this.bgImage.height * scale;
-            const x = (this.canvasWidth - width) / 2;
-            const y = (this.canvasHeight - height) / 2;
-            
-            this.bgCtx.drawImage(this.bgImage, x, y, width, height);
+            // 直接以畫布尺寸繪製
+            this.bgCtx.drawImage(this.bgImage, 0, 0, this.canvasWidth, this.canvasHeight);
         } else {
             this.bgCtx.fillStyle = '#ffffff';
             this.bgCtx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
