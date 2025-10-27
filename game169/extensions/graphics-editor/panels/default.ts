@@ -392,6 +392,7 @@ class GraphicsEditorLogic {
     private bgImage: HTMLImageElement | null = null;
     private bgOffsetX: number = 0; // 背景圖 X 偏移
     private bgOffsetY: number = 0; // 背景圖 Y 偏移
+    private skipOffsetCalculation: boolean = false; // 跳過偏移計算標記
     private showGrid: boolean = true;
     private originMode: string = 'bottomLeft';
     private canvasWidth: number = 600;
@@ -445,8 +446,8 @@ class GraphicsEditorLogic {
         const newWidth = this.canvasWidth;
         const newHeight = this.canvasHeight;
         
-        // 根據座標原點模式計算背景圖偏移
-        if (this.bgImage) {
+        // 根據座標原點模式計算背景圖偏移（除非標記跳過）
+        if (this.bgImage && !this.skipOffsetCalculation) {
             const deltaWidth = newWidth - oldWidth;
             const deltaHeight = newHeight - oldHeight;
             
@@ -467,6 +468,9 @@ class GraphicsEditorLogic {
                     break;
             }
         }
+        
+        // 重置標記
+        this.skipOffsetCalculation = false;
         
         const width = this.canvasWidth;
         const height = this.canvasHeight;
@@ -707,6 +711,9 @@ class GraphicsEditorLogic {
                     // 因為畫布尺寸等於圖片尺寸，所以偏移為 0
                     this.bgOffsetX = 0;
                     this.bgOffsetY = 0;
+                    
+                    // 跳過 applyCanvasSize 中的偏移計算
+                    this.skipOffsetCalculation = true;
                     
                     // 強制設置為中心模式
                     this.originMode = 'center';
