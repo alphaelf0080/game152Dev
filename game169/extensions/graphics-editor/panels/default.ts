@@ -39,8 +39,16 @@ export const template = `
         <div class="toolbar-section">
             <label>填充:</label>
             <input type="color" id="fillColor" value="#ff0000">
+            <label>透明度:</label>
+            <ui-num-input id="fillAlpha" value="255" min="0" max="255" step="1"></ui-num-input>
+        </div>
+
+        <!-- 描邊設置 -->
+        <div class="toolbar-section">
             <label>描邊:</label>
             <input type="color" id="strokeColor" value="#000000">
+            <label>透明度:</label>
+            <ui-num-input id="strokeAlpha" value="255" min="0" max="255" step="1"></ui-num-input>
         </div>
 
         <!-- 線寬 -->
@@ -320,7 +328,9 @@ export const $ = {
     btnLine: '#btnLine',
     btnPolyline: '#btnPolyline',
     fillColor: '#fillColor',
+    fillAlpha: '#fillAlpha',
     strokeColor: '#strokeColor',
+    strokeAlpha: '#strokeAlpha',
     lineWidth: '#lineWidth',
     fillMode: '#fillMode',
     strokeMode: '#strokeMode',
@@ -366,7 +376,9 @@ class GraphicsEditorLogic {
     private commands: string[] = [];
     
     private fillColor: string = '#ff0000';
+    private fillAlpha: number = 255;
     private strokeColor: string = '#000000';
+    private strokeAlpha: number = 255;
     private lineWidth: number = 2;
     private fillMode: boolean = true;
     private strokeMode: boolean = true;
@@ -738,8 +750,14 @@ class GraphicsEditorLogic {
         this.panel.$.fillColor.addEventListener('change', (e: any) => {
             this.fillColor = e.target.value;
         });
+        this.panel.$.fillAlpha.addEventListener('change', (e: any) => {
+            this.fillAlpha = parseInt(e.target.value);
+        });
         this.panel.$.strokeColor.addEventListener('change', (e: any) => {
             this.strokeColor = e.target.value;
+        });
+        this.panel.$.strokeAlpha.addEventListener('change', (e: any) => {
+            this.strokeAlpha = parseInt(e.target.value);
         });
 
         // 線寬
@@ -932,7 +950,9 @@ class GraphicsEditorLogic {
             endX: endX,
             endY: endY,
             fillColor: this.fillColor,
+            fillAlpha: this.fillAlpha,
             strokeColor: this.strokeColor,
+            strokeAlpha: this.strokeAlpha,
             lineWidth: this.lineWidth,
             fillMode: this.fillMode,
             strokeMode: this.strokeMode
@@ -1094,12 +1114,14 @@ export class CustomGraphics extends Component {
             
             if (shape.fillMode) {
                 const fillRGB = this.hexToRgb(shape.fillColor);
-                code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, 255);\n`;
+                const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
+                code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, ${fillAlpha});\n`;
             }
             
             if (shape.strokeMode) {
                 const strokeRGB = this.hexToRgb(shape.strokeColor);
-                code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, 255);\n`;
+                const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
+                code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, ${strokeAlpha});\n`;
             }
 
             switch(shape.tool) {
@@ -1196,15 +1218,19 @@ export class CustomGraphics extends Component {
 
     exportScript() {
         const code = this.generateTypeScriptCode();
-        Editor.Dialog.save({
-            title: '導出 TypeScript 腳本',
-            defaultPath: 'CustomGraphics.ts',
-            filters: [{name: 'TypeScript', extensions: ['ts']}]
-        }).then((result: any) => {
-            if (result.filePath) {
-                Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
-            }
-        });
+        
+        // 創建下載連結
+        const blob = new Blob([code], { type: 'text/typescript' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CustomGraphics.ts';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log('[Graphics Editor] TypeScript 腳本已導出');
     }
 
     // ==================== 折線相關方法 ====================
@@ -1263,7 +1289,9 @@ export class CustomGraphics extends Component {
             tool: 'polyline',
             points: [...this.polylinePoints],
             fillColor: this.fillColor,
+            fillAlpha: this.fillAlpha,
             strokeColor: this.strokeColor,
+            strokeAlpha: this.strokeAlpha,
             lineWidth: this.lineWidth,
             fillMode: this.fillMode,
             strokeMode: this.strokeMode,
