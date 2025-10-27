@@ -115,6 +115,7 @@ export const template = `
             <div class="export-section">
                 <h3>生成的腳本代碼</h3>
                 <ui-code id="codePreview" language="typescript">// TypeScript 代碼將顯示在這裡</ui-code>
+                <ui-button id="btnCopyCode" class="green">複製代碼</ui-button>
                 <ui-button id="btnExport" class="blue">導出為 TypeScript 腳本</ui-button>
                 <ui-button id="btnClearAll" class="red">清空所有繪圖</ui-button>
             </div>
@@ -309,6 +310,10 @@ ui-button {
     margin-bottom: 5px;
 }
 
+ui-button.green {
+    background: var(--color-success-fill);
+}
+
 ui-button.blue {
     background: var(--color-info-fill);
 }
@@ -342,6 +347,7 @@ export const $ = {
     btnUndo: '#btnUndo',
     btnClear: '#btnClear',
     btnClosePolyline: '#btnClosePolyline',
+    btnCopyCode: '#btnCopyCode',
     btnExport: '#btnExport',
     btnClearAll: '#btnClearAll',
     canvasWidth: '#canvasWidth',
@@ -906,6 +912,7 @@ class GraphicsEditorLogic {
         // 操作
         this.panel.$.btnUndo.addEventListener('click', () => this.undo());
         this.panel.$.btnClear.addEventListener('click', () => this.undo());
+        this.panel.$.btnCopyCode.addEventListener('click', () => this.copyCode());
         this.panel.$.btnExport.addEventListener('click', () => this.exportScript());
         this.panel.$.btnClearAll.addEventListener('click', () => this.clearAll());
     }
@@ -1261,6 +1268,52 @@ export class CustomGraphics extends Component {
         this.drawCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.updateCommandList();
         this.updateCodePreview();
+    }
+
+    copyCode() {
+        const code = this.generateTypeScriptCode();
+        
+        // 使用 Clipboard API 複製代碼
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+                console.log('[Graphics Editor] 代碼已複製到剪貼板');
+                // 可選：顯示提示
+                this.showCopyNotification();
+            }).catch(err => {
+                console.error('[Graphics Editor] 複製失敗:', err);
+                // 降級方案：使用 textarea
+                this.copyCodeFallback(code);
+            });
+        } else {
+            // 舊瀏覽器降級方案
+            this.copyCodeFallback(code);
+        }
+    }
+
+    copyCodeFallback(code: string) {
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            console.log('[Graphics Editor] 代碼已複製到剪貼板（降級方案）');
+            this.showCopyNotification();
+        } catch (err) {
+            console.error('[Graphics Editor] 複製失敗:', err);
+        }
+        document.body.removeChild(textarea);
+    }
+
+    showCopyNotification() {
+        // 簡單的提示訊息
+        const originalText = this.panel.$.btnCopyCode.textContent;
+        this.panel.$.btnCopyCode.textContent = '✓ 已複製！';
+        setTimeout(() => {
+            this.panel.$.btnCopyCode.textContent = originalText;
+        }, 2000);
     }
 
     exportScript() {
