@@ -44,7 +44,7 @@
         "y": 0.32
       },
       "layer2Texture": {
-        "__uuid__": "f8a905b5-e0c1-44d3-a9ab-d9035ffc5ff7@6c48a",
+        "__uuid__": "be015464-776a-4311-abe2-158893a01790@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "layer2Scale": {
@@ -58,7 +58,7 @@
         "y": -1.92
       },
       "layer3Texture": {
-        "__uuid__": "2b83027a-f558-46e3-a94c-f2a070f0c5f6@6c48a",
+        "__uuid__": "00e4785d-cbce-4557-a0b6-15637361d8e3@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "layer3Scale": {
@@ -85,8 +85,9 @@
         "x": 1.035,
         "y": -4.29
       },
+      "layer4Opacity": 0,
       "layer5Texture": {
-        "__uuid__": "8549f612-a8b5-442d-858a-509a7d3b2899@6c48a",
+        "__uuid__": "00e4785d-cbce-4557-a0b6-15637361d8e3@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "layer5Scale": {
@@ -99,6 +100,7 @@
         "x": -1.05,
         "y": -4.29
       },
+      "layer5Opacity": 0,
       "layer6Opacity": 0,
       "layer7Opacity": 0
     }

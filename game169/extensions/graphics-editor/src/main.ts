@@ -36,20 +36,23 @@ export const methods = {
      * @param {string} filePath - 文件路徑
      * @param {string} content - 文件內容
      */
-    async 'write-file'(filePath: string, content: string) {
+    async writeFile(filePath: string, content: string) {
         try {
+            console.log('[Graphics Editor] 準備寫入文件:', filePath);
+            
             // 確保目錄存在
             const dir = path.dirname(filePath);
             if (!fs.existsSync(dir)) {
+                console.log('[Graphics Editor] 創建目錄:', dir);
                 fs.mkdirSync(dir, { recursive: true });
             }
             
             // 寫入文件
             fs.writeFileSync(filePath, content, 'utf-8');
-            console.log('[Graphics Editor] 文件已寫入:', filePath);
+            console.log('[Graphics Editor] ✓ 文件寫入成功:', filePath);
             return { success: true, path: filePath };
-        } catch (err) {
-            console.error('[Graphics Editor] 文件寫入失敗:', err);
+        } catch (err: any) {
+            console.error('[Graphics Editor] ✗ 文件寫入失敗:', err);
             return { success: false, error: err.message };
         }
     }

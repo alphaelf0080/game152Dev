@@ -1350,24 +1350,21 @@ export class CustomGraphics extends Component {
                 if (result.filePath) {
                     // 使用文件系統寫入
                     try {
-                        // 通過 Editor 的文件系統 API 寫入
-                        const writeResult = await Editor.Message.request('asset-db', 'query-path', result.filePath);
+                        console.log('[Graphics Editor] 準備寫入文件:', result.filePath);
                         
-                        // 如果是項目內路徑，使用 create-asset
-                        if (writeResult) {
-                            await Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
+                        // 直接通過主進程寫入文件系統
+                        const writeResult = await Editor.Message.request('graphics-editor', 'write-file', result.filePath, code);
+                        
+                        if (writeResult && writeResult.success) {
+                            console.log('[Graphics Editor] ✓ 腳本已保存到:', writeResult.path);
+                            this.showExportNotification();
                         } else {
-                            // 否則直接寫入文件系統（需要通過主進程）
-                            // 發送消息到主進程寫入文件
-                            await Editor.Message.send('graphics-editor', 'write-file', result.filePath, code);
+                            console.error('[Graphics Editor] ✗ 寫入失敗:', writeResult?.error);
+                            alert('導出失敗: ' + (writeResult?.error || '未知錯誤'));
                         }
-                        
-                        console.log('[Graphics Editor] 腳本已保存到:', result.filePath);
-                        this.showExportNotification();
                     } catch (writeErr) {
-                        console.error('[Graphics Editor] 寫入文件失敗:', writeErr);
-                        // 使用降級方案：複製到剪貼板並提示
-                        this.showCodeInDialog(code);
+                        console.error('[Graphics Editor] ✗ 寫入文件失敗:', writeErr);
+                        alert('導出失敗: ' + writeErr);
                     }
                 } else {
                     console.log('[Graphics Editor] 用戶取消了保存');
