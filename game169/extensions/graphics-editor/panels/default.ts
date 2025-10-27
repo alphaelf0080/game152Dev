@@ -416,6 +416,8 @@ class GraphicsEditorLogic {
     private polylinePoints: Array<{x: number, y: number}> = [];
     private polylineHistory: Array<Array<{x: number, y: number}>> = []; // 折線點的歷史記錄
     private polylineHistoryIndex: number = -1; // 當前歷史索引
+    private polylinePreviewX: number = 0; // 折線預覽鼠標 X 坐標
+    private polylinePreviewY: number = 0; // 折線預覽鼠標 Y 坐標
 
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
@@ -1011,7 +1013,27 @@ class GraphicsEditorLogic {
             if (!this.isDrawingPolyline) {
                 this.startPolyline();
             }
-            this.addPolylinePoint(pos.x, pos.y);
+            
+            let clickX = pos.x;
+            let clickY = pos.y;
+            
+            // 按住 Shift 鍵：限制為水平或垂直線
+            if (e.shiftKey && this.polylinePoints.length > 0) {
+                const lastPoint = this.polylinePoints[this.polylinePoints.length - 1];
+                const dx = Math.abs(clickX - lastPoint.x);
+                const dy = Math.abs(clickY - lastPoint.y);
+                
+                // 判斷是水平還是垂直
+                if (dx > dy) {
+                    // 水平線
+                    clickY = lastPoint.y;
+                } else {
+                    // 垂直線
+                    clickX = lastPoint.x;
+                }
+            }
+            
+            this.addPolylinePoint(clickX, clickY);
             return;
         }
 
@@ -1028,8 +1050,37 @@ class GraphicsEditorLogic {
 
     onMouseMove(e: MouseEvent) {
         const pos = this.screenToCanvas(e.clientX, e.clientY);
-        const currentX = pos.x;
-        const currentY = pos.y;
+        let currentX = pos.x;
+        let currentY = pos.y;
+
+        // 折線繪製中：處理 Shift 鍵約束和預覽
+        if (this.isDrawingPolyline && this.polylinePoints.length > 0) {
+            const lastPoint = this.polylinePoints[this.polylinePoints.length - 1];
+            
+            // 按住 Shift 鍵：限制為水平或垂直線
+            if (e.shiftKey) {
+                const dx = Math.abs(currentX - lastPoint.x);
+                const dy = Math.abs(currentY - lastPoint.y);
+                
+                // 判斷是水平還是垂直
+                if (dx > dy) {
+                    // 水平線
+                    currentY = lastPoint.y;
+                } else {
+                    // 垂直線
+                    currentX = lastPoint.x;
+                }
+            }
+            
+            // 保存預覽坐標
+            this.polylinePreviewX = currentX;
+            this.polylinePreviewY = currentY;
+            
+            // 重繪以顯示預覽線
+            this.redraw();
+            this.drawPolylinePreview();
+            return;
+        }
 
         // 更新坐標顯示
         const cocosX = this.canvasToCocosX(currentX);
@@ -1911,11 +1962,13 @@ export class CustomMask extends Component {
         this.polylinePoints = [];
         this.polylineHistory = [];
         this.polylineHistoryIndex = -1;
+        this.polylinePreviewX = 0;
+        this.polylinePreviewY = 0;
         this.panel.$.btnClosePolyline.style.display = 'block';
         this.panel.$.btnPolylineUndo.style.display = 'block';
         this.panel.$.btnPolylineRedo.style.display = 'block';
         this.updatePolylineButtons();
-        console.log('[Graphics Editor] 開始繪製折線，單擊添加點，Enter 鍵或點擊「完成折線」完成，Ctrl+Z/Y 撤銷/重做');
+        console.log('[Graphics Editor] 開始繪製折線，單擊添加點，按住 Shift 畫水平/垂直線，Enter 鍵完成，Ctrl+Z/Y 撤銷/重做');
     }
 
     addPolylinePoint(x: number, y: number) {
@@ -2002,7 +2055,7 @@ export class CustomMask extends Component {
         this.drawCtx.lineWidth = this.lineWidth;
         this.drawCtx.fillStyle = this.getRgbaColor(this.fillColor, this.fillAlpha);
 
-        // 繪製折線
+        // 繪製已確定的折線
         if (this.polylinePoints.length > 1) {
             this.drawCtx.beginPath();
             this.drawCtx.moveTo(this.polylinePoints[0].x, this.polylinePoints[0].y);
@@ -2016,11 +2069,34 @@ export class CustomMask extends Component {
             }
         }
 
-        // 繪製關鍵點
+        // 繪製預覽線（從最後一個點到鼠標位置）
+        if (this.polylinePoints.length > 0 && (this.polylinePreviewX !== 0 || this.polylinePreviewY !== 0)) {
+            const lastPoint = this.polylinePoints[this.polylinePoints.length - 1];
+            
+            this.drawCtx.beginPath();
+            this.drawCtx.moveTo(lastPoint.x, lastPoint.y);
+            this.drawCtx.lineTo(this.polylinePreviewX, this.polylinePreviewY);
+            
+            // 使用虛線繪製預覽線
+            this.drawCtx.setLineDash([5, 5]);
+            this.drawCtx.strokeStyle = 'rgba(255, 165, 0, 0.8)'; // 橙色預覽線
+            this.drawCtx.stroke();
+            this.drawCtx.setLineDash([]); // 重置虛線
+        }
+
+        // 繪製已確定的關鍵點
         this.drawCtx.fillStyle = 'rgba(0, 0, 255, 0.7)';
         for (const point of this.polylinePoints) {
             this.drawCtx.beginPath();
             this.drawCtx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+            this.drawCtx.fill();
+        }
+        
+        // 繪製預覽點（當前鼠標位置）
+        if (this.polylinePreviewX !== 0 || this.polylinePreviewY !== 0) {
+            this.drawCtx.fillStyle = 'rgba(255, 165, 0, 0.7)'; // 橙色預覽點
+            this.drawCtx.beginPath();
+            this.drawCtx.arc(this.polylinePreviewX, this.polylinePreviewY, 4, 0, Math.PI * 2);
             this.drawCtx.fill();
         }
     }
@@ -2055,6 +2131,8 @@ export class CustomMask extends Component {
         this.polylinePoints = [];
         this.polylineHistory = [];
         this.polylineHistoryIndex = -1;
+        this.polylinePreviewX = 0;
+        this.polylinePreviewY = 0;
         this.panel.$.btnClosePolyline.style.display = 'none';
         this.panel.$.btnPolylineUndo.style.display = 'none';
         this.panel.$.btnPolylineRedo.style.display = 'none';
