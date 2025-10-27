@@ -661,13 +661,8 @@ class GraphicsEditorLogic {
                     this.bgImage = img;
                     console.log('[Graphics Editor] 背景圖片已載入:', file.name, `${img.width}x${img.height}`);
                     
-                    // 自動調整畫布尺寸為圖片尺寸
-                    this.canvasWidth = img.width;
-                    this.canvasHeight = img.height;
-                    this.panel.$.canvasWidth.value = img.width;
-                    this.panel.$.canvasHeight.value = img.height;
-                    
-                    this.applyCanvasSize();
+                    // 不再自動調整畫布尺寸，保持背景圖獨立
+                    this.redrawBackground();
                     this.zoomFit();
                 };
                 
@@ -688,8 +683,8 @@ class GraphicsEditorLogic {
         this.bgCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         
         if (this.bgImage) {
-            // 直接以畫布尺寸繪製
-            this.bgCtx.drawImage(this.bgImage, 0, 0, this.canvasWidth, this.canvasHeight);
+            // 保持背景圖原始尺寸，不拉伸，從左上角開始繪製
+            this.bgCtx.drawImage(this.bgImage, 0, 0);
         } else {
             this.bgCtx.fillStyle = '#ffffff';
             this.bgCtx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
