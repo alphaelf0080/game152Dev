@@ -36,11 +36,18 @@
     ],
     "messages": {
       "open-panel": {
-        "methods": ["openPanel"]
+        "methods": [
+          "openPanel"
+        ]
       },
       "export-script": {
-        "methods": ["exportScript"]
+        "methods": [
+          "exportScript"
+        ]
       }
     }
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1"
   }
 }

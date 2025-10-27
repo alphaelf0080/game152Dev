@@ -43,7 +43,34 @@
         "x": 0,
         "y": 0.32
       },
-      "layer2Opacity": 0,
+      "layer2Texture": {
+        "__uuid__": "f8a905b5-e0c1-44d3-a9ab-d9035ffc5ff7@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer2Scale": {
+        "__type__": "cc.Vec2",
+        "x": 11.35,
+        "y": 14.1
+      },
+      "layer2Offset": {
+        "__type__": "cc.Vec2",
+        "x": 1.035,
+        "y": -1.92
+      },
+      "layer3Texture": {
+        "__uuid__": "2db31454-8d8c-489c-b411-22ea0d55a448@6c48a",
+        "__expectedType__": "cc.Texture2D"
+      },
+      "layer3Scale": {
+        "__type__": "cc.Vec2",
+        "x": 8.68,
+        "y": 14
+      },
+      "layer3Offset": {
+        "__type__": "cc.Vec2",
+        "x": 0,
+        "y": -4.235
+      },
       "layer3Opacity": 0,
       "layer4Opacity": 0,
       "layer5Opacity": 0,

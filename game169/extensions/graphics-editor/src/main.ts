@@ -3,6 +3,8 @@
  */
 
 declare const Editor: any;
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function load() {
     console.log('[Graphics Editor] 擴展已加載');
@@ -27,5 +29,28 @@ export const methods = {
     async exportScript(data: any) {
         console.log('[Graphics Editor] 導出腳本:', data);
         // 這裡處理導出邏輯
+    },
+
+    /**
+     * 寫入文件到文件系統
+     * @param {string} filePath - 文件路徑
+     * @param {string} content - 文件內容
+     */
+    async 'write-file'(filePath: string, content: string) {
+        try {
+            // 確保目錄存在
+            const dir = path.dirname(filePath);
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            
+            // 寫入文件
+            fs.writeFileSync(filePath, content, 'utf-8');
+            console.log('[Graphics Editor] 文件已寫入:', filePath);
+            return { success: true, path: filePath };
+        } catch (err) {
+            console.error('[Graphics Editor] 文件寫入失敗:', err);
+            return { success: false, error: err.message };
+        }
     }
 };

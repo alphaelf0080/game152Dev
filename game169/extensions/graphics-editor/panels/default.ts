@@ -1348,15 +1348,26 @@ export class CustomGraphics extends Component {
                 });
                 
                 if (result.filePath) {
-                    // 使用 Editor 文件系統寫入
+                    // 使用文件系統寫入
                     try {
-                        await Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
+                        // 通過 Editor 的文件系統 API 寫入
+                        const writeResult = await Editor.Message.request('asset-db', 'query-path', result.filePath);
+                        
+                        // 如果是項目內路徑，使用 create-asset
+                        if (writeResult) {
+                            await Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
+                        } else {
+                            // 否則直接寫入文件系統（需要通過主進程）
+                            // 發送消息到主進程寫入文件
+                            await Editor.Message.send('graphics-editor', 'write-file', result.filePath, code);
+                        }
+                        
                         console.log('[Graphics Editor] 腳本已保存到:', result.filePath);
                         this.showExportNotification();
                     } catch (writeErr) {
                         console.error('[Graphics Editor] 寫入文件失敗:', writeErr);
-                        // 嘗試使用降級方案
-                        this.exportScriptFallback(code);
+                        // 使用降級方案：複製到剪貼板並提示
+                        this.showCodeInDialog(code);
                     }
                 } else {
                     console.log('[Graphics Editor] 用戶取消了保存');
