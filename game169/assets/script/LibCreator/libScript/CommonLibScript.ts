@@ -47,19 +47,19 @@ export class CommonLibScript extends Component {
         this.handleNode();    // 將節點加入 AllNode.Data.Map 
         
         console.log("[CommonLibScript] → 開始判斷首頁按鈕...");
-        this.handleHomeJudge(); // 判斷首頁按鈕是否顯示
+        //this.handleHomeJudge(); // 判斷首頁按鈕是否顯示
         
         console.log("[CommonLibScript] → 開始設置鍵盤控制...");
-        this.handleKeyboard();  // 新增空白鍵和 Enter 鍵來旋轉
+        //this.handleKeyboard();  // 新增空白鍵和 Enter 鍵來旋轉
         
         console.log("[CommonLibScript] → 開始設置帳號序號...");
-        this.handleAccountSn(); // 新增帳號序號
+        //this.handleAccountSn(); // 新增帳號序號
         
         console.log("[CommonLibScript] → 開始設置試玩模式...");
-        this.handleDemoMode();  // 試玩模式
+        //this.handleDemoMode();  // 試玩模式
         
         console.log("[CommonLibScript] → 開始設置遊戲版號...");
-        this.handleGameVersion(); // 遊戲版號
+        //this.handleGameVersion(); // 遊戲版號
         
         console.log("[CommonLibScript] ✓ 初始化完成");
     }
@@ -249,41 +249,106 @@ export class CommonLibScript extends Component {
 
     /**
      * 每幀更新函數
-     * - 自動調整遊戲幀率為 59 FPS
-     * - 在試玩模式下調整 DEMO 標籤位置
-     * - 處理 WebView 和錯誤訊息的顯示衝突
+     * - 自動調整遊戲幀率為 59 FPS（只執行一次）
+     * - 在試玩模式下調整 DEMO 標籤位置（每幀執行）
+     * - 處理 WebView 和錯誤訊息的顯示衝突（每幀執行）
      * @param deltaTime 距離上一幀的時間間隔
      */
     protected update(deltaTime: number) {
-        // 當幀率穩定後（deltaTime < 0.01），設置為 59 FPS
+        // 【性能優化】只在第一次穩定時設置幀率，之後完全跳過此邏輯
         if (!this.initFps && deltaTime < 0.01) {
             game.frameRate = 59;
             this.initFps = true;
             console.log("[CommonLibScript] ✓ 遊戲幀率已設置為 59 FPS");
+            // 幀率設置完成後直接返回，避免執行試玩模式邏輯
+            return;
         }
         
-        // 試玩模式下動態調整 DEMO 標籤位置
-        if (this.GetURLParameter('pm') == '1') {
-            let yPos = this.demoString.parent.getPosition().y;
-            yPos = -yPos - 640;
-            
-            // 根據下注捲軸或自動頁面是否開啟，調整 Y 座標
-            if (AllNode.Data.Map.get("BetSCroll").active || AllNode.Data.Map.get("AutoPage").active)
-                this.demoString.setPosition(100, 70 + yPos);
-            else
-                this.demoString.setPosition(100, 265 + yPos);
-            
-            // 當幫助頁面顯示時，隱藏 DEMO 標籤
-            this.demoString.active = !AllNode.Data.Map.get("HelpPage").active;
+        // 【試玩模式】動態調整 DEMO 標籤位置
+        this.updateDemoPosition();
+        
+        // 【衝突管理】防止 WebView 和錯誤訊息同時顯示
+        this.preventUIConflict();
+    }
+
+    /**
+     * 更新試玩模式下 DEMO 標籤的位置
+     * - 根據下注捲軸/自動頁面的開啟狀態調整 Y 座標
+     * - 根據幫助頁面的顯示狀態控制 DEMO 標籤的可見性
+     */
+    private updateDemoPosition(): void {
+        // 只在試玩模式下執行
+        if (this.GetURLParameter('pm') !== '1') {
+            return;
         }
 
-        // 防止 WebView 和錯誤訊息同時顯示
-        const webView = AllNode.Data.Map.get("WebView");
-        const infoText = AllNode.Data.Map.get("InfoBg/text").parent;
-        if (webView?.active && infoText?.active) {
-            webView.active = false;
+        try {
+            // 【安全檢查】確保 demoString 和其 parent 存在
+            if (!this.demoString || !this.demoString.parent) {
+                console.warn("[CommonLibScript] ⚠ demoString 或其 parent 未初始化");
+                return;
+            }
+
+            // 計算 Y 座標偏移
+            let yPos = this.demoString.parent.getPosition().y;
+            yPos = -yPos - 640;
+
+            // 【安全檢查】獲取下注捲軸和自動頁面節點
+            const betScroll = AllNode.Data.Map.get("BetSCroll");
+            const autoPage = AllNode.Data.Map.get("AutoPage");
+
+            if (!betScroll || !autoPage) {
+                console.warn("[CommonLibScript] ⚠ BetSCroll 或 AutoPage 節點未找到");
+                return;
+            }
+
+            // 根據下注捲軸或自動頁面是否開啟，調整 Y 座標
+            const baseYPos = (betScroll.active || autoPage.active) ? 70 : 265;
+            this.demoString.setPosition(100, baseYPos + yPos);
+
+            // 【安全檢查】獲取幫助頁面節點
+            const helpPage = AllNode.Data.Map.get("HelpPage");
+            if (helpPage) {
+                // 當幫助頁面顯示時，隱藏 DEMO 標籤
+                this.demoString.active = !helpPage.active;
+            } else {
+                console.warn("[CommonLibScript] ⚠ HelpPage 節點未找到");
+            }
+        } catch (error) {
+            console.error("[CommonLibScript] ✗ 更新 DEMO 標籤位置失敗:", error);
         }
     }
+
+    /**
+     * 防止 UI 元件同時顯示造成的衝突
+     * - WebView 和錯誤訊息不能同時顯示
+     * - 若兩者都活躍，優先隱藏 WebView
+     */
+    private preventUIConflict(): void {
+        try {
+            // 【安全檢查】獲取 WebView 節點
+            const webView = AllNode.Data.Map.get("WebView");
+            if (!webView) {
+                return; // WebView 不存在，無需處理衝突
+            }
+
+            // 【安全檢查】獲取錯誤訊息節點
+            const infoText = AllNode.Data.Map.get("InfoBg/text");
+            if (!infoText || !infoText.parent) {
+                return; // 錯誤訊息節點不存在，無需處理衝突
+            }
+
+            // 若兩者都顯示，隱藏 WebView
+            if (webView.active && infoText.parent.active) {
+                webView.active = false;
+                console.log("[CommonLibScript] ℹ 隱藏 WebView，優先顯示錯誤訊息");
+            }
+        } catch (error) {
+            console.error("[CommonLibScript] ✗ UI 衝突管理失敗:", error);
+        }
+    }
+    
+
     /*靜態唯讀屬性
     1.節省記憶體：所有實例共享同一份資料。
     2.防止修改：readonly 確保資料不被意外更改。
@@ -600,5 +665,6 @@ globalThis.Logger = Logger;
 // 將 Data 設置為全局可訪問
 globalThis.Data = Data;
 
-// 將 AllNode.Data.Map 設置為全局可訪問
-globalThis.AllNode = AllNode?.Data?.Map;
+// ✅ 正確暴露：保留完整的 AllNode 命名空間結構
+// 其他模組需要透過 AllNode.Data.Map 訪問節點映射
+globalThis.AllNode = AllNode;
