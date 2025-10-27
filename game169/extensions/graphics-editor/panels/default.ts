@@ -32,6 +32,7 @@ export const template = `
             <ui-button class="tool-btn active" id="btnRect">矩形</ui-button>
             <ui-button class="tool-btn" id="btnCircle">圓形</ui-button>
             <ui-button class="tool-btn" id="btnLine">線條</ui-button>
+            <ui-button class="tool-btn" id="btnPolyline">折線</ui-button>
         </div>
 
         <!-- 顏色設置 -->
@@ -68,6 +69,7 @@ export const template = `
         <div class="toolbar-section">
             <ui-button id="btnUndo">撤銷</ui-button>
             <ui-button id="btnClear">清空</ui-button>
+            <ui-button id="btnClosePolyline" style="display:none;">完成折線 (ESC)</ui-button>
         </div>
     </div>
 
@@ -316,6 +318,7 @@ export const $ = {
     btnRect: '#btnRect',
     btnCircle: '#btnCircle',
     btnLine: '#btnLine',
+    btnPolyline: '#btnPolyline',
     fillColor: '#fillColor',
     strokeColor: '#strokeColor',
     lineWidth: '#lineWidth',
@@ -328,6 +331,7 @@ export const $ = {
     zoomLevel: '#zoomLevel',
     btnUndo: '#btnUndo',
     btnClear: '#btnClear',
+    btnClosePolyline: '#btnClosePolyline',
     btnExport: '#btnExport',
     btnClearAll: '#btnClearAll',
     canvasWidth: '#canvasWidth',
@@ -372,6 +376,10 @@ class GraphicsEditorLogic {
     private originMode: string = 'bottomLeft';
     private canvasWidth: number = 600;
     private canvasHeight: number = 400;
+
+    // 折線相關
+    private isDrawingPolyline: boolean = false;
+    private polylinePoints: Array<{x: number, y: number}> = [];
 
     // 視圖控制
     private zoom: number = 1.0;
@@ -721,6 +729,10 @@ class GraphicsEditorLogic {
         this.panel.$.btnRect.addEventListener('click', () => this.selectTool('rect', this.panel.$.btnRect));
         this.panel.$.btnCircle.addEventListener('click', () => this.selectTool('circle', this.panel.$.btnCircle));
         this.panel.$.btnLine.addEventListener('click', () => this.selectTool('line', this.panel.$.btnLine));
+        this.panel.$.btnPolyline.addEventListener('click', () => this.selectTool('polyline', this.panel.$.btnPolyline));
+        
+        // 完成折線
+        this.panel.$.btnClosePolyline.addEventListener('click', () => this.closePolyline());
 
         // 顏色
         this.panel.$.fillColor.addEventListener('change', (e: any) => {
@@ -809,7 +821,12 @@ class GraphicsEditorLogic {
 
         // 鍵盤快捷鍵
         document.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.key === '+' || e.key === '=') {
+            if (e.key === 'Escape') {
+                if (this.isDrawingPolyline) {
+                    e.preventDefault();
+                    this.closePolyline();
+                }
+            } else if (e.key === '+' || e.key === '=') {
                 e.preventDefault();
                 this.zoomIn();
             } else if (e.key === '-' || e.key === '_') {
@@ -840,16 +857,32 @@ class GraphicsEditorLogic {
     }
 
     selectTool(tool: string, button: any) {
-        [this.panel.$.btnRect, this.panel.$.btnCircle, this.panel.$.btnLine].forEach((btn: any) => {
+        [this.panel.$.btnRect, this.panel.$.btnCircle, this.panel.$.btnLine, this.panel.$.btnPolyline].forEach((btn: any) => {
             btn.classList.remove('active');
         });
         button.classList.add('active');
         this.currentTool = tool;
+        
+        // 如果不是折線工具，關閉任何正在進行的折線繪製
+        if (tool !== 'polyline' && this.isDrawingPolyline) {
+            this.closePolyline();
+        }
     }
 
     onMouseDown(e: MouseEvent) {
-        this.isDrawing = true;
         const pos = this.screenToCanvas(e.clientX, e.clientY);
+        
+        // 折線模式：點擊添加點
+        if (this.currentTool === 'polyline') {
+            if (!this.isDrawingPolyline) {
+                this.startPolyline();
+            }
+            this.addPolylinePoint(pos.x, pos.y);
+            return;
+        }
+
+        // 其他工具：正常繪製
+        this.isDrawing = true;
         this.startX = pos.x;
         this.startY = pos.y;
     }
@@ -966,8 +999,24 @@ class GraphicsEditorLogic {
                     this.drawCtx.lineTo(shape.endX, shape.endY);
                     this.drawCtx.stroke();
                     break;
+                case 'polyline':
+                    if (shape.points && shape.points.length > 1) {
+                        this.drawCtx.beginPath();
+                        this.drawCtx.moveTo(shape.points[0].x, shape.points[0].y);
+                        for (let i = 1; i < shape.points.length; i++) {
+                            this.drawCtx.lineTo(shape.points[i].x, shape.points[i].y);
+                        }
+                        if (shape.strokeMode) this.drawCtx.stroke();
+                        if (shape.fillMode && shape.isClosed) this.drawCtx.fill();
+                    }
+                    break;
             }
         });
+
+        // 繪製正在進行的折線預覽
+        if (this.isDrawingPolyline) {
+            this.drawPolylinePreview();
+        }
     }
 
     addCommand(shape: any) {
@@ -1072,6 +1121,24 @@ export class CustomGraphics extends Component {
                     code += `        g.lineTo(${cocosEndX}, ${cocosEndY});\n`;
                     code += `        g.stroke();\n`;
                     break;
+                case 'polyline':
+                    if (shape.points && shape.points.length > 0) {
+                        const firstPoint = shape.points[0];
+                        const cocosFirstX = this.canvasToCocosX(firstPoint.x);
+                        const cocosFirstY = this.canvasToCocosY(firstPoint.y);
+                        code += `        g.moveTo(${cocosFirstX}, ${cocosFirstY});\n`;
+                        
+                        for (let j = 1; j < shape.points.length; j++) {
+                            const point = shape.points[j];
+                            const cocosX = this.canvasToCocosX(point.x);
+                            const cocosY = this.canvasToCocosY(point.y);
+                            code += `        g.lineTo(${cocosX}, ${cocosY});\n`;
+                        }
+                        
+                        if (shape.strokeMode) code += `        g.stroke();\n`;
+                        if (shape.fillMode && shape.isClosed) code += `        g.fill();\n`;
+                    }
+                    break;
             }
             code += '\n';
         });
@@ -1094,7 +1161,8 @@ export class CustomGraphics extends Component {
         const names: any = {
             'rect': '矩形',
             'circle': '圓形',
-            'line': '線條'
+            'line': '線條',
+            'polyline': '折線'
         };
         return names[tool] || tool;
     }
@@ -1137,6 +1205,91 @@ export class CustomGraphics extends Component {
                 Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
             }
         });
+    }
+
+    // ==================== 折線相關方法 ====================
+
+    startPolyline() {
+        this.isDrawingPolyline = true;
+        this.polylinePoints = [];
+        this.panel.$.btnClosePolyline.style.display = 'block';
+        console.log('[Graphics Editor] 開始繪製折線，單擊添加點，ESC 鍵或點擊「完成折線」完成');
+    }
+
+    addPolylinePoint(x: number, y: number) {
+        this.polylinePoints.push({x, y});
+        this.redraw();
+        this.drawPolylinePreview();
+    }
+
+    drawPolylinePreview() {
+        if (this.polylinePoints.length < 1) return;
+        
+        this.drawCtx.strokeStyle = this.strokeColor;
+        this.drawCtx.lineWidth = this.lineWidth;
+        this.drawCtx.fillStyle = this.fillColor;
+
+        // 繪製折線
+        if (this.polylinePoints.length > 1) {
+            this.drawCtx.beginPath();
+            this.drawCtx.moveTo(this.polylinePoints[0].x, this.polylinePoints[0].y);
+            
+            for (let i = 1; i < this.polylinePoints.length; i++) {
+                this.drawCtx.lineTo(this.polylinePoints[i].x, this.polylinePoints[i].y);
+            }
+            
+            if (this.strokeMode) {
+                this.drawCtx.stroke();
+            }
+        }
+
+        // 繪製關鍵點
+        this.drawCtx.fillStyle = 'rgba(0, 0, 255, 0.7)';
+        for (const point of this.polylinePoints) {
+            this.drawCtx.beginPath();
+            this.drawCtx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+            this.drawCtx.fill();
+        }
+    }
+
+    closePolyline() {
+        if (this.polylinePoints.length < 2) {
+            console.warn('[Graphics Editor] 折線必須至少有 2 個點');
+            return;
+        }
+
+        // 創建折線形狀
+        const shape = {
+            tool: 'polyline',
+            points: [...this.polylinePoints],
+            fillColor: this.fillColor,
+            strokeColor: this.strokeColor,
+            lineWidth: this.lineWidth,
+            fillMode: this.fillMode,
+            strokeMode: this.strokeMode,
+            isClosed: true // 表示已閉合的折線
+        };
+
+        this.shapes.push(shape);
+        this.addPolylineCommand(shape);
+        this.redraw();
+        this.updateCodePreview();
+
+        // 重置折線狀態
+        this.isDrawingPolyline = false;
+        this.polylinePoints = [];
+        this.panel.$.btnClosePolyline.style.display = 'none';
+        
+        console.log('[Graphics Editor] 折線已完成，包含', shape.points.length, '個點');
+    }
+
+    addPolylineCommand(shape: any) {
+        let commandText = 'g.moveTo(';
+        const pointsStr = shape.points.map((p: any) => `(${Math.round(p.x)}, ${Math.round(p.y)})`).join(' → ');
+        commandText = `折線: ${pointsStr} [${shape.points.length}個點]`;
+        
+        this.commands.push(commandText);
+        this.updateCommandList();
     }
 }
 
