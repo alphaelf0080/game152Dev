@@ -15,6 +15,9 @@
       "type": "dockable",
       "main": "./dist/panels/default.js",
       "icon": "./static/icon.svg",
+      "flags": {
+        "alwaysOnTop": true
+      },
       "size": {
         "min-width": 400,
         "min-height": 300,
