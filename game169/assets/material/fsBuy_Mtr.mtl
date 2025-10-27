@@ -26,33 +26,13 @@
   "_props": [
     {
       "mainTexture": {
-        "__uuid__": "1bfe3b2c-9d4a-4972-890a-893f97ba705f@6c48a",
+        "__uuid__": "7c4321a3-d5ad-456d-86b2-17a362024b51@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
-      "layer0Scale": {
-        "__type__": "cc.Vec2",
-        "x": 8.7,
-        "y": 6.75
-      },
-      "layer0WrapMode": 1,
-      "layer0Value": 54,
       "layer1Texture": {
-        "__uuid__": "25c1d0ba-ab09-4c5e-87eb-9c81be85f153@6c48a",
+        "__uuid__": "ca0e3bd4-efa0-44e8-8e18-1db64d63c99d@6c48a",
         "__expectedType__": "cc.Texture2D"
-      },
-      "layer1Scale": {
-        "__type__": "cc.Vec2",
-        "x": 0.96,
-        "y": 0.7
-      },
-      "layer1Repeat": {
-        "__type__": "cc.Vec2",
-        "x": 5,
-        "y": 1
-      },
-      "layer1WrapMode": 1,
-      "layer1Opacity": 46,
-      "layer1BlendMode": 1
+      }
     }
   ]
 }
