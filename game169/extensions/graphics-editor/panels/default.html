@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphics Editor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: #1e1e1e;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* 工具欄 */
+        .toolbar {
+            background: #252526;
+            padding: 10px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-section {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 5px;
+            border-right: 1px solid #3e3e42;
+        }
+
+        .toolbar-section:last-child {
+            border-right: none;
+        }
+
+        .toolbar label {
+            margin-right: 5px;
+            font-size: 12px;
+        }
+
+        .tool-btn {
+            padding: 8px 12px;
+            background: #3e3e42;
+            border: 1px solid #555;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .tool-btn:hover {
+            background: #505050;
+        }
+
+        .tool-btn.active {
+            background: #007acc;
+            border-color: #007acc;
+        }
+
+        input[type="color"] {
+            width: 40px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 60px;
+            padding: 5px;
+            background: #3e3e42;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 3px;
+        }
+
+        /* 主要工作區 */
+        .main-area {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* 畫布區域 */
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2d2d30;
+            position: relative;
+        }
+
+        #drawCanvas {
+            background: #fff;
+            cursor: crosshair;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* 側邊欄 */
+        .sidebar {
+            width: 300px;
+            background: #252526;
+            border-left: 1px solid #3e3e42;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #007acc;
+        }
+
+        .command-list {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 3px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+
+        .command-item {
+            padding: 3px 0;
+            color: #9cdcfe;
+        }
+
+        .export-section {
+            margin-top: 20px;
+        }
+
+        .code-preview {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 3px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            white-space: pre;
+            color: #d4d4d4;
+        }
+
+        .btn-export {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #007acc;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .btn-export:hover {
+            background: #005a9e;
+        }
+
+        .btn-clear {
+            background: #c5454b;
+        }
+
+        .btn-clear:hover {
+            background: #a03a3f;
+        }
+
+        /* 滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3e3e42;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 工具欄 -->
+        <div class="toolbar">
+            <!-- 繪圖工具 -->
+            <div class="toolbar-section">
+                <label>工具:</label>
+                <button class="tool-btn active" data-tool="rect">矩形</button>
+                <button class="tool-btn" data-tool="circle">圓形</button>
+                <button class="tool-btn" data-tool="line">線條</button>
+                <button class="tool-btn" data-tool="polygon">多邊形</button>
+                <button class="tool-btn" data-tool="arc">圓弧</button>
+            </div>
+
+            <!-- 顏色設置 -->
+            <div class="toolbar-section">
+                <label>填充:</label>
+                <input type="color" id="fillColor" value="#ff0000">
+                <label>描邊:</label>
+                <input type="color" id="strokeColor" value="#000000">
+            </div>
+
+            <!-- 線寬 -->
+            <div class="toolbar-section">
+                <label>線寬:</label>
+                <input type="number" id="lineWidth" value="2" min="0" max="20">
+            </div>
+
+            <!-- 填充模式 -->
+            <div class="toolbar-section">
+                <label>
+                    <input type="checkbox" id="fillMode" checked> 填充
+                </label>
+                <label>
+                    <input type="checkbox" id="strokeMode" checked> 描邊
+                </label>
+            </div>
+
+            <!-- 操作按鈕 -->
+            <div class="toolbar-section">
+                <button class="tool-btn" id="btnUndo">撤銷 (Ctrl+Z)</button>
+                <button class="tool-btn" id="btnClear">清空</button>
+            </div>
+        </div>
+
+        <!-- 主要工作區 -->
+        <div class="main-area">
+            <!-- 畫布區域 -->
+            <div class="canvas-area">
+                <canvas id="drawCanvas" width="600" height="400"></canvas>
+            </div>
+
+            <!-- 側邊欄 -->
+            <div class="sidebar">
+                <h3>繪圖命令記錄</h3>
+                <div class="command-list" id="commandList">
+                    <div style="color: #6a9955;">// 繪圖命令將顯示在這裡</div>
+                </div>
+
+                <div class="export-section">
+                    <h3>生成的腳本代碼</h3>
+                    <div class="code-preview" id="codePreview">
+// TypeScript 代碼將顯示在這裡
+                    </div>
+                    <button class="btn-export" id="btnExport">導出為 TypeScript 腳本</button>
+                    <button class="btn-export btn-clear" id="btnClearAll">清空所有繪圖</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Graphics 編輯器主邏輯
+        class GraphicsEditor {
+            constructor() {
+                this.canvas = document.getElementById('drawCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentTool = 'rect';
+                this.isDrawing = false;
+                this.startX = 0;
+                this.startY = 0;
+                this.commands = [];
+                this.shapes = [];
+                
+                this.fillColor = '#ff0000';
+                this.strokeColor = '#000000';
+                this.lineWidth = 2;
+                this.fillMode = true;
+                this.strokeMode = true;
+
+                this.initEvents();
+                this.updateCodePreview();
+            }
+
+            initEvents() {
+                // 工具按鈕
+                document.querySelectorAll('[data-tool]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentTool = e.target.dataset.tool;
+                    });
+                });
+
+                // 顏色選擇
+                document.getElementById('fillColor').addEventListener('change', (e) => {
+                    this.fillColor = e.target.value;
+                });
+
+                document.getElementById('strokeColor').addEventListener('change', (e) => {
+                    this.strokeColor = e.target.value;
+                });
+
+                document.getElementById('lineWidth').addEventListener('change', (e) => {
+                    this.lineWidth = parseInt(e.target.value);
+                });
+
+                document.getElementById('fillMode').addEventListener('change', (e) => {
+                    this.fillMode = e.target.checked;
+                });
+
+                document.getElementById('strokeMode').addEventListener('change', (e) => {
+                    this.strokeMode = e.target.checked;
+                });
+
+                // 畫布事件
+                this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+
+                // 操作按鈕
+                document.getElementById('btnUndo').addEventListener('click', () => this.undo());
+                document.getElementById('btnClear').addEventListener('click', () => this.clear());
+                document.getElementById('btnExport').addEventListener('click', () => this.exportScript());
+                document.getElementById('btnClearAll').addEventListener('click', () => this.clearAll());
+
+                // 鍵盤快捷鍵
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'z') {
+                        e.preventDefault();
+                        this.undo();
+                    }
+                });
+            }
+
+            onMouseDown(e) {
+                this.isDrawing = true;
+                const rect = this.canvas.getBoundingClientRect();
+                this.startX = e.clientX - rect.left;
+                this.startY = e.clientY - rect.top;
+            }
+
+            onMouseMove(e) {
+                if (!this.isDrawing) return;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+
+                // 重繪所有形狀
+                this.redraw();
+
+                // 預覽當前繪製
+                this.ctx.strokeStyle = this.strokeColor;
+                this.ctx.fillStyle = this.fillColor;
+                this.ctx.lineWidth = this.lineWidth;
+
+                switch(this.currentTool) {
+                    case 'rect':
+                        this.previewRect(this.startX, this.startY, currentX, currentY);
+                        break;
+                    case 'circle':
+                        this.previewCircle(this.startX, this.startY, currentX, currentY);
+                        break;
+                    case 'line':
+                        this.previewLine(this.startX, this.startY, currentX, currentY);
+                        break;
+                }
+            }
+
+            onMouseUp(e) {
+                if (!this.isDrawing) return;
+                this.isDrawing = false;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const endX = e.clientX - rect.left;
+                const endY = e.clientY - rect.top;
+
+                // 記錄形狀
+                const shape = {
+                    tool: this.currentTool,
+                    startX: this.startX,
+                    startY: this.startY,
+                    endX: endX,
+                    endY: endY,
+                    fillColor: this.fillColor,
+                    strokeColor: this.strokeColor,
+                    lineWidth: this.lineWidth,
+                    fillMode: this.fillMode,
+                    strokeMode: this.strokeMode
+                };
+
+                this.shapes.push(shape);
+                this.addCommand(shape);
+                this.redraw();
+                this.updateCodePreview();
+            }
+
+            previewRect(x1, y1, x2, y2) {
+                const width = x2 - x1;
+                const height = y2 - y1;
+                
+                if (this.fillMode) {
+                    this.ctx.fillRect(x1, y1, width, height);
+                }
+                if (this.strokeMode) {
+                    this.ctx.strokeRect(x1, y1, width, height);
+                }
+            }
+
+            previewCircle(x1, y1, x2, y2) {
+                const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                
+                this.ctx.beginPath();
+                this.ctx.arc(x1, y1, radius, 0, Math.PI * 2);
+                
+                if (this.fillMode) {
+                    this.ctx.fill();
+                }
+                if (this.strokeMode) {
+                    this.ctx.stroke();
+                }
+            }
+
+            previewLine(x1, y1, x2, y2) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x1, y1);
+                this.ctx.lineTo(x2, y2);
+                this.ctx.stroke();
+            }
+
+            redraw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.shapes.forEach(shape => {
+                    this.ctx.strokeStyle = shape.strokeColor;
+                    this.ctx.fillStyle = shape.fillColor;
+                    this.ctx.lineWidth = shape.lineWidth;
+
+                    switch(shape.tool) {
+                        case 'rect':
+                            const width = shape.endX - shape.startX;
+                            const height = shape.endY - shape.startY;
+                            if (shape.fillMode) {
+                                this.ctx.fillRect(shape.startX, shape.startY, width, height);
+                            }
+                            if (shape.strokeMode) {
+                                this.ctx.strokeRect(shape.startX, shape.startY, width, height);
+                            }
+                            break;
+                        case 'circle':
+                            const radius = Math.sqrt(
+                                Math.pow(shape.endX - shape.startX, 2) + 
+                                Math.pow(shape.endY - shape.startY, 2)
+                            );
+                            this.ctx.beginPath();
+                            this.ctx.arc(shape.startX, shape.startY, radius, 0, Math.PI * 2);
+                            if (shape.fillMode) {
+                                this.ctx.fill();
+                            }
+                            if (shape.strokeMode) {
+                                this.ctx.stroke();
+                            }
+                            break;
+                        case 'line':
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(shape.startX, shape.startY);
+                            this.ctx.lineTo(shape.endX, shape.endY);
+                            this.ctx.stroke();
+                            break;
+                    }
+                });
+            }
+
+            addCommand(shape) {
+                let commandText = '';
+                
+                switch(shape.tool) {
+                    case 'rect':
+                        const width = Math.round(shape.endX - shape.startX);
+                        const height = Math.round(shape.endY - shape.startY);
+                        commandText = `g.rect(${Math.round(shape.startX)}, ${Math.round(shape.startY)}, ${width}, ${height});`;
+                        break;
+                    case 'circle':
+                        const radius = Math.round(Math.sqrt(
+                            Math.pow(shape.endX - shape.startX, 2) + 
+                            Math.pow(shape.endY - shape.startY, 2)
+                        ));
+                        commandText = `g.circle(${Math.round(shape.startX)}, ${Math.round(shape.startY)}, ${radius});`;
+                        break;
+                    case 'line':
+                        commandText = `g.moveTo(${Math.round(shape.startX)}, ${Math.round(shape.startY)});\ng.lineTo(${Math.round(shape.endX)}, ${Math.round(shape.endY)});`;
+                        break;
+                }
+
+                this.commands.push(commandText);
+                this.updateCommandList();
+            }
+
+            updateCommandList() {
+                const list = document.getElementById('commandList');
+                list.innerHTML = this.commands.map((cmd, i) => 
+                    `<div class="command-item">${i + 1}. ${cmd}</div>`
+                ).join('');
+            }
+
+            updateCodePreview() {
+                const code = this.generateTypeScriptCode();
+                document.getElementById('codePreview').textContent = code;
+            }
+
+            generateTypeScriptCode() {
+                if (this.shapes.length === 0) {
+                    return '// 請先繪製一些圖形';
+                }
+
+                let code = `import { _decorator, Component, Graphics, Color } from 'cc';
+const { ccclass, property } = _decorator;
+
+@ccclass('CustomGraphics')
+export class CustomGraphics extends Component {
+    @property(Graphics)
+    graphics: Graphics = null;
+
+    start() {
+        this.drawShapes();
+    }
+
+    private drawShapes() {
+        const g = this.graphics;
+        
+        // 清除之前的繪製
+        g.clear();
+        
+`;
+
+                this.shapes.forEach((shape, i) => {
+                    code += `        // 形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
+                    code += `        g.lineWidth = ${shape.lineWidth};\n`;
+                    
+                    if (shape.fillMode) {
+                        const fillRGB = this.hexToRgb(shape.fillColor);
+                        code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, 255);\n`;
+                    }
+                    
+                    if (shape.strokeMode) {
+                        const strokeRGB = this.hexToRgb(shape.strokeColor);
+                        code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, 255);\n`;
+                    }
+
+                    switch(shape.tool) {
+                        case 'rect':
+                            const width = Math.round(shape.endX - shape.startX);
+                            const height = Math.round(shape.endY - shape.startY);
+                            code += `        g.rect(${Math.round(shape.startX)}, ${Math.round(shape.startY)}, ${width}, ${height});\n`;
+                            break;
+                        case 'circle':
+                            const radius = Math.round(Math.sqrt(
+                                Math.pow(shape.endX - shape.startX, 2) + 
+                                Math.pow(shape.endY - shape.startY, 2)
+                            ));
+                            code += `        g.circle(${Math.round(shape.startX)}, ${Math.round(shape.startY)}, ${radius});\n`;
+                            break;
+                        case 'line':
+                            code += `        g.moveTo(${Math.round(shape.startX)}, ${Math.round(shape.startY)});\n`;
+                            code += `        g.lineTo(${Math.round(shape.endX)}, ${Math.round(shape.endY)});\n`;
+                            code += `        g.stroke();\n`;
+                            break;
+                    }
+
+                    if (shape.tool !== 'line') {
+                        if (shape.fillMode) {
+                            code += `        g.fill();\n`;
+                        }
+                        if (shape.strokeMode) {
+                            code += `        g.stroke();\n`;
+                        }
+                    }
+                    
+                    code += '\n';
+                });
+
+                code += `    }
+}
+`;
+
+                return code;
+            }
+
+            getShapeName(tool) {
+                const names = {
+                    'rect': '矩形',
+                    'circle': '圓形',
+                    'line': '線條',
+                    'polygon': '多邊形',
+                    'arc': '圓弧'
+                };
+                return names[tool] || tool;
+            }
+
+            hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : {r: 0, g: 0, b: 0};
+            }
+
+            undo() {
+                if (this.shapes.length > 0) {
+                    this.shapes.pop();
+                    this.commands.pop();
+                    this.redraw();
+                    this.updateCommandList();
+                    this.updateCodePreview();
+                }
+            }
+
+            clear() {
+                if (this.shapes.length > 0) {
+                    this.shapes.pop();
+                    this.commands.pop();
+                    this.redraw();
+                    this.updateCommandList();
+                    this.updateCodePreview();
+                }
+            }
+
+            clearAll() {
+                if (confirm('確定要清空所有繪圖嗎？')) {
+                    this.shapes = [];
+                    this.commands = [];
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.updateCommandList();
+                    this.updateCodePreview();
+                }
+            }
+
+            exportScript() {
+                const code = this.generateTypeScriptCode();
+                
+                // 創建下載
+                const blob = new Blob([code], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'CustomGraphics.ts';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                alert('腳本已導出為 CustomGraphics.ts');
+            }
+        }
+
+        // 初始化編輯器
+        const editor = new GraphicsEditor();
+    </script>
+</body>
+</html>

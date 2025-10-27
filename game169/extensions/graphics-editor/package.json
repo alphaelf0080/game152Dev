@@ -1,0 +1,43 @@
+{
+  "name": "graphics-editor",
+  "version": "1.0.0",
+  "description": "2D Graphics 繪製工具，可以將繪製結果轉換為腳本",
+  "main": "./dist/src/main.js",
+  "author": "Your Name",
+  "editor": ">=3.8.0",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "panels": {
+    "default": {
+      "title": "Graphics Editor",
+      "type": "dockable",
+      "main": "./dist/panels/default.js",
+      "icon": "./static/icon.svg",
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 800,
+        "height": 600
+      }
+    }
+  },
+  "contributions": {
+    "menu": [
+      {
+        "path": "擴展/Graphics Editor",
+        "label": "打開 Graphics 編輯器",
+        "message": "open-panel"
+      }
+    ],
+    "messages": {
+      "open-panel": {
+        "methods": ["openPanel"]
+      },
+      "export-script": {
+        "methods": ["exportScript"]
+      }
+    }
+  }
+}

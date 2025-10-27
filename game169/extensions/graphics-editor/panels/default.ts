@@ -1,0 +1,1148 @@
+/**
+ * Graphics Editor 面板腳本 - 帶背景圖片和坐標系統
+ */
+
+declare const Editor: any;
+
+export const template = `
+<div class="container">
+    <!-- 工具欄 -->
+    <div class="toolbar">
+        <!-- 背景圖片 -->
+        <div class="toolbar-section">
+            <label>背景圖:</label>
+            <ui-button id="btnLoadBg">載入背景</ui-button>
+            <ui-button id="btnClearBg">清除背景</ui-button>
+            <ui-checkbox id="showGrid" checked>顯示網格</ui-checkbox>
+        </div>
+
+        <!-- 坐標系統 -->
+        <div class="toolbar-section">
+            <label>坐標原點:</label>
+            <ui-select id="originMode">
+                <option value="center">中心 (0,0)</option>
+                <option value="bottomLeft">左下 (Cocos 預設)</option>
+                <option value="topLeft">左上</option>
+            </ui-select>
+        </div>
+
+        <!-- 繪圖工具 -->
+        <div class="toolbar-section">
+            <label>工具:</label>
+            <ui-button class="tool-btn active" id="btnRect">矩形</ui-button>
+            <ui-button class="tool-btn" id="btnCircle">圓形</ui-button>
+            <ui-button class="tool-btn" id="btnLine">線條</ui-button>
+        </div>
+
+        <!-- 顏色設置 -->
+        <div class="toolbar-section">
+            <label>填充:</label>
+            <input type="color" id="fillColor" value="#ff0000">
+            <label>描邊:</label>
+            <input type="color" id="strokeColor" value="#000000">
+        </div>
+
+        <!-- 線寬 -->
+        <div class="toolbar-section">
+            <label>線寬:</label>
+            <ui-num-input id="lineWidth" value="2" min="0" max="20"></ui-num-input>
+        </div>
+
+        <!-- 填充模式 -->
+        <div class="toolbar-section">
+            <ui-checkbox id="fillMode" checked>填充</ui-checkbox>
+            <ui-checkbox id="strokeMode" checked>描邊</ui-checkbox>
+        </div>
+
+        <!-- 視圖控制 -->
+        <div class="toolbar-section">
+            <label>視圖:</label>
+            <ui-button id="btnZoomIn">放大 (+)</ui-button>
+            <ui-button id="btnZoomOut">縮小 (-)</ui-button>
+            <ui-button id="btnZoomFit">適應 (F)</ui-button>
+            <ui-button id="btnZoomReset">重置 (R)</ui-button>
+            <span id="zoomLevel" style="margin-left: 5px; font-size: 11px;">100%</span>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="toolbar-section">
+            <ui-button id="btnUndo">撤銷</ui-button>
+            <ui-button id="btnClear">清空</ui-button>
+        </div>
+    </div>
+
+    <!-- 主要工作區 -->
+    <div class="main-area">
+        <!-- 畫布區域 -->
+        <div class="canvas-area" id="canvasArea">
+            <div class="canvas-container" id="canvasContainer">
+                <div class="canvas-wrapper" id="canvasWrapper">
+                    <canvas id="bgCanvas"></canvas>
+                    <canvas id="gridCanvas"></canvas>
+                    <canvas id="drawCanvas"></canvas>
+                </div>
+            </div>
+            <div id="coordDisplay" class="coord-display"></div>
+            <div id="viewInfo" class="view-info"></div>
+        </div>
+
+        <!-- 側邊欄 -->
+        <div class="sidebar">
+            <h3>畫布設置</h3>
+            <div class="canvas-settings">
+                <label>畫布寬度:</label>
+                <ui-num-input id="canvasWidth" value="600" min="100" max="2000"></ui-num-input>
+                <label>畫布高度:</label>
+                <ui-num-input id="canvasHeight" value="400" min="100" max="2000"></ui-num-input>
+                <ui-button id="btnApplySize">應用尺寸</ui-button>
+            </div>
+
+            <h3>繪圖命令記錄</h3>
+            <div class="command-list" id="commandList">
+                <div style="color: #6a9955;">// 繪圖命令將顯示在這裡</div>
+            </div>
+
+            <div class="export-section">
+                <h3>生成的腳本代碼</h3>
+                <ui-code id="codePreview" language="typescript">// TypeScript 代碼將顯示在這裡</ui-code>
+                <ui-button id="btnExport" class="blue">導出為 TypeScript 腳本</ui-button>
+                <ui-button id="btnClearAll" class="red">清空所有繪圖</ui-button>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+
+export const style = `
+.container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.toolbar {
+    padding: 10px;
+    border-bottom: 1px solid var(--color-normal-border);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.toolbar-section {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    border-right: 1px solid var(--color-normal-border);
+}
+
+.toolbar-section:last-child {
+    border-right: none;
+}
+
+.toolbar label {
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.tool-btn.active {
+    background: var(--color-info-fill);
+}
+
+.main-area {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.canvas-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-normal-fill-emphasis);
+    position: relative;
+    overflow: hidden;
+}
+
+.canvas-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+
+.canvas-container.panning {
+    cursor: grabbing;
+}
+
+.canvas-wrapper {
+    position: absolute;
+    transform-origin: 0 0;
+    transition: transform 0.1s ease-out;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#bgCanvas, #gridCanvas, #drawCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+}
+
+#bgCanvas {
+    z-index: 1;
+    background: #fff;
+}
+
+#gridCanvas {
+    z-index: 2;
+    pointer-events: none;
+}
+
+#drawCanvas {
+    z-index: 3;
+    cursor: crosshair;
+}
+
+.coord-display {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 11px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.view-info {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 11px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.sidebar {
+    width: 350px;
+    border-left: 1px solid var(--color-normal-border);
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.canvas-settings {
+    border: 1px solid var(--color-normal-border);
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.canvas-settings label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.canvas-settings ui-num-input {
+    width: 100%;
+}
+
+.canvas-settings ui-button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.command-list {
+    border: 1px solid var(--color-normal-border);
+    border-radius: 3px;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 11px;
+    margin-bottom: 20px;
+}
+
+.command-item {
+    padding: 3px 0;
+}
+
+.export-section {
+    margin-top: 20px;
+}
+
+#codePreview {
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+
+ui-button {
+    margin-bottom: 5px;
+}
+
+ui-button.blue {
+    background: var(--color-info-fill);
+}
+
+ui-button.red {
+    background: var(--color-danger-fill);
+}
+`;
+
+export const $ = {
+    btnLoadBg: '#btnLoadBg',
+    btnClearBg: '#btnClearBg',
+    showGrid: '#showGrid',
+    originMode: '#originMode',
+    btnRect: '#btnRect',
+    btnCircle: '#btnCircle',
+    btnLine: '#btnLine',
+    fillColor: '#fillColor',
+    strokeColor: '#strokeColor',
+    lineWidth: '#lineWidth',
+    fillMode: '#fillMode',
+    strokeMode: '#strokeMode',
+    btnZoomIn: '#btnZoomIn',
+    btnZoomOut: '#btnZoomOut',
+    btnZoomFit: '#btnZoomFit',
+    btnZoomReset: '#btnZoomReset',
+    zoomLevel: '#zoomLevel',
+    btnUndo: '#btnUndo',
+    btnClear: '#btnClear',
+    btnExport: '#btnExport',
+    btnClearAll: '#btnClearAll',
+    canvasWidth: '#canvasWidth',
+    canvasHeight: '#canvasHeight',
+    btnApplySize: '#btnApplySize',
+    canvasArea: '#canvasArea',
+    canvasContainer: '#canvasContainer',
+    canvasWrapper: '#canvasWrapper',
+    bgCanvas: '#bgCanvas',
+    gridCanvas: '#gridCanvas',
+    drawCanvas: '#drawCanvas',
+    coordDisplay: '#coordDisplay',
+    viewInfo: '#viewInfo',
+    commandList: '#commandList',
+    codePreview: '#codePreview'
+};
+
+// Graphics 編輯器邏輯
+class GraphicsEditorLogic {
+    private bgCanvas: HTMLCanvasElement;
+    private gridCanvas: HTMLCanvasElement;
+    private drawCanvas: HTMLCanvasElement;
+    private bgCtx: CanvasRenderingContext2D;
+    private gridCtx: CanvasRenderingContext2D;
+    private drawCtx: CanvasRenderingContext2D;
+    
+    private currentTool: string = 'rect';
+    private isDrawing: boolean = false;
+    private startX: number = 0;
+    private startY: number = 0;
+    private shapes: any[] = [];
+    private commands: string[] = [];
+    
+    private fillColor: string = '#ff0000';
+    private strokeColor: string = '#000000';
+    private lineWidth: number = 2;
+    private fillMode: boolean = true;
+    private strokeMode: boolean = true;
+
+    private bgImage: HTMLImageElement | null = null;
+    private showGrid: boolean = true;
+    private originMode: string = 'bottomLeft';
+    private canvasWidth: number = 600;
+    private canvasHeight: number = 400;
+
+    // 視圖控制
+    private zoom: number = 1.0;
+    private minZoom: number = 0.1;
+    private maxZoom: number = 10.0;
+    private panX: number = 0;
+    private panY: number = 0;
+    private isPanning: boolean = false;
+    private lastPanX: number = 0;
+    private lastPanY: number = 0;
+    private canvasContainer: HTMLElement;
+    private canvasWrapper: HTMLElement;
+
+    constructor(private panel: any) {}
+
+    init() {
+        this.bgCanvas = this.panel.$.bgCanvas as HTMLCanvasElement;
+        this.gridCanvas = this.panel.$.gridCanvas as HTMLCanvasElement;
+        this.drawCanvas = this.panel.$.drawCanvas as HTMLCanvasElement;
+        this.canvasContainer = this.panel.$.canvasContainer as HTMLElement;
+        this.canvasWrapper = this.panel.$.canvasWrapper as HTMLElement;
+        
+        if (!this.bgCanvas || !this.gridCanvas || !this.drawCanvas) {
+            console.error('[Graphics Editor] Canvas not found!');
+            return;
+        }
+
+        this.bgCtx = this.bgCanvas.getContext('2d')!;
+        this.gridCtx = this.gridCanvas.getContext('2d')!;
+        this.drawCtx = this.drawCanvas.getContext('2d')!;
+        
+        this.applyCanvasSize();
+        this.drawGrid();
+        this.bindEvents();
+        this.updateCodePreview();
+        this.updateViewTransform();
+        this.centerCanvas();
+    }
+
+    applyCanvasSize() {
+        const width = this.canvasWidth;
+        const height = this.canvasHeight;
+
+        [this.bgCanvas, this.gridCanvas, this.drawCanvas].forEach(canvas => {
+            canvas.width = width;
+            canvas.height = height;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+        });
+
+        this.drawGrid();
+        this.redrawBackground();
+        this.redraw();
+    }
+
+    drawGrid() {
+        if (!this.showGrid) {
+            this.gridCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            return;
+        }
+
+        this.gridCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.gridCtx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+        this.gridCtx.lineWidth = 1;
+
+        const gridSize = 50;
+        const centerX = this.canvasWidth / 2;
+        const centerY = this.canvasHeight / 2;
+
+        // 繪製網格線
+        for (let x = 0; x <= this.canvasWidth; x += gridSize) {
+            this.gridCtx.beginPath();
+            this.gridCtx.moveTo(x, 0);
+            this.gridCtx.lineTo(x, this.canvasHeight);
+            this.gridCtx.stroke();
+        }
+
+        for (let y = 0; y <= this.canvasHeight; y += gridSize) {
+            this.gridCtx.beginPath();
+            this.gridCtx.moveTo(0, y);
+            this.gridCtx.lineTo(this.canvasWidth, y);
+            this.gridCtx.stroke();
+        }
+
+        // 計算原點位置
+        let originX = 0, originY = 0;
+        
+        switch(this.originMode) {
+            case 'center':
+                originX = centerX;
+                originY = centerY;
+                break;
+            case 'bottomLeft':
+                originX = 0;
+                originY = this.canvasHeight;
+                break;
+            case 'topLeft':
+                originX = 0;
+                originY = 0;
+                break;
+        }
+
+        // X軸（紅色）
+        this.gridCtx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+        this.gridCtx.lineWidth = 2;
+        this.gridCtx.beginPath();
+        this.gridCtx.moveTo(0, originY);
+        this.gridCtx.lineTo(this.canvasWidth, originY);
+        this.gridCtx.stroke();
+
+        // Y軸（綠色）
+        this.gridCtx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+        this.gridCtx.beginPath();
+        this.gridCtx.moveTo(originX, 0);
+        this.gridCtx.lineTo(originX, this.canvasHeight);
+        this.gridCtx.stroke();
+
+        // 標註原點
+        this.gridCtx.fillStyle = 'rgba(0, 0, 255, 0.7)';
+        this.gridCtx.font = '12px monospace';
+        this.gridCtx.fillText('(0, 0)', originX + 5, originY - 5);
+
+        // 標註坐標刻度
+        this.gridCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.gridCtx.font = '10px monospace';
+        
+        for (let x = gridSize; x < this.canvasWidth; x += gridSize) {
+            const cocosX = this.canvasToCocosX(x);
+            this.gridCtx.fillText(cocosX.toString(), x + 2, Math.max(15, Math.min(this.canvasHeight - 5, originY + 15)));
+        }
+        
+        for (let y = gridSize; y < this.canvasHeight; y += gridSize) {
+            const cocosY = this.canvasToCocosY(y);
+            this.gridCtx.fillText(cocosY.toString(), Math.max(5, originX + 5), y + 12);
+        }
+    }
+
+    // ==================== 視圖控制方法 ====================
+    
+    updateViewTransform() {
+        const transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoom})`;
+        this.canvasWrapper.style.transform = transform;
+        
+        // 更新縮放顯示
+        this.panel.$.zoomLevel.textContent = Math.round(this.zoom * 100) + '%';
+        this.panel.$.viewInfo.textContent = `Zoom: ${Math.round(this.zoom * 100)}% | Pan: (${Math.round(this.panX)}, ${Math.round(this.panY)})`;
+    }
+
+    centerCanvas() {
+        const containerRect = this.canvasContainer.getBoundingClientRect();
+        const canvasW = this.canvasWidth * this.zoom;
+        const canvasH = this.canvasHeight * this.zoom;
+        
+        this.panX = (containerRect.width - canvasW) / 2;
+        this.panY = (containerRect.height - canvasH) / 2;
+        
+        this.updateViewTransform();
+    }
+
+    zoomIn() {
+        const oldZoom = this.zoom;
+        this.zoom = Math.min(this.maxZoom, this.zoom * 1.2);
+        this.adjustPanAfterZoom(oldZoom);
+    }
+
+    zoomOut() {
+        const oldZoom = this.zoom;
+        this.zoom = Math.max(this.minZoom, this.zoom / 1.2);
+        this.adjustPanAfterZoom(oldZoom);
+    }
+
+    zoomFit() {
+        const containerRect = this.canvasContainer.getBoundingClientRect();
+        const scaleX = (containerRect.width - 40) / this.canvasWidth;
+        const scaleY = (containerRect.height - 40) / this.canvasHeight;
+        
+        this.zoom = Math.min(scaleX, scaleY, 1.0); // 不超過 100%
+        this.centerCanvas();
+    }
+
+    zoomReset() {
+        this.zoom = 1.0;
+        this.centerCanvas();
+    }
+
+    adjustPanAfterZoom(oldZoom: number) {
+        // 以畫布中心為縮放中心
+        const containerRect = this.canvasContainer.getBoundingClientRect();
+        const centerX = containerRect.width / 2;
+        const centerY = containerRect.height / 2;
+        
+        const canvasCenterX = (centerX - this.panX) / oldZoom;
+        const canvasCenterY = (centerY - this.panY) / oldZoom;
+        
+        this.panX = centerX - canvasCenterX * this.zoom;
+        this.panY = centerY - canvasCenterY * this.zoom;
+        
+        this.updateViewTransform();
+    }
+
+    screenToCanvas(screenX: number, screenY: number): {x: number, y: number} {
+        const rect = this.drawCanvas.getBoundingClientRect();
+        return {
+            x: (screenX - rect.left) / this.zoom,
+            y: (screenY - rect.top) / this.zoom
+        };
+    }
+
+    // ==================== 坐標轉換方法 ====================
+
+    canvasToCocosX(canvasX: number): number {
+        switch(this.originMode) {
+            case 'center':
+                return Math.round(canvasX - this.canvasWidth / 2);
+            case 'bottomLeft':
+            case 'topLeft':
+                return Math.round(canvasX);
+            default:
+                return Math.round(canvasX);
+        }
+    }
+
+    canvasToCocosY(canvasY: number): number {
+        switch(this.originMode) {
+            case 'center':
+                return Math.round(this.canvasHeight / 2 - canvasY);
+            case 'bottomLeft':
+                return Math.round(this.canvasHeight - canvasY);
+            case 'topLeft':
+                return Math.round(-canvasY);
+            default:
+                return Math.round(canvasY);
+        }
+    }
+
+    loadBackgroundImage() {
+        // 創建隱藏的文件輸入元素
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/png,image/jpeg,image/jpg,image/webp';
+        
+        input.onchange = (e: any) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = (event: any) => {
+                const img = new Image();
+                
+                img.onload = () => {
+                    this.bgImage = img;
+                    console.log('[Graphics Editor] 背景圖片已載入:', file.name, `${img.width}x${img.height}`);
+                    
+                    // 自動調整畫布尺寸為圖片尺寸
+                    this.canvasWidth = img.width;
+                    this.canvasHeight = img.height;
+                    this.panel.$.canvasWidth.value = img.width;
+                    this.panel.$.canvasHeight.value = img.height;
+                    
+                    this.applyCanvasSize();
+                    this.zoomFit();
+                };
+                
+                img.onerror = () => {
+                    console.error('[Graphics Editor] 背景圖片載入失敗');
+                };
+
+                img.src = event.target.result;
+            };
+            
+            reader.readAsDataURL(file);
+        };
+        
+        input.click();
+    }
+
+    redrawBackground() {
+        this.bgCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        
+        if (this.bgImage) {
+            const scale = Math.min(
+                this.canvasWidth / this.bgImage.width,
+                this.canvasHeight / this.bgImage.height
+            );
+            
+            const width = this.bgImage.width * scale;
+            const height = this.bgImage.height * scale;
+            const x = (this.canvasWidth - width) / 2;
+            const y = (this.canvasHeight - height) / 2;
+            
+            this.bgCtx.drawImage(this.bgImage, x, y, width, height);
+        } else {
+            this.bgCtx.fillStyle = '#ffffff';
+            this.bgCtx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+        }
+    }
+
+    clearBackground() {
+        this.bgImage = null;
+        this.redrawBackground();
+    }
+
+    bindEvents() {
+        // 背景圖片
+        this.panel.$.btnLoadBg.addEventListener('click', () => this.loadBackgroundImage());
+        this.panel.$.btnClearBg.addEventListener('click', () => this.clearBackground());
+        
+        // 視圖控制
+        this.panel.$.btnZoomIn.addEventListener('click', () => this.zoomIn());
+        this.panel.$.btnZoomOut.addEventListener('click', () => this.zoomOut());
+        this.panel.$.btnZoomFit.addEventListener('click', () => this.zoomFit());
+        this.panel.$.btnZoomReset.addEventListener('click', () => this.zoomReset());
+        
+        // 網格
+        this.panel.$.showGrid.addEventListener('change', (e: any) => {
+            this.showGrid = e.target.checked;
+            this.drawGrid();
+        });
+
+        // 坐標系統
+        this.panel.$.originMode.addEventListener('change', (e: any) => {
+            this.originMode = e.target.value;
+            this.drawGrid();
+            this.updateCodePreview();
+        });
+
+        // 畫布尺寸
+        this.panel.$.canvasWidth.addEventListener('change', (e: any) => {
+            this.canvasWidth = parseInt(e.target.value);
+        });
+        this.panel.$.canvasHeight.addEventListener('change', (e: any) => {
+            this.canvasHeight = parseInt(e.target.value);
+        });
+        this.panel.$.btnApplySize.addEventListener('click', () => {
+            this.applyCanvasSize();
+            this.centerCanvas();
+        });
+
+        // 工具
+        this.panel.$.btnRect.addEventListener('click', () => this.selectTool('rect', this.panel.$.btnRect));
+        this.panel.$.btnCircle.addEventListener('click', () => this.selectTool('circle', this.panel.$.btnCircle));
+        this.panel.$.btnLine.addEventListener('click', () => this.selectTool('line', this.panel.$.btnLine));
+
+        // 顏色
+        this.panel.$.fillColor.addEventListener('change', (e: any) => {
+            this.fillColor = e.target.value;
+        });
+        this.panel.$.strokeColor.addEventListener('change', (e: any) => {
+            this.strokeColor = e.target.value;
+        });
+
+        // 線寬
+        this.panel.$.lineWidth.addEventListener('change', (e: any) => {
+            this.lineWidth = parseInt(e.target.value);
+        });
+
+        // 填充模式
+        this.panel.$.fillMode.addEventListener('change', (e: any) => {
+            this.fillMode = e.target.checked;
+        });
+        this.panel.$.strokeMode.addEventListener('change', (e: any) => {
+            this.strokeMode = e.target.checked;
+        });
+
+        // Canvas 容器平移事件
+        this.canvasContainer.addEventListener('mousedown', (e: MouseEvent) => {
+            // 只有空格鍵或中鍵才啟動平移
+            if (e.button === 1 || (e.button === 0 && e.target === this.canvasContainer)) {
+                e.preventDefault();
+                this.isPanning = true;
+                this.lastPanX = e.clientX;
+                this.lastPanY = e.clientY;
+                this.canvasContainer.classList.add('panning');
+            }
+        });
+
+        this.canvasContainer.addEventListener('mousemove', (e: MouseEvent) => {
+            if (this.isPanning) {
+                const deltaX = e.clientX - this.lastPanX;
+                const deltaY = e.clientY - this.lastPanY;
+                
+                this.panX += deltaX;
+                this.panY += deltaY;
+                
+                this.lastPanX = e.clientX;
+                this.lastPanY = e.clientY;
+                
+                this.updateViewTransform();
+                return;
+            }
+        });
+
+        this.canvasContainer.addEventListener('mouseup', () => {
+            if (this.isPanning) {
+                this.isPanning = false;
+                this.canvasContainer.classList.remove('panning');
+            }
+        });
+
+        this.canvasContainer.addEventListener('mouseleave', () => {
+            if (this.isPanning) {
+                this.isPanning = false;
+                this.canvasContainer.classList.remove('panning');
+            }
+        });
+
+        // 滾輪縮放
+        this.canvasContainer.addEventListener('wheel', (e: WheelEvent) => {
+            e.preventDefault();
+            
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const oldZoom = this.zoom;
+            this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoom * delta));
+            
+            // 以滑鼠位置為中心縮放
+            const rect = this.canvasContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const canvasX = (mouseX - this.panX) / oldZoom;
+            const canvasY = (mouseY - this.panY) / oldZoom;
+            
+            this.panX = mouseX - canvasX * this.zoom;
+            this.panY = mouseY - canvasY * this.zoom;
+            
+            this.updateViewTransform();
+        }, { passive: false });
+
+        // 鍵盤快捷鍵
+        document.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === '+' || e.key === '=') {
+                e.preventDefault();
+                this.zoomIn();
+            } else if (e.key === '-' || e.key === '_') {
+                e.preventDefault();
+                this.zoomOut();
+            } else if (e.key.toLowerCase() === 'f') {
+                e.preventDefault();
+                this.zoomFit();
+            } else if (e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                this.zoomReset();
+            }
+        });
+
+        // 畫布繪圖事件
+        this.drawCanvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+        this.drawCanvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+        this.drawCanvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+        this.drawCanvas.addEventListener('mouseleave', () => {
+            this.panel.$.coordDisplay.textContent = '';
+        });
+
+        // 操作
+        this.panel.$.btnUndo.addEventListener('click', () => this.undo());
+        this.panel.$.btnClear.addEventListener('click', () => this.undo());
+        this.panel.$.btnExport.addEventListener('click', () => this.exportScript());
+        this.panel.$.btnClearAll.addEventListener('click', () => this.clearAll());
+    }
+
+    selectTool(tool: string, button: any) {
+        [this.panel.$.btnRect, this.panel.$.btnCircle, this.panel.$.btnLine].forEach((btn: any) => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+        this.currentTool = tool;
+    }
+
+    onMouseDown(e: MouseEvent) {
+        this.isDrawing = true;
+        const pos = this.screenToCanvas(e.clientX, e.clientY);
+        this.startX = pos.x;
+        this.startY = pos.y;
+    }
+
+    onMouseMove(e: MouseEvent) {
+        const pos = this.screenToCanvas(e.clientX, e.clientY);
+        const currentX = pos.x;
+        const currentY = pos.y;
+
+        // 更新坐標顯示
+        const cocosX = this.canvasToCocosX(currentX);
+        const cocosY = this.canvasToCocosY(currentY);
+        this.panel.$.coordDisplay.textContent = `Canvas: (${Math.round(currentX)}, ${Math.round(currentY)}) → Cocos: (${cocosX}, ${cocosY})`;
+
+        if (!this.isDrawing) return;
+
+        this.redraw();
+        this.drawCtx.strokeStyle = this.strokeColor;
+        this.drawCtx.fillStyle = this.fillColor;
+        this.drawCtx.lineWidth = this.lineWidth;
+
+        switch(this.currentTool) {
+            case 'rect':
+                this.previewRect(this.startX, this.startY, currentX, currentY);
+                break;
+            case 'circle':
+                this.previewCircle(this.startX, this.startY, currentX, currentY);
+                break;
+            case 'line':
+                this.previewLine(this.startX, this.startY, currentX, currentY);
+                break;
+        }
+    }
+
+    onMouseUp(e: MouseEvent) {
+        if (!this.isDrawing) return;
+        this.isDrawing = false;
+
+        const pos = this.screenToCanvas(e.clientX, e.clientY);
+        const endX = pos.x;
+        const endY = pos.y;
+
+        const shape = {
+            tool: this.currentTool,
+            startX: this.startX,
+            startY: this.startY,
+            endX: endX,
+            endY: endY,
+            fillColor: this.fillColor,
+            strokeColor: this.strokeColor,
+            lineWidth: this.lineWidth,
+            fillMode: this.fillMode,
+            strokeMode: this.strokeMode
+        };
+
+        this.shapes.push(shape);
+        this.addCommand(shape);
+        this.redraw();
+        this.updateCodePreview();
+    }
+
+    previewRect(x1: number, y1: number, x2: number, y2: number) {
+        const width = x2 - x1;
+        const height = y2 - y1;
+        
+        if (this.fillMode) {
+            this.drawCtx.fillRect(x1, y1, width, height);
+        }
+        if (this.strokeMode) {
+            this.drawCtx.strokeRect(x1, y1, width, height);
+        }
+    }
+
+    previewCircle(x1: number, y1: number, x2: number, y2: number) {
+        const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        this.drawCtx.beginPath();
+        this.drawCtx.arc(x1, y1, radius, 0, Math.PI * 2);
+        if (this.fillMode) this.drawCtx.fill();
+        if (this.strokeMode) this.drawCtx.stroke();
+    }
+
+    previewLine(x1: number, y1: number, x2: number, y2: number) {
+        this.drawCtx.beginPath();
+        this.drawCtx.moveTo(x1, y1);
+        this.drawCtx.lineTo(x2, y2);
+        this.drawCtx.stroke();
+    }
+
+    redraw() {
+        this.drawCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        
+        this.shapes.forEach(shape => {
+            this.drawCtx.strokeStyle = shape.strokeColor;
+            this.drawCtx.fillStyle = shape.fillColor;
+            this.drawCtx.lineWidth = shape.lineWidth;
+
+            switch(shape.tool) {
+                case 'rect':
+                    const width = shape.endX - shape.startX;
+                    const height = shape.endY - shape.startY;
+                    if (shape.fillMode) this.drawCtx.fillRect(shape.startX, shape.startY, width, height);
+                    if (shape.strokeMode) this.drawCtx.strokeRect(shape.startX, shape.startY, width, height);
+                    break;
+                case 'circle':
+                    const radius = Math.sqrt(Math.pow(shape.endX - shape.startX, 2) + Math.pow(shape.endY - shape.startY, 2));
+                    this.drawCtx.beginPath();
+                    this.drawCtx.arc(shape.startX, shape.startY, radius, 0, Math.PI * 2);
+                    if (shape.fillMode) this.drawCtx.fill();
+                    if (shape.strokeMode) this.drawCtx.stroke();
+                    break;
+                case 'line':
+                    this.drawCtx.beginPath();
+                    this.drawCtx.moveTo(shape.startX, shape.startY);
+                    this.drawCtx.lineTo(shape.endX, shape.endY);
+                    this.drawCtx.stroke();
+                    break;
+            }
+        });
+    }
+
+    addCommand(shape: any) {
+        const cocosStartX = this.canvasToCocosX(shape.startX);
+        const cocosStartY = this.canvasToCocosY(shape.startY);
+        const cocosEndX = this.canvasToCocosX(shape.endX);
+        const cocosEndY = this.canvasToCocosY(shape.endY);
+
+        let commandText = '';
+        switch(shape.tool) {
+            case 'rect':
+                const width = cocosEndX - cocosStartX;
+                const height = cocosEndY - cocosStartY;
+                commandText = `g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});`;
+                break;
+            case 'circle':
+                const radius = Math.round(Math.sqrt(Math.pow(cocosEndX - cocosStartX, 2) + Math.pow(cocosEndY - cocosStartY, 2)));
+                commandText = `g.circle(${cocosStartX}, ${cocosStartY}, ${radius});`;
+                break;
+            case 'line':
+                commandText = `g.moveTo(${cocosStartX}, ${cocosStartY}); g.lineTo(${cocosEndX}, ${cocosEndY});`;
+                break;
+        }
+        this.commands.push(commandText);
+        this.updateCommandList();
+    }
+
+    updateCommandList() {
+        const list = this.panel.$.commandList;
+        list.innerHTML = this.commands.map((cmd: string, i: number) => 
+            `<div class="command-item">${i + 1}. ${cmd}</div>`
+        ).join('');
+    }
+
+    updateCodePreview() {
+        const code = this.generateTypeScriptCode();
+        this.panel.$.codePreview.value = code;
+    }
+
+    generateTypeScriptCode(): string {
+        if (this.shapes.length === 0) {
+            return '// 請先繪製一些圖形';
+        }
+
+        let code = `import { _decorator, Component, Graphics, Color } from 'cc';
+const { ccclass, property } = _decorator;
+
+/**
+ * 使用 Graphics Editor 生成的圖形代碼
+ * 坐標系統: ${this.getOriginModeName()}
+ */
+@ccclass('CustomGraphics')
+export class CustomGraphics extends Component {
+    @property(Graphics)
+    graphics: Graphics = null;
+
+    start() {
+        this.drawShapes();
+    }
+
+    private drawShapes() {
+        const g = this.graphics;
+        g.clear();
+        
+`;
+
+        this.shapes.forEach((shape: any, i: number) => {
+            const cocosStartX = this.canvasToCocosX(shape.startX);
+            const cocosStartY = this.canvasToCocosY(shape.startY);
+            const cocosEndX = this.canvasToCocosX(shape.endX);
+            const cocosEndY = this.canvasToCocosY(shape.endY);
+
+            code += `        // 形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
+            code += `        g.lineWidth = ${shape.lineWidth};\n`;
+            
+            if (shape.fillMode) {
+                const fillRGB = this.hexToRgb(shape.fillColor);
+                code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, 255);\n`;
+            }
+            
+            if (shape.strokeMode) {
+                const strokeRGB = this.hexToRgb(shape.strokeColor);
+                code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, 255);\n`;
+            }
+
+            switch(shape.tool) {
+                case 'rect':
+                    const width = cocosEndX - cocosStartX;
+                    const height = cocosEndY - cocosStartY;
+                    code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    if (shape.fillMode) code += `        g.fill();\n`;
+                    if (shape.strokeMode) code += `        g.stroke();\n`;
+                    break;
+                case 'circle':
+                    const radius = Math.round(Math.sqrt(Math.pow(cocosEndX - cocosStartX, 2) + Math.pow(cocosEndY - cocosStartY, 2)));
+                    code += `        g.circle(${cocosStartX}, ${cocosStartY}, ${radius});\n`;
+                    if (shape.fillMode) code += `        g.fill();\n`;
+                    if (shape.strokeMode) code += `        g.stroke();\n`;
+                    break;
+                case 'line':
+                    code += `        g.moveTo(${cocosStartX}, ${cocosStartY});\n`;
+                    code += `        g.lineTo(${cocosEndX}, ${cocosEndY});\n`;
+                    code += `        g.stroke();\n`;
+                    break;
+            }
+            code += '\n';
+        });
+
+        code += `    }
+}\n`;
+        return code;
+    }
+
+    getOriginModeName(): string {
+        const names: any = {
+            'center': '中心 (0,0)',
+            'bottomLeft': '左下 - Cocos Creator 預設',
+            'topLeft': '左上'
+        };
+        return names[this.originMode] || this.originMode;
+    }
+
+    getShapeName(tool: string): string {
+        const names: any = {
+            'rect': '矩形',
+            'circle': '圓形',
+            'line': '線條'
+        };
+        return names[tool] || tool;
+    }
+
+    hexToRgb(hex: string) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : {r: 0, g: 0, b: 0};
+    }
+
+    undo() {
+        if (this.shapes.length > 0) {
+            this.shapes.pop();
+            this.commands.pop();
+            this.redraw();
+            this.updateCommandList();
+            this.updateCodePreview();
+        }
+    }
+
+    clearAll() {
+        this.shapes = [];
+        this.commands = [];
+        this.drawCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.updateCommandList();
+        this.updateCodePreview();
+    }
+
+    exportScript() {
+        const code = this.generateTypeScriptCode();
+        Editor.Dialog.save({
+            title: '導出 TypeScript 腳本',
+            defaultPath: 'CustomGraphics.ts',
+            filters: [{name: 'TypeScript', extensions: ['ts']}]
+        }).then((result: any) => {
+            if (result.filePath) {
+                Editor.Message.request('asset-db', 'create-asset', result.filePath, code);
+            }
+        });
+    }
+}
+
+let editorLogic: GraphicsEditorLogic | null = null;
+
+export async function ready(this: any) {
+    console.log('[Graphics Editor] 面板已就緒');
+    editorLogic = new GraphicsEditorLogic(this);
+    editorLogic.init();
+}
+
+export function close() {
+    console.log('[Graphics Editor] 面板已關閉');
+    editorLogic = null;
+}
