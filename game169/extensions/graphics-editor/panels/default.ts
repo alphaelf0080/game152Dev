@@ -384,6 +384,8 @@ class GraphicsEditorLogic {
     private strokeMode: boolean = true;
 
     private bgImage: HTMLImageElement | null = null;
+    private bgOffsetX: number = 0; // 背景圖 X 偏移
+    private bgOffsetY: number = 0; // 背景圖 Y 偏移
     private showGrid: boolean = true;
     private originMode: string = 'bottomLeft';
     private canvasWidth: number = 600;
@@ -432,6 +434,34 @@ class GraphicsEditorLogic {
     }
 
     applyCanvasSize() {
+        const oldWidth = this.bgCanvas.style.width ? parseInt(this.bgCanvas.style.width) : this.canvasWidth;
+        const oldHeight = this.bgCanvas.style.height ? parseInt(this.bgCanvas.style.height) : this.canvasHeight;
+        const newWidth = this.canvasWidth;
+        const newHeight = this.canvasHeight;
+        
+        // 根據座標原點模式計算背景圖偏移
+        if (this.bgImage) {
+            const deltaWidth = newWidth - oldWidth;
+            const deltaHeight = newHeight - oldHeight;
+            
+            switch(this.originMode) {
+                case 'center':
+                    // 中心擴展：從中心向四周擴展
+                    this.bgOffsetX += deltaWidth / 2;
+                    this.bgOffsetY += deltaHeight / 2;
+                    break;
+                case 'bottomLeft':
+                    // 左下擴展：向右和向上擴展
+                    // X 不變，Y 向上移動
+                    this.bgOffsetY += deltaHeight;
+                    break;
+                case 'topLeft':
+                    // 左上擴展：向右和向下擴展
+                    // X 和 Y 都不變（默認行為）
+                    break;
+            }
+        }
+        
         const width = this.canvasWidth;
         const height = this.canvasHeight;
         
@@ -661,8 +691,17 @@ class GraphicsEditorLogic {
                     this.bgImage = img;
                     console.log('[Graphics Editor] 背景圖片已載入:', file.name, `${img.width}x${img.height}`);
                     
-                    // 不再自動調整畫布尺寸，保持背景圖獨立
-                    this.redrawBackground();
+                    // 載入背景時，自動調整畫布尺寸為圖片尺寸
+                    this.canvasWidth = img.width;
+                    this.canvasHeight = img.height;
+                    this.panel.$.canvasWidth.value = img.width;
+                    this.panel.$.canvasHeight.value = img.height;
+                    
+                    // 重置背景圖偏移
+                    this.bgOffsetX = 0;
+                    this.bgOffsetY = 0;
+                    
+                    this.applyCanvasSize();
                     this.zoomFit();
                 };
                 
@@ -683,8 +722,8 @@ class GraphicsEditorLogic {
         this.bgCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         
         if (this.bgImage) {
-            // 保持背景圖原始尺寸，不拉伸，從左上角開始繪製
-            this.bgCtx.drawImage(this.bgImage, 0, 0);
+            // 使用偏移量繪製背景圖，保持原始尺寸
+            this.bgCtx.drawImage(this.bgImage, this.bgOffsetX, this.bgOffsetY);
         } else {
             this.bgCtx.fillStyle = '#ffffff';
             this.bgCtx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -693,6 +732,8 @@ class GraphicsEditorLogic {
 
     clearBackground() {
         this.bgImage = null;
+        this.bgOffsetX = 0;
+        this.bgOffsetY = 0;
         this.redrawBackground();
     }
 
