@@ -77,6 +77,7 @@ export const template = `
         <div class="toolbar-section">
             <ui-button id="btnUndo">撤銷</ui-button>
             <ui-button id="btnClear">清空</ui-button>
+            <ui-button id="btnDelete" style="display:none;" class="red">刪除選中 (Del)</ui-button>
             <ui-button id="btnClosePolyline" style="display:none;">完成折線 (ESC)</ui-button>
         </div>
     </div>
@@ -352,6 +353,7 @@ export const $ = {
     zoomLevel: '#zoomLevel',
     btnUndo: '#btnUndo',
     btnClear: '#btnClear',
+    btnDelete: '#btnDelete',
     btnClosePolyline: '#btnClosePolyline',
     btnCopyCode: '#btnCopyCode',
     btnExport: '#btnExport',
@@ -408,6 +410,9 @@ class GraphicsEditorLogic {
     // 折線相關
     private isDrawingPolyline: boolean = false;
     private polylinePoints: Array<{x: number, y: number}> = [];
+
+    // 選取相關
+    private selectedShapeIndex: number = -1; // 選中的圖形索引
 
     // 視圖控制
     private zoom: number = 1.0;
@@ -907,6 +912,15 @@ class GraphicsEditorLogic {
                 if (this.isDrawingPolyline) {
                     e.preventDefault();
                     this.closePolyline();
+                } else if (this.selectedShapeIndex !== -1) {
+                    // 取消選取
+                    this.deselectShape();
+                }
+            } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                // 刪除選中的圖形
+                if (this.selectedShapeIndex !== -1) {
+                    e.preventDefault();
+                    this.deleteSelectedShape();
                 }
             } else if (e.key === '+' || e.key === '=') {
                 e.preventDefault();
@@ -927,6 +941,10 @@ class GraphicsEditorLogic {
         this.drawCanvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
         this.drawCanvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
         this.drawCanvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
+        this.drawCanvas.addEventListener('contextmenu', (e) => {
+            // 禁用右鍵菜單，用於選取功能
+            e.preventDefault();
+        });
         this.drawCanvas.addEventListener('mouseleave', () => {
             this.panel.$.coordDisplay.textContent = '';
         });
@@ -934,6 +952,7 @@ class GraphicsEditorLogic {
         // 操作
         this.panel.$.btnUndo.addEventListener('click', () => this.undo());
         this.panel.$.btnClear.addEventListener('click', () => this.undo());
+        this.panel.$.btnDelete.addEventListener('click', () => this.deleteSelectedShape());
         this.panel.$.btnCopyCode.addEventListener('click', () => this.copyCode());
         this.panel.$.btnExport.addEventListener('click', () => this.exportScript());
         this.panel.$.btnExportMask.addEventListener('click', () => this.exportMaskScript());
@@ -956,6 +975,14 @@ class GraphicsEditorLogic {
     onMouseDown(e: MouseEvent) {
         const pos = this.screenToCanvas(e.clientX, e.clientY);
         
+        // 檢查是否點擊到已有的圖形（用於選取）
+        // 按住 Ctrl/Cmd 或者右鍵點擊可以選取
+        if (e.button === 2 || e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            this.trySelectShape(pos.x, pos.y);
+            return;
+        }
+        
         // 折線模式：點擊添加點
         if (this.currentTool === 'polyline') {
             if (!this.isDrawingPolyline) {
@@ -963,6 +990,11 @@ class GraphicsEditorLogic {
             }
             this.addPolylinePoint(pos.x, pos.y);
             return;
+        }
+
+        // 取消之前的選取
+        if (this.selectedShapeIndex !== -1) {
+            this.deselectShape();
         }
 
         // 其他工具：正常繪製
@@ -1108,7 +1140,241 @@ class GraphicsEditorLogic {
         if (this.isDrawingPolyline) {
             this.drawPolylinePreview();
         }
+
+        // 繪製選中圖形的高亮邊框
+        if (this.selectedShapeIndex !== -1) {
+            this.drawSelectionHighlight();
+        }
     }
+
+    // ==================== 選取相關方法 ====================
+
+    /**
+     * 嘗試選取點擊位置的圖形
+     */
+    trySelectShape(x: number, y: number) {
+        // 從後往前遍歷（後繪製的圖形在上層）
+        for (let i = this.shapes.length - 1; i >= 0; i--) {
+            if (this.isPointInShape(x, y, this.shapes[i])) {
+                this.selectShape(i);
+                return;
+            }
+        }
+        // 如果沒有點擊到任何圖形，取消選取
+        this.deselectShape();
+    }
+
+    /**
+     * 檢測點是否在圖形內
+     */
+    isPointInShape(x: number, y: number, shape: any): boolean {
+        const tolerance = 5; // 點擊容差
+
+        switch(shape.tool) {
+            case 'rect':
+                const minX = Math.min(shape.startX, shape.endX) - tolerance;
+                const maxX = Math.max(shape.startX, shape.endX) + tolerance;
+                const minY = Math.min(shape.startY, shape.endY) - tolerance;
+                const maxY = Math.max(shape.startY, shape.endY) + tolerance;
+                return x >= minX && x <= maxX && y >= minY && y <= maxY;
+                
+            case 'circle':
+                const radius = Math.sqrt(
+                    Math.pow(shape.endX - shape.startX, 2) + 
+                    Math.pow(shape.endY - shape.startY, 2)
+                );
+                const distance = Math.sqrt(
+                    Math.pow(x - shape.startX, 2) + 
+                    Math.pow(y - shape.startY, 2)
+                );
+                return distance <= radius + tolerance;
+                
+            case 'line':
+                // 線條：計算點到線段的距離
+                const lineDistance = this.pointToLineDistance(
+                    x, y, 
+                    shape.startX, shape.startY, 
+                    shape.endX, shape.endY
+                );
+                return lineDistance <= tolerance + shape.lineWidth / 2;
+                
+            case 'polyline':
+                if (!shape.points || shape.points.length < 2) return false;
+                
+                // 如果是閉合的折線且有填充，檢查是否在多邊形內
+                if (shape.isClosed && shape.fillMode) {
+                    return this.isPointInPolygon(x, y, shape.points);
+                }
+                
+                // 否則檢查是否在任何線段附近
+                for (let i = 0; i < shape.points.length - 1; i++) {
+                    const dist = this.pointToLineDistance(
+                        x, y,
+                        shape.points[i].x, shape.points[i].y,
+                        shape.points[i + 1].x, shape.points[i + 1].y
+                    );
+                    if (dist <= tolerance + shape.lineWidth / 2) {
+                        return true;
+                    }
+                }
+                return false;
+        }
+        return false;
+    }
+
+    /**
+     * 計算點到線段的距離
+     */
+    pointToLineDistance(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
+        const A = px - x1;
+        const B = py - y1;
+        const C = x2 - x1;
+        const D = y2 - y1;
+
+        const dot = A * C + B * D;
+        const lenSq = C * C + D * D;
+        let param = -1;
+        
+        if (lenSq !== 0) {
+            param = dot / lenSq;
+        }
+
+        let xx, yy;
+
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + param * C;
+            yy = y1 + param * D;
+        }
+
+        const dx = px - xx;
+        const dy = py - yy;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * 檢測點是否在多邊形內（射線法）
+     */
+    isPointInPolygon(x: number, y: number, points: Array<{x: number, y: number}>): boolean {
+        let inside = false;
+        for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+            const xi = points[i].x, yi = points[i].y;
+            const xj = points[j].x, yj = points[j].y;
+            
+            const intersect = ((yi > y) !== (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
+    }
+
+    /**
+     * 選取圖形
+     */
+    selectShape(index: number) {
+        this.selectedShapeIndex = index;
+        this.panel.$.btnDelete.style.display = 'block';
+        this.redraw();
+        console.log('[Graphics Editor] 已選取圖形', index + 1);
+    }
+
+    /**
+     * 取消選取
+     */
+    deselectShape() {
+        this.selectedShapeIndex = -1;
+        this.panel.$.btnDelete.style.display = 'none';
+        this.redraw();
+    }
+
+    /**
+     * 繪製選中圖形的高亮邊框
+     */
+    drawSelectionHighlight() {
+        if (this.selectedShapeIndex < 0 || this.selectedShapeIndex >= this.shapes.length) {
+            return;
+        }
+
+        const shape = this.shapes[this.selectedShapeIndex];
+        this.drawCtx.save();
+        
+        // 高亮邊框樣式
+        this.drawCtx.strokeStyle = '#00BFFF'; // 亮藍色
+        this.drawCtx.lineWidth = 3;
+        this.drawCtx.setLineDash([5, 5]); // 虛線
+
+        switch(shape.tool) {
+            case 'rect':
+                const width = shape.endX - shape.startX;
+                const height = shape.endY - shape.startY;
+                this.drawCtx.strokeRect(shape.startX - 2, shape.startY - 2, width + 4, height + 4);
+                break;
+                
+            case 'circle':
+                const radius = Math.sqrt(
+                    Math.pow(shape.endX - shape.startX, 2) + 
+                    Math.pow(shape.endY - shape.startY, 2)
+                );
+                this.drawCtx.beginPath();
+                this.drawCtx.arc(shape.startX, shape.startY, radius + 2, 0, Math.PI * 2);
+                this.drawCtx.stroke();
+                break;
+                
+            case 'line':
+                this.drawCtx.beginPath();
+                this.drawCtx.moveTo(shape.startX, shape.startY);
+                this.drawCtx.lineTo(shape.endX, shape.endY);
+                this.drawCtx.stroke();
+                break;
+                
+            case 'polyline':
+                if (shape.points && shape.points.length > 1) {
+                    this.drawCtx.beginPath();
+                    this.drawCtx.moveTo(shape.points[0].x, shape.points[0].y);
+                    for (let i = 1; i < shape.points.length; i++) {
+                        this.drawCtx.lineTo(shape.points[i].x, shape.points[i].y);
+                    }
+                    if (shape.isClosed) {
+                        this.drawCtx.closePath();
+                    }
+                    this.drawCtx.stroke();
+                }
+                break;
+        }
+
+        this.drawCtx.restore();
+    }
+
+    /**
+     * 刪除選中的圖形
+     */
+    deleteSelectedShape() {
+        if (this.selectedShapeIndex === -1) {
+            return;
+        }
+
+        console.log('[Graphics Editor] 刪除圖形', this.selectedShapeIndex + 1);
+        
+        // 刪除圖形和對應的命令
+        this.shapes.splice(this.selectedShapeIndex, 1);
+        this.commands.splice(this.selectedShapeIndex, 1);
+        
+        // 取消選取
+        this.selectedShapeIndex = -1;
+        this.panel.$.btnDelete.style.display = 'none';
+        
+        // 重繪和更新
+        this.redraw();
+        this.updateCommandList();
+        this.updateCodePreview();
+    }
+
+    // ==================== 命令相關方法 ====================
 
     addCommand(shape: any) {
         const cocosStartX = this.canvasToCocosX(shape.startX);
