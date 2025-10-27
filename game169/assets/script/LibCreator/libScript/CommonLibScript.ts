@@ -47,21 +47,28 @@ export class CommonLibScript extends Component {
         this.handleNode();    // 將節點加入 AllNode.Data.Map 
         
         console.log("[CommonLibScript] → 開始判斷首頁按鈕...");
-        //this.handleHomeJudge(); // 判斷首頁按鈕是否顯示
+        this.handleHomeJudge(); // 判斷首頁按鈕是否顯示
         
         console.log("[CommonLibScript] → 開始設置鍵盤控制...");
-        //this.handleKeyboard();  // 新增空白鍵和 Enter 鍵來旋轉
+        this.handleKeyboard();  // 新增空白鍵和 Enter 鍵來旋轉
         
         console.log("[CommonLibScript] → 開始設置帳號序號...");
-        //this.handleAccountSn(); // 新增帳號序號
+        this.handleAccountSn(); // 新增帳號序號
         
         console.log("[CommonLibScript] → 開始設置試玩模式...");
-        //this.handleDemoMode();  // 試玩模式
+        this.handleDemoMode();  // 試玩模式
         
         console.log("[CommonLibScript] → 開始設置遊戲版號...");
-        //this.handleGameVersion(); // 遊戲版號
+        this.handleGameVersion(); // 遊戲版號
         
         console.log("[CommonLibScript] ✓ 初始化完成");
+        
+        // 🔴 關鍵：發送初始化完成信號
+        setTimeout(() => {
+            console.log("[CommonLibScript] ► 發送初始化完成信號...");
+            globalThis['CommonLibScriptReady'] = true;
+            console.log("[CommonLibScript] ✓ 初始化完成信號已發送");
+        }, 0);
     }
 
     handleGameVersion() {
@@ -140,6 +147,7 @@ export class CommonLibScript extends Component {
      */
     handleHomeJudge() {
         // 檢查 psapi 的返回類型設定
+        console.log("[CommonLibScript] 開始判斷首頁按鈕...",window.psapi);
         if (window.psapi?.hostInfo.return_type === 0) {
             console.log("[CommonLibScript] return_type = 0, 隱藏首頁按鈕");
             
@@ -265,10 +273,10 @@ export class CommonLibScript extends Component {
         }
         
         // 【試玩模式】動態調整 DEMO 標籤位置
-        this.updateDemoPosition();
+        //this.updateDemoPosition();  //開發模式先關閉
         
         // 【衝突管理】防止 WebView 和錯誤訊息同時顯示
-        this.preventUIConflict();
+    // this.preventUIConflict();     //開發模式先關閉
     }
 
     /**
@@ -386,16 +394,21 @@ export class CommonLibScript extends Component {
                 const language = Data.Library.RES_LANGUAGE;
                 const demoText = CommonLibScript.DEMO_TEXT[language] || CommonLibScript.DEMO_TEXT['eng'];
                 
+                // ✅ 改為使用系統字體，支援所有字符，避免位圖字體限制
+                demoLabel.useSystemFont = true;
+                demoLabel.systemFont = "Arial";  // 支援所有字符（s, t, U, V, W 等）
+                
                 demoLabel.string = demoText;
                 demoLabel.isBold = true;
                 demoLabel.fontSize = 35;
+                demoLabel.color = new Color(255, 255, 255, 255);  // 白色文字
                 
                 console.log("[CommonLibScript] ✓ DEMO 標籤已設置 (語言:", language, ", 文字:", demoText + ")");
                 
                 this.demoString.getComponent(UITransform).setAnchorPoint(0.5, 0.5);
                 this.demoString.setPosition(100, 265);
                 
-                // 隱藏歷史記錄按鈕
+                // ✅ 添加完整的安全檢查 - 隱藏歷史記錄按鈕
                 const historyBtn = AllNode.Data.Map.get("HistoryButton");
                 if (historyBtn) {
                     historyBtn.active = false;
@@ -404,23 +417,35 @@ export class CommonLibScript extends Component {
                     console.warn("[CommonLibScript] ⚠ 找不到 HistoryButton");
                 }
                 
-                // 禁用贏得按鈕
+                // ✅ 添加完整的安全檢查 - 禁用贏得按鈕
                 const winBtn = AllNode.Data.Map.get("WinBtn");
                 if (winBtn) {
-                    winBtn.getComponent(Button).enabled = false;
-                    console.log("[CommonLibScript] ✓ 禁用 WinBtn");
+                    const btnComp = winBtn.getComponent(Button);
+                    if (btnComp) {
+                        btnComp.enabled = false;
+                        console.log("[CommonLibScript] ✓ 禁用 WinBtn");
+                    } else {
+                        console.warn("[CommonLibScript] ⚠ WinBtn 上沒有 Button 組件");
+                    }
                 } else {
                     console.warn("[CommonLibScript] ⚠ 找不到 WinBtn");
                 }
                 
-                // 同步贏得背景
+                // ✅ 添加完整的安全檢查 - 同步贏得背景
                 const winBgOff = AllNode.Data.Map.get("WinBg_Off");
                 const winBgOn = AllNode.Data.Map.get("WinBg_On");
                 
                 if (winBgOff && winBgOn) {
-                    winBgOff.getComponent(Sprite).spriteFrame = winBgOn.getComponent(Sprite).spriteFrame;
-                    winBgOff.setPosition(winBgOn.getPosition());
-                    console.log("[CommonLibScript] ✓ 同步 WinBg 外觀");
+                    const offSprite = winBgOff.getComponent(Sprite);
+                    const onSprite = winBgOn.getComponent(Sprite);
+                    
+                    if (offSprite && onSprite) {
+                        offSprite.spriteFrame = onSprite.spriteFrame;
+                        winBgOff.setPosition(winBgOn.getPosition());
+                        console.log("[CommonLibScript] ✓ 同步 WinBg 外觀");
+                    } else {
+                        console.warn("[CommonLibScript] ⚠ WinBg 上缺少 Sprite 組件");
+                    }
                 } else {
                     console.warn("[CommonLibScript] ⚠ 找不到 WinBg_Off 或 WinBg_On");
                 }
@@ -430,6 +455,25 @@ export class CommonLibScript extends Component {
         } else {
             console.log("[CommonLibScript] ℹ 未啟用試玩模式");
         }
+    }
+
+    /**
+     * 等待 CommonLibScript 初始化完成
+     * - 其他組件可以調用此方法來確保初始化已完成
+     * - 返回一個 Promise，當初始化完成時 resolve
+     * @returns Promise<void> 當初始化完成時 resolve
+     */
+    public static waitForReady(): Promise<void> {
+        return new Promise((resolve) => {
+            const checkReady = () => {
+                if (globalThis['CommonLibScriptReady']) {
+                    resolve();
+                } else {
+                    setTimeout(checkReady, 10);  // 每 10ms 檢查一次
+                }
+            };
+            checkReady();
+        });
     }
 
     /**
