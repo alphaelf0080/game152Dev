@@ -24,25 +24,31 @@
 Skeletal Animation         → 拖入包含 3D 動畫的節點
 Btn Next                  → 拖入"下一個"按鈕
 Btn Prev                  → 拖入"上一個"按鈕
+Label Clip Name           → 拖入顯示動畫名稱的 Label（可選）
 Animation Clip Resources  → 拖入動畫 Clip 資源（從 assets）
 ```
 
-### ⚡ Clip 資源拖入說明
+### 📝 Label 顯示功能（新）
 
-從 Cocos Creator assets 中直接拖入 AnimationClip 資源：
+將任何 Label 節點拖入 **Label Clip Name** 欄位，每次切換動畫時會自動顯示當前 clip 名稱。
 
-**操作步驟：**
-1. 在 Cocos Creator 資源面板中找到 AnimationClip 文件（通常在 assets 目錄）
-2. 將 Clip 拖入檢查器的 **Animation Clip Resources** 陣列
-3. 或點擊 `+` 按鈕逐個添加 Clip
-
-**Clip 資源位置示例：**
+**推薦的 UI 配置：**
 ```
-assets/
-├── animations/
-│   ├── Take_001.anim
-│   ├── Take_002.anim
-│   └── Take_003.anim (都可拖入)
+Canvas
+├── Panel_AnimationInfo
+│   └── Label_ClipName (拖入到 labelClipName)
+├── Panel_Controls
+│   ├── BtnNext
+│   ├── BtnPrev
+│   ├── BtnPlay
+│   └── BtnStop
+```
+
+**Label 自動更新內容示例：**
+```
+Take_003.animation  ← 初始狀態
+Take_001.animation  ← 點擊 Next 後
+Take_002.animation  ← 再點擊 Next 後
 ```
 
 ### 第 3 步: 設置按鈕（必要）
@@ -266,12 +272,13 @@ setPreviewSpeed(speed: number) {
 | 屬性 | 類型 | 預設 | 說明 |
 |------|------|------|------|
 | `skeletalAnimation` | SkeletalAnimation | null | 3D 模型的動畫組件 |
-| `animationClipResources` | AnimationClip[] | [] | ⭐ 拖入動畫 Clip 資源（新功能） |
 | `btnNext` | Button | null | 下一個按鈕 |
 | `btnPrev` | Button | null | 上一個按鈕 |
 | `btnPlay` | Button | null | 播放按鈕（可選） |
 | `btnPause` | Button | null | 暫停按鈕（可選） |
 | `btnStop` | Button | null | 停止按鈕（可選） |
+| `labelClipName` | Label | null | ⭐ **顯示動畫名稱的 Label（新功能）** |
+| `animationClipResources` | AnimationClip[] | [] | 拖入動畫 Clip 資源 |
 | `playbackSpeed` | Number | 1.0 | 播放速度 |
 | `isLooping` | Boolean | true | 是否循環播放 |
 | `crossFadeTime` | Number | 0.3 | 動畫轉換時間（秒） |
