@@ -1020,12 +1020,12 @@ class GraphicsEditorLogic {
                     this.updateCodePreview();
                 } else if (this.isDrawingPolyline) {
                     e.preventDefault();
-                    // 完成折線繪製
+                    // 完成折線繪製 - 閉合折線
                     this.isDrawingPolyline = false;
                     const polylineShape = {
                         tool: 'polyline',
                         points: this.polylinePoints,
-                        isClosed: false,
+                        isClosed: true,  // 按 Enter 時應該閉合
                         fillColor: this.fillColor,
                         fillAlpha: this.fillAlpha,
                         strokeColor: this.strokeColor,
@@ -1386,6 +1386,10 @@ class GraphicsEditorLogic {
                         this.drawCtx.moveTo(shape.points[0].x, shape.points[0].y);
                         for (let i = 1; i < shape.points.length; i++) {
                             this.drawCtx.lineTo(shape.points[i].x, shape.points[i].y);
+                        }
+                        // 如果是閉合的折線，返回起點，使 stroke 和 fill 都能正確封閉
+                        if (shape.isClosed) {
+                            this.drawCtx.lineTo(shape.points[0].x, shape.points[0].y);
                         }
                         if (shape.strokeMode) this.drawCtx.stroke();
                         if (shape.fillMode && shape.isClosed) this.drawCtx.fill();
