@@ -2242,6 +2242,11 @@ export class CustomGraphics extends Component {
                             code += `        g.lineTo(${cocosX}, ${cocosY});\n`;
                         }
                         
+                        // 如果是閉合的折線，返回起點
+                        if (shape.isClosed) {
+                            code += `        g.lineTo(${cocosFirstX}, ${cocosFirstY});\n`;
+                        }
+                        
                         if (shape.strokeMode) code += `        g.stroke();\n`;
                         if (shape.fillMode && shape.isClosed) code += `        g.fill();\n`;
                     }
