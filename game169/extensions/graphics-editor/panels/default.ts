@@ -1582,6 +1582,11 @@ class GraphicsEditorLogic {
                     const newH = Math.abs(newW) / ratio;
                     shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
                 }
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 'ne': // 右上角
@@ -1600,6 +1605,11 @@ class GraphicsEditorLogic {
                     const newW = shape.endX - shape.startX;
                     const newH = Math.abs(newW) / ratio;
                     shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
+                }
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
                 }
                 break;
 
@@ -1620,6 +1630,11 @@ class GraphicsEditorLogic {
                     const newH = Math.abs(newW) / ratio;
                     shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
                 }
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 'se': // 右下角
@@ -1639,24 +1654,103 @@ class GraphicsEditorLogic {
                     const newH = Math.abs(newW) / ratio;
                     shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
                 }
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 'n': // 上邊中點
                 shape.startY = snapPixel(origShape.startY + deltaY);
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 's': // 下邊中點
                 shape.endY = snapPixel(origShape.endY + deltaY);
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 'w': // 左邊中點
                 shape.startX = snapPixel(origShape.startX + deltaX);
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
 
             case 'e': // 右邊中點
                 shape.endX = snapPixel(origShape.endX + deltaX);
+                
+                // 處理折線縮放
+                if (shape.points && origShape.points) {
+                    this.scalePolylinePoints(shape, origShape);
+                }
                 break;
         }
+    }
+
+    /**
+     * 縮放折線的所有點
+     */
+    private scalePolylinePoints(shape: any, origShape: any) {
+        if (!shape.points || !origShape.points) return;
+
+        const snapPixel = this.snapToPixel ? Math.round : (x: number) => x;
+
+        // 計算原始邊界框
+        let origMinX = origShape.points[0].x, origMaxX = origShape.points[0].x;
+        let origMinY = origShape.points[0].y, origMaxY = origShape.points[0].y;
+        for (const p of origShape.points) {
+            origMinX = Math.min(origMinX, p.x);
+            origMaxX = Math.max(origMaxX, p.x);
+            origMinY = Math.min(origMinY, p.y);
+            origMaxY = Math.max(origMaxY, p.y);
+        }
+        
+        const origWidth = origMaxX - origMinX;
+        const origHeight = origMaxY - origMinY;
+        
+        // 新的邊界框
+        const newMinX = Math.min(shape.startX, shape.endX);
+        const newMaxX = Math.max(shape.startX, shape.endX);
+        const newMinY = Math.min(shape.startY, shape.endY);
+        const newMaxY = Math.max(shape.startY, shape.endY);
+        
+        const newWidth = newMaxX - newMinX;
+        const newHeight = newMaxY - newMinY;
+        
+        // 計算縮放比例
+        const scaleX = origWidth !== 0 ? newWidth / origWidth : 1;
+        const scaleY = origHeight !== 0 ? newHeight / origHeight : 1;
+        
+        // 縮放每個點
+        shape.points = origShape.points.map((p: any) => {
+            // 計算點在原始邊界框中的相對位置 (0-1)
+            const relX = origWidth !== 0 ? (p.x - origMinX) / origWidth : 0;
+            const relY = origHeight !== 0 ? (p.y - origMinY) / origHeight : 0;
+            
+            // 應用到新的邊界框
+            return {
+                x: snapPixel(newMinX + relX * newWidth),
+                y: snapPixel(newMinY + relY * newHeight)
+            };
+        });
+        
+        // 更新 shape 的 startX/Y 和 endX/Y 以匹配新的邊界
+        shape.startX = newMinX;
+        shape.startY = newMinY;
+        shape.endX = newMaxX;
+        shape.endY = newMaxY;
     }
 
     // ==================== 選取相關方法 ====================
