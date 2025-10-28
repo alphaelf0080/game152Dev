@@ -79,10 +79,11 @@ export class SkeletalAnimationController extends Component {
             this.animationClipResources.forEach((clip, index) => {
                 if (clip) {
                     this.animationClips.push({
-                        name: clip.name,
+                        name: clip.name || `Clip_${index}`,
                         index: index,
                         duration: clip.duration || 0
                     });
+                    console.log(`[SkeletalAnimationController] 已加載 Clip: ${clip.name} (${clip.duration || 0}s)`);
                 }
             });
 
@@ -98,6 +99,7 @@ export class SkeletalAnimationController extends Component {
                         index: index,
                         duration: clip.duration || 0
                     });
+                    console.log(`[SkeletalAnimationController] 已加載 Clip: ${clip.name} (${clip.duration || 0}s)`);
                 });
 
                 console.log(`[SkeletalAnimationController] 已從 SkeletalAnimation 組件加載 ${this.animationClips.length} 個動畫片段`);
@@ -110,9 +112,12 @@ export class SkeletalAnimationController extends Component {
 
         if (this.animationClips.length > 0) {
             this.currentClipIndex = 0;
+            console.log(`[SkeletalAnimationController] 初始化完成，共 ${this.animationClips.length} 個動畫片段`);
             
-            // 自動播放第一個動畫
-            this.playCurrentClip();
+            // 延遲播放以確保 SkeletalAnimation 已初始化
+            setTimeout(() => {
+                this.playCurrentClip();
+            }, 100);
         } else {
             console.error('[SkeletalAnimationController] 沒有可用的動畫片段');
         }
@@ -159,7 +164,9 @@ export class SkeletalAnimationController extends Component {
             this.currentClipIndex = 0; // 循環到第一個
         }
 
-        console.log(`[SkeletalAnimationController] 切換到下一個動畫: ${this.animationClips[this.currentClipIndex].name}`);
+        const nextClipName = this.animationClips[this.currentClipIndex].name;
+        console.log(`[SkeletalAnimationController] nextClip() → 切換到 [${this.currentClipIndex}] ${nextClipName}`);
+        
         this.updateDisplay();
         this.playCurrentClip();
     }
@@ -178,13 +185,15 @@ export class SkeletalAnimationController extends Component {
             this.currentClipIndex = this.animationClips.length - 1; // 循環到最後一個
         }
 
-        console.log(`[SkeletalAnimationController] 切換到上一個動畫: ${this.animationClips[this.currentClipIndex].name}`);
+        const prevClipName = this.animationClips[this.currentClipIndex].name;
+        console.log(`[SkeletalAnimationController] prevClip() → 切換到 [${this.currentClipIndex}] ${prevClipName}`);
+        
         this.updateDisplay();
         this.playCurrentClip();
     }
 
     /**
-     * 播放當前動畫片段（使用平滑轉換）
+     * 播放當前動畫片段
      */
     public playCurrentClip() {
         if (!this.skeletalAnimation || this.animationClips.length === 0) {
@@ -192,32 +201,51 @@ export class SkeletalAnimationController extends Component {
             return;
         }
 
-        const clipName = this.animationClips[this.currentClipIndex].name;
-        const duration = this.animationClips[this.currentClipIndex].duration;
+        const clipInfo = this.animationClips[this.currentClipIndex];
+        const clipName = clipInfo.name;
 
         try {
-            // 如果當前正在播放動畫，使用平滑轉換
-            if (this.isPlaying && this.currentAnimationName !== clipName) {
-                // 交叉淡入淡出轉換
-                this.skeletalAnimation.crossFade(clipName, this.crossFadeTime);
-                console.log(`[SkeletalAnimationController] 交叉淡入淡出轉換: ${clipName} (轉換時間: ${this.crossFadeTime}s)`);
-            } else {
-                // 直接播放
-                this.skeletalAnimation.play(clipName);
-                console.log(`[SkeletalAnimationController] 播放動畫: ${clipName} (時長: ${duration.toFixed(2)}s, 速度: ${this.playbackSpeed}x, 循環: ${this.isLooping})`);
+            console.log(`[SkeletalAnimationController] 準備播放: ${clipName}`);
+
+            // SkeletalAnimation API: 獲取所有可用的 clip 名稱
+            const availableClips = this.skeletalAnimation.clips || [];
+            console.log(`[SkeletalAnimationController] 可用 clips 數量: ${availableClips.length}`);
+
+            // 查詢 clip 是否存在
+            let clipExists = false;
+            if (availableClips.length > 0) {
+                clipExists = availableClips.some(c => c.name === clipName);
+                console.log(`[SkeletalAnimationController] Clip '${clipName}' 存在: ${clipExists}`);
             }
 
-            // 設置循環模式
-            const playingState = this.skeletalAnimation.state;
-            if (playingState) {
-                playingState.speed = this.playbackSpeed;
-                playingState.wrapMode = this.isLooping ? 2 : 1; // 2 = Loop, 1 = Default (one-time)
+            if (!clipExists && this.animationClipResources.length > 0) {
+                // 如果是拖入的資源，直接在 SkeletalAnimation 上註冊
+                console.log(`[SkeletalAnimationController] 從拖入資源播放`);
+            }
+
+            // 停止當前動畫
+            this.skeletalAnimation.stop();
+
+            // 播放指定的 clip
+            this.skeletalAnimation.play(clipName);
+            
+            console.log(`[SkeletalAnimationController] ✓ 已開始播放: ${clipName}`);
+
+            // 獲取當前播放狀態
+            const state = this.skeletalAnimation.state;
+            if (state) {
+                // 設置循環模式
+                state.wrapMode = this.isLooping ? 2 : 1; // 2 = Loop, 1 = Once
+                state.speed = this.playbackSpeed;
+                
+                console.log(`[SkeletalAnimationController] 循環: ${this.isLooping}, 速度: ${this.playbackSpeed}x`);
             }
 
             this.currentAnimationName = clipName;
             this.isPlaying = true;
+
         } catch (error) {
-            console.error(`[SkeletalAnimationController] 播放動畫失敗: ${error}`);
+            console.error(`[SkeletalAnimationController] 播放失敗:`, error);
         }
 
         this.updateDisplay();
