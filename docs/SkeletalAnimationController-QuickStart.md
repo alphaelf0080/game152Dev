@@ -24,14 +24,30 @@
 Skeletal Animation    → 拖入包含 3D 動畫的節點
 Btn Next             → 拖入"下一個"按鈕
 Btn Prev             → 拖入"上一個"按鈕
-Label Clip Name      → 拖入動畫名稱標籤
-Label Clip Index     → 拖入進度標籤
-Label Clip Duration  → 拖入時長標籤
+Auto Find Labels     → ✅ 勾選（自動查找 Label）
 ```
 
-### 第 3 步: 設置按鈕和標籤
+### ⚡ Label 自動查找說明
 
-創建 UI 元素：
+控制器會自動從 **SkeletalAnimation 節點** 及其子節點中查找 Label 組件，無需手動拖入！
+
+**自動查找規則：**
+- `labelClipName` - 查找名稱包含 `name` / `clipname` / `animation` 的 Label
+- `labelClipIndex` - 查找名稱包含 `index` / `progress` 的 Label  
+- `labelClipDuration` - 查找名稱包含 `duration` / `time` 的 Label
+
+**推薦的節點結構：**
+```
+SkeletalAnimation (3D 模型)
+├── Canvas (UI 容器)
+│   ├── Label_ClipName (自動查找)
+│   ├── Label_ClipIndex (自動查找)
+│   └── Label_Duration (自動查找)
+```
+
+### 第 3 步: 設置按鈕和標籤（可選）
+
+如果自動查找失敗或需要手動指定，創建 UI 元素：
 
 **按鈕：**
 - `btnNext` - 播放下一個動畫
@@ -40,16 +56,16 @@ Label Clip Duration  → 拖入時長標籤
 - `btnPause` - 暫停動畫（可選）
 - `btnStop` - 停止動畫（可選）
 
-**標籤：**
-- `labelClipName` - 顯示當前動畫名稱
-- `labelClipIndex` - 顯示動畫索引
-- `labelClipDuration` - 顯示動畫時長
+**標籤（如未自動查找到）：**
+- `Label_ClipName` - 顯示當前動畫名稱
+- `Label_ClipIndex` - 顯示動畫索引
+- `Label_Duration` - 顯示動畫時長
 
 ### 第 4 步: 運行測試
 
 1. 按 **Play** 執行場景
 2. 點擊 **Next** 切換動畫
-3. 觀察 3D 模型動畫變化
+3. 觀察 3D 模型動畫變化和 Label 自動更新
 
 ✅ 成功！
 
@@ -252,12 +268,13 @@ setPreviewSpeed(speed: number) {
 | `btnPlay` | Button | null | 播放按鈕（可選） |
 | `btnPause` | Button | null | 暫停按鈕（可選） |
 | `btnStop` | Button | null | 停止按鈕（可選） |
-| `labelClipName` | Label | null | 動畫名稱標籤 |
-| `labelClipIndex` | Label | null | 進度標籤 |
-| `labelClipDuration` | Label | null | 時長標籤 |
+| `labelClipName` | Label | null | 動畫名稱標籤（自動查找） |
+| `labelClipIndex` | Label | null | 進度標籤（自動查找） |
+| `labelClipDuration` | Label | null | 時長標籤（自動查找） |
 | `playbackSpeed` | Number | 1.0 | 播放速度 |
 | `isLooping` | Boolean | true | 是否循環播放 |
 | `crossFadeTime` | Number | 0.3 | 動畫轉換時間（秒） |
+| `autoFindLabels` | Boolean | true | ⭐ 自動查找 Label（新功能） |
 
 ### 速度設置指南
 

@@ -18,24 +18,43 @@
 Animation Component    → 拖入包含動畫的節點
 Btn Next              → 拖入"下一個"按鈕節點
 Btn Prev              → 拖入"上一個"按鈕節點
-Label Clip Name       → 拖入用於顯示動畫名稱的標籤
-Label Clip Index      → 拖入用於顯示進度的標籤
+Auto Find Labels      → ✅ 勾選（自動查找 Label）
 ```
 
-### 第 3 步: 設置按鈕
+### ⚡ Label 自動查找說明
 
-創建 4 個按鈕節點（至少需要 Next 和 Prev）：
+控制器會自動從 **Animation 節點** 及其子節點中查找 Label 組件，無需手動拖入！
 
-- **btnNext** - 下一個動畫
-- **btnPrev** - 上一個動畫
+**自動查找規則：**
+- `labelClipName` - 查找名稱包含 `name` / `clipname` / `animation` 的 Label
+- `labelClipIndex` - 查找名稱包含 `index` / `progress` 的 Label
+
+**推薦的節點結構：**
+```
+Animation (2D 動畫)
+├── Canvas (UI 容器)
+│   ├── Label_ClipName (自動查找)
+│   └── Label_ClipIndex (自動查找)
+```
+
+### 第 3 步: 設置按鈕（必要）
+
+創建按鈕節點（至少需要 Next 和 Prev）：
+
+- **btnNext** - 下一個動畫（必要）
+- **btnPrev** - 上一個動畫（必要）
 - **btnPlay** - 播放（可選）
 - **btnStop** - 停止（可選）
+
+如果自動查找失敗，可手動在檢查器中設置 Label：
+- `Label Clip Name` - 顯示當前動畫名稱
+- `Label Clip Index` - 顯示進度
 
 ### 第 4 步: 運行
 
 1. 按下 **Play** 按鈕運行場景
-2. 點擊 **Next** 按鈕播放下一個動畫
-3. 點擊 **Prev** 按鈕播放上一個動畫
+2. 點擊 **Next** 按鈕播放下一個動畫和更新 Label
+3. 點擊 **Prev** 按鈕播放上一個動畫和更新 Label
 
 ✅ 完成！
 
@@ -126,16 +145,32 @@ Idle → Walk → Run → Jump → Landing
 
 ## ⚙️ 配置參數
 
-在編輯器中調整：
+### 編輯器屬性
 
-- **Playback Speed** (預設: 1.0)
-  - 0.5 = 半速播放
-  - 1.0 = 正常速度
-  - 2.0 = 2 倍速播放
+| 屬性 | 類型 | 預設 | 說明 |
+|------|------|------|------|
+| `animationComponent` | Animation | null | 2D 動畫組件 |
+| `btnNext` | Button | null | 下一個按鈕 |
+| `btnPrev` | Button | null | 上一個按鈕 |
+| `btnPlay` | Button | null | 播放按鈕（可選） |
+| `btnPause` | Button | null | 暫停按鈕（可選） |
+| `btnStop` | Button | null | 停止按鈕（可選） |
+| `labelClipName` | Label | null | 動畫名稱標籤（自動查找） |
+| `labelClipIndex` | Label | null | 進度標籤（自動查找） |
+| `playbackSpeed` | Number | 1.0 | 播放速度 |
+| `isLooping` | Boolean | true | 是否循環播放 |
+| `autoFindLabels` | Boolean | true | ⭐ 自動查找 Label（新功能） |
 
-- **Is Looping** (預設: false)
-  - true = 動畫循環播放
-  - false = 動畫播放一次
+### 速度設置指南
+
+- **0.5** = 半速播放
+- **1.0** = 正常速度（預設）
+- **2.0** = 2 倍速播放
+
+### 循環模式
+
+- **true** = 動畫循環播放（預設）
+- **false** = 動畫播放一次
 
 ---
 
