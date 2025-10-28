@@ -67,100 +67,13 @@ export class ProtoConsole extends Component {
         console.log('[DEBUG] isLocalServerMode:', isLocalServerMode);
         
         if (isLocalServerMode) {
-            console.log('[ProtoConsole] 🌐 LocalServer 模式：使用 Spin Server API');
+            console.log('[ProtoConsole] 🌐 LocalServer 模式：初始化開始');
             (Data.Library as any).localServerMode = true;
-            console.log('[DEBUG] Set Data.Library.localServerMode to:', (Data.Library as any).localServerMode);
-            
-            // LocalServer 模式：創建 WebSocket 連接到本地 Spin Server
-            console.log('[DEBUG] LocalServer mode - creating WebSocket to local Spin Server');
-            
-            // 設定 WebSocket URL 為本地 Spin Server
             socketUrl = "ws://localhost:8000/ws";
             console.log('[DEBUG] WebSocket URL:', socketUrl);
             
-            // 使用 setTimeout 確保 Data.Library 完全初始化
-            setTimeout(() => {
-                console.log('[DEBUG] Timeout callback - initializing data structures');
-                
-                // 初始化 StateConsole 的基本配置（模擬 ConfigRecall 的行為）
-                if (Data.Library.StateConsole) {
-                    console.log('[DEBUG] Initializing StateConsole basic config');
-                    
-                    // 設定基本的下注配置
-                    Data.Library.StateConsole.BetArray = [1, 2, 5, 10, 20, 50, 100];
-                    Data.Library.StateConsole.LineArray = [25]; // 25線遊戲
-                    Data.Library.StateConsole.RateArray = [1, 2, 5, 10];
-                    Data.Library.StateConsole.RateIndex = 0;
-                    Data.Library.StateConsole.PlayerCent = 1000000; // 初始金額
-                    
-                    // 計算 TotalArray（總下注選項）
-                    for (let i = 0; i < Data.Library.StateConsole.BetArray.length; i++) {
-                        for (let j = 0; j < Data.Library.StateConsole.RateArray.length; j++) {
-                            let total = Data.Library.StateConsole.BetArray[i] * 
-                                       Data.Library.StateConsole.RateArray[j] * 
-                                       Data.Library.StateConsole.LineArray[0];
-                            if (!Data.Library.StateConsole.TotalArray.includes(total)) {
-                                Data.Library.StateConsole.TotalArray.push(total);
-                                Data.Library.StateConsole.TotalArrayX.push([i, j]);
-                            }
-                        }
-                    }
-                    
-                    Data.Library.StateConsole.TotalArray.sort((a, b) => a - b);
-                    Data.Library.StateConsole.TotalIndex = 0; // 預設使用第一個下注選項
-                    Data.Library.StateConsole.MaxBet = Data.Library.StateConsole.BetArray[Data.Library.StateConsole.BetArray.length - 1] * 
-                                                       Data.Library.StateConsole.RateArray[Data.Library.StateConsole.RateArray.length - 1] * 
-                                                       Data.Library.StateConsole.LineArray[0];
-                    
-                    console.log('[DEBUG] StateConsole config initialized:', {
-                        BetArray: Data.Library.StateConsole.BetArray,
-                        TotalArray: Data.Library.StateConsole.TotalArray,
-                        PlayerCent: Data.Library.StateConsole.PlayerCent
-                    });
-                }
-                
-                // 初始化 MathConsole 必要的資料結構（模擬 StripsRecall 的行為）
-                if (Data.Library.MathConsole) {
-                    // 初始化 Striptables 陣列
-                    Data.Library.MathConsole.Striptables = [];
-                    Data.Library.MathConsole.Paytables = [];
-                    
-                    // 創建一個基本的 Striptable（使用 BS 模組）
-                    const striptable = instantiate(Data.Library.MathConsole.StripTable);
-                    striptable._id = "BS"; // 基本遊戲模組ID
-                    
-                    // 創建假的 strips 資料（5個滾輪，每個滾輪有足夠的符號）
-                    // 這些 strips 將被初始盤面的 RNG 資料使用
-                    const dummyStrips = [];
-                    const reelCount = 5;
-                    const symbolsPerReel = 100; // 每個滾輪足夠的符號數量
-                    
-                    for (let i = 0; i < reelCount; i++) {
-                        const strip = [];
-                        for (let j = 0; j < symbolsPerReel; j++) {
-                            // 使用 1-10 之間的符號ID（根據遊戲的符號定義）
-                            strip.push((j % 10) + 1);
-                        }
-                        dummyStrips.push(strip);
-                    }
-                    
-                    striptable.setStrips(dummyStrips);
-                    
-                    Data.Library.MathConsole.Striptables.push(striptable);
-                    Data.Library.MathConsole.Paytables.push({_id: "BS"});
-                    Data.Library.MathConsole.CurModuleid = "BS";
-                    
-                    console.log('[DEBUG] MathConsole initialized with module:', Data.Library.MathConsole.CurModuleid);
-                    console.log('[DEBUG] Striptables[0]._strips length:', striptable._strips.length);
-                } else {
-                    console.error('[ERROR] MathConsole not initialized');
-                }
-                
-                // 創建 WebSocket 連接
-                console.log('[DEBUG] Creating WebSocket connection to Spin Server');
-                CreateSocket();
-                
-            }, 100);
+            // 👇 使用 async/await 替代 setTimeout
+            this.initializeLocalServer();
         } else {
             console.log('[ProtoConsole] 🌐 正常模式：使用 WebSocket');
             (Data.Library as any).localServerMode = false;
@@ -174,7 +87,162 @@ export class ProtoConsole extends Component {
             Data.Library.ProtoData = this;
         }
         else {
-            this.destroy();
+            this.node.destroy();
+        }
+    }
+
+    /**
+     * 等待 Data.Library 完全初始化
+     * @returns Promise<void>
+     */
+    private waitForDataLibraryReady(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const maxAttempts = 50;  // 最多等待 5 秒（50 * 100ms）
+            let attempts = 0;
+            
+            const checkReady = () => {
+                attempts++;
+                
+                if (Data.Library && 
+                    Data.Library.StateConsole && 
+                    Data.Library.MathConsole) {
+                    console.log('[DEBUG] Data.Library ready after', attempts * 100, 'ms');
+                    resolve();
+                } else if (attempts >= maxAttempts) {
+                    reject(new Error('Data.Library 初始化超時'));
+                } else {
+                    setTimeout(checkReady, 100);
+                }
+            };
+            
+            checkReady();
+        });
+    }
+
+    /**
+     * 初始化 StateConsole 配置
+     */
+    private initializeStateConsole(): void {
+        if (!Data.Library.StateConsole) {
+            console.warn('[ProtoConsole] ⚠️ StateConsole 未初始化');
+            return;
+        }
+        
+        console.log('[DEBUG] Initializing StateConsole basic config');
+        
+        // 設定基本的下注配置
+        Data.Library.StateConsole.BetArray = [1, 2, 5, 10, 20, 50, 100];
+        Data.Library.StateConsole.LineArray = [25]; // 25線遊戲
+        Data.Library.StateConsole.RateArray = [1, 2, 5, 10];
+        Data.Library.StateConsole.RateIndex = 0;
+        Data.Library.StateConsole.PlayerCent = 1000000; // 初始金額
+        
+        // 計算 TotalArray（總下注選項）
+        for (let i = 0; i < Data.Library.StateConsole.BetArray.length; i++) {
+            for (let j = 0; j < Data.Library.StateConsole.RateArray.length; j++) {
+                let total = Data.Library.StateConsole.BetArray[i] * 
+                           Data.Library.StateConsole.RateArray[j] * 
+                           Data.Library.StateConsole.LineArray[0];
+                if (!Data.Library.StateConsole.TotalArray.includes(total)) {
+                    Data.Library.StateConsole.TotalArray.push(total);
+                    Data.Library.StateConsole.TotalArrayX.push([i, j]);
+                }
+            }
+        }
+        
+        Data.Library.StateConsole.TotalArray.sort((a, b) => a - b);
+        Data.Library.StateConsole.TotalIndex = 0; // 預設使用第一個下注選項
+        Data.Library.StateConsole.MaxBet = Data.Library.StateConsole.BetArray[Data.Library.StateConsole.BetArray.length - 1] * 
+                                           Data.Library.StateConsole.RateArray[Data.Library.StateConsole.RateArray.length - 1] * 
+                                           Data.Library.StateConsole.LineArray[0];
+        
+        console.log('[DEBUG] StateConsole config initialized:', {
+            BetArray: Data.Library.StateConsole.BetArray,
+            TotalArray: Data.Library.StateConsole.TotalArray,
+            PlayerCent: Data.Library.StateConsole.PlayerCent
+        });
+    }
+
+    /**
+     * 初始化 MathConsole 配置
+     */
+    private initializeMathConsole(): void {
+        if (!Data.Library.MathConsole) {
+            console.error('[ERROR] MathConsole not initialized');
+            return;
+        }
+        
+        console.log('[DEBUG] Initializing MathConsole');
+        
+        // 初始化 Striptables 陣列
+        Data.Library.MathConsole.Striptables = [];
+        Data.Library.MathConsole.Paytables = [];
+        
+        // 創建一個基本的 Striptable（使用 BS 模組）
+        const striptable = instantiate(Data.Library.MathConsole.StripTable);
+        striptable._id = "BS"; // 基本遊戲模組ID
+        
+        // 創建假的 strips 資料（5個滾輪，每個滾輪有足夠的符號）
+        // 這些 strips 將被初始盤面的 RNG 資料使用
+        const dummyStrips = [];
+        const reelCount = 5;
+        const symbolsPerReel = 100; // 每個滾輪足夠的符號數量
+        
+        for (let i = 0; i < reelCount; i++) {
+            const strip = [];
+            for (let j = 0; j < symbolsPerReel; j++) {
+                // 使用 1-10 之間的符號ID（根據遊戲的符號定義）
+                strip.push((j % 10) + 1);
+            }
+            dummyStrips.push(strip);
+        }
+        
+        striptable.setStrips(dummyStrips);
+        
+        Data.Library.MathConsole.Striptables.push(striptable);
+        Data.Library.MathConsole.Paytables.push({_id: "BS"});
+        Data.Library.MathConsole.CurModuleid = "BS";
+        
+        console.log('[DEBUG] MathConsole initialized with module:', Data.Library.MathConsole.CurModuleid);
+        console.log('[DEBUG] Striptables[0]._strips length:', striptable._strips.length);
+    }
+
+    /**
+     * 初始化 LocalServer 配置（異步）
+     */
+    private async initializeLocalServer(): Promise<void> {
+        try {
+            console.log('[ProtoConsole] 🔄 等待 Data.Library 初始化...');
+            
+            // 等待 Data.Library 完全初始化
+            await this.waitForDataLibraryReady();
+            
+            console.log('[ProtoConsole] ✅ Data.Library 已就緒，開始配置初始化');
+            
+            // 初始化 StateConsole
+            this.initializeStateConsole();
+            
+            // 初始化 MathConsole
+            this.initializeMathConsole();
+            
+            console.log('[ProtoConsole] ✅ LocalServer 配置初始化完成');
+            
+            // 創建 WebSocket 連接
+            console.log('[DEBUG] Creating WebSocket connection to Spin Server');
+            CreateSocket();
+            
+        } catch (error) {
+            console.error('[ProtoConsole] ❌ LocalServer 初始化失敗:', error);
+            Mode.ErrorInLoading('LocalServer 初始化失敗: ' + error.message);
+        }
+    }
+
+    protected onLoad(): void {
+        if (Data.Library.ProtoData === null) {
+            Data.Library.ProtoData = this;
+        }
+        else {
+            this.node.destroy();
         }
     }
 
