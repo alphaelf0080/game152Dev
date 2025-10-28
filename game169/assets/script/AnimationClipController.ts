@@ -50,8 +50,8 @@ export class AnimationClipController extends Component {
     @property({ type: Number, tooltip: '動畫播放速度' })
     public playbackSpeed: number = 1.0;
 
-    @property({ type: Boolean, tooltip: '是否循環播放' })
-    public isLooping: boolean = false;
+    @property({ type: Boolean, tooltip: '是否循環播放', default: true })
+    public isLooping: boolean = true;
 
     // 內部狀態
     private animationClips: AnimationClip[] = [];
@@ -173,12 +173,15 @@ export class AnimationClipController extends Component {
             // 設置循環模式
             state.isMotionFrozen = false;
             state.speed = this.playbackSpeed;
+            
+            // 設置 wrapMode: 0 = Default, 1 = Once (無循環), 2 = Loop (循環)
+            state.wrapMode = this.isLooping ? 2 : 1;
 
             // 播放動畫
             this.animationComponent.play(clipName);
             this.isPlaying = true;
 
-            console.log(`[AnimationClipController] 播放動畫: ${clipName} (速度: ${this.playbackSpeed}x)`);
+            console.log(`[AnimationClipController] 播放動畫: ${clipName} (速度: ${this.playbackSpeed}x, 循環: ${this.isLooping})`);
         } else {
             console.warn(`[AnimationClipController] 找不到動畫狀態: ${clipName}`);
         }
@@ -237,6 +240,24 @@ export class AnimationClipController extends Component {
         }
 
         console.log(`[AnimationClipController] 播放速度已設置為: ${this.playbackSpeed}x`);
+    }
+
+    /**
+     * 設置循環模式
+     */
+    public setLooping(loop: boolean) {
+        this.isLooping = loop;
+
+        if (this.animationComponent && this.animationClips.length > 0) {
+            const clipName = this.animationClips[this.currentClipIndex].name;
+            const state = this.animationComponent.getState(clipName);
+            if (state) {
+                // 0 = Default, 1 = Once (無循環), 2 = Loop (循環)
+                state.wrapMode = loop ? 2 : 1;
+            }
+        }
+
+        console.log(`[AnimationClipController] 循環模式: ${loop ? '開啟' : '關閉'}`);
     }
 
     /**

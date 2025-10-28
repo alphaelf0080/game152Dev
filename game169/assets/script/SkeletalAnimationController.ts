@@ -192,7 +192,14 @@ export class SkeletalAnimationController extends Component {
             } else {
                 // 直接播放
                 this.skeletalAnimation.play(clipName);
-                console.log(`[SkeletalAnimationController] 播放動畫: ${clipName} (時長: ${duration.toFixed(2)}s, 速度: ${this.playbackSpeed}x)`);
+                console.log(`[SkeletalAnimationController] 播放動畫: ${clipName} (時長: ${duration.toFixed(2)}s, 速度: ${this.playbackSpeed}x, 循環: ${this.isLooping})`);
+            }
+
+            // 設置循環模式
+            const playingState = this.skeletalAnimation.state;
+            if (playingState) {
+                playingState.speed = this.playbackSpeed;
+                playingState.wrapMode = this.isLooping ? 2 : 1; // 2 = Loop, 1 = Default (one-time)
             }
 
             this.currentAnimationName = clipName;
