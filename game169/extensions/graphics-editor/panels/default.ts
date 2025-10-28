@@ -63,6 +63,12 @@ export const template = `
             <ui-checkbox id="strokeMode" checked>描邊</ui-checkbox>
         </div>
 
+        <!-- 變換相關選項 -->
+        <div class="toolbar-section">
+            <label>變換:</label>
+            <ui-checkbox id="snapToPixel" checked>對齊像素</ui-checkbox>
+        </div>
+
         <!-- 視圖控制 -->
         <div class="toolbar-section">
             <label>視圖:</label>
@@ -370,6 +376,7 @@ export const $ = {
     lineWidth: '#lineWidth',
     fillMode: '#fillMode',
     strokeMode: '#strokeMode',
+    snapToPixel: '#snapToPixel',
     btnZoomIn: '#btnZoomIn',
     btnZoomOut: '#btnZoomOut',
     btnZoomFit: '#btnZoomFit',
@@ -449,6 +456,17 @@ class GraphicsEditorLogic {
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
     private cornerRadius: number = 10; // 圓角半徑
+
+    // 圖形變換相關
+    private isTransforming: boolean = false; // 是否正在變換
+    private transformMode: string = ''; // 變換模式: 'move', 'nw', 'ne', 'sw', 'se', 'n', 's', 'e', 'w'
+    private transformStartX: number = 0;
+    private transformStartY: number = 0;
+    private transformStartShape: any = null; // 變換前的圖形副本
+    private snapToPixel: boolean = true; // 是否 snap to pixel
+    private keepAspectRatio: boolean = false; // 是否保持寬高比例
+    private transformFromCenter: boolean = false; // 是否從中心變換
+    private handleSize: number = 8; // 調整句柄大小
 
     // 視圖控制
     private zoom: number = 1.0;
@@ -880,6 +898,12 @@ class GraphicsEditorLogic {
             this.strokeMode = e.target.checked;
         });
 
+        // 像素對齊
+        this.panel.$.snapToPixel.addEventListener('change', (e: any) => {
+            this.snapToPixel = e.target.checked;
+            console.log('[Graphics Editor] Snap to pixel:', this.snapToPixel ? '啟用' : '禁用');
+        });
+
         // Canvas 容器平移事件
         this.canvasContainer.addEventListener('mousedown', (e: MouseEvent) => {
             // 只有空格鍵或中鍵才啟動平移
@@ -987,6 +1011,56 @@ class GraphicsEditorLogic {
             } else if (e.key.toLowerCase() === 'r') {
                 e.preventDefault();
                 this.zoomReset();
+            } else if (e.key === 'Enter') {
+                // Enter：確認變換或完成折線
+                if (this.isTransforming) {
+                    e.preventDefault();
+                    this.isTransforming = false;
+                    this.transformMode = '';
+                    this.updateCodePreview();
+                } else if (this.isDrawingPolyline) {
+                    e.preventDefault();
+                    // 完成折線繪製
+                    this.isDrawingPolyline = false;
+                    const polylineShape = {
+                        tool: 'polyline',
+                        points: this.polylinePoints,
+                        isClosed: false,
+                        fillColor: this.fillColor,
+                        fillAlpha: this.fillAlpha,
+                        strokeColor: this.strokeColor,
+                        strokeAlpha: this.strokeAlpha,
+                        lineWidth: this.lineWidth,
+                        fillMode: this.fillMode,
+                        strokeMode: this.strokeMode
+                    };
+                    this.shapes.push(polylineShape);
+                    this.polylinePoints = [];
+                    this.redraw();
+                    this.updateCodePreview();
+                }
+            } else if (e.key === 'Escape') {
+                // Esc：取消變換
+                if (this.isTransforming) {
+                    e.preventDefault();
+                    // 恢復到變換前的狀態
+                    this.shapes[this.selectedShapeIndex] = JSON.parse(JSON.stringify(this.transformStartShape));
+                    this.isTransforming = false;
+                    this.transformMode = '';
+                    this.redraw();
+                } else if (this.isDrawingPolyline) {
+                    e.preventDefault();
+                    // 清除折線繪製
+                    this.isDrawingPolyline = false;
+                    this.polylinePoints = [];
+                    this.redraw();
+                }
+            } else if (e.key === 'Delete') {
+                // Delete：刪除選中的圖形
+                if (this.selectedShapeIndex !== -1 && !this.isTransforming && !this.isDrawingPolyline) {
+                    e.preventDefault();
+                    this.deleteSelectedShape();
+                }
             }
         });
 
@@ -1043,6 +1117,23 @@ class GraphicsEditorLogic {
     onMouseDown(e: MouseEvent) {
         const pos = this.screenToCanvas(e.clientX, e.clientY);
         
+        // 檢查是否有圖形被選中並且點擊到變換句柄
+        if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline) {
+            const shape = this.shapes[this.selectedShapeIndex];
+            const handleMode = this.getHandleAtPosition(pos.x, pos.y);
+            
+            if (handleMode) {
+                // 開始變換
+                this.isTransforming = true;
+                this.transformMode = handleMode;
+                this.transformStartX = pos.x;
+                this.transformStartY = pos.y;
+                this.transformStartShape = JSON.parse(JSON.stringify(shape)); // 深複製
+                e.preventDefault();
+                return;
+            }
+        }
+        
         // 檢查是否點擊到已有的圖形（用於選取）
         // 按住 Ctrl/Cmd 或者右鍵點擊可以選取
         if (e.button === 2 || e.ctrlKey || e.metaKey) {
@@ -1096,6 +1187,34 @@ class GraphicsEditorLogic {
         let currentX = pos.x;
         let currentY = pos.y;
 
+        // 處理圖形變換
+        if (this.isTransforming) {
+            const deltaX = currentX - this.transformStartX;
+            const deltaY = currentY - this.transformStartY;
+            this.updateShapeTransform(deltaX, deltaY, e);
+            this.redraw();
+            return;
+        }
+
+        // 更新光標顯示當前句柄
+        if (this.selectedShapeIndex !== -1) {
+            const handleMode = this.getHandleAtPosition(currentX, currentY);
+            if (handleMode) {
+                let cursor = 'move';
+                switch(handleMode) {
+                    case 'nw': case 'se': cursor = 'nwse-resize'; break;
+                    case 'ne': case 'sw': cursor = 'nesw-resize'; break;
+                    case 'n': case 's': cursor = 'ns-resize'; break;
+                    case 'e': case 'w': cursor = 'ew-resize'; break;
+                }
+                this.drawCanvas.style.cursor = cursor;
+            } else {
+                this.drawCanvas.style.cursor = 'crosshair';
+            }
+        } else {
+            this.drawCanvas.style.cursor = 'crosshair';
+        }
+        
         // 折線繪製中：處理 Shift 鍵約束和預覽
         if (this.isDrawingPolyline && this.polylinePoints.length > 0) {
             const lastPoint = this.polylinePoints[this.polylinePoints.length - 1];
@@ -1153,6 +1272,14 @@ class GraphicsEditorLogic {
     }
 
     onMouseUp(e: MouseEvent) {
+        // 完成圖形變換
+        if (this.isTransforming) {
+            this.isTransforming = false;
+            this.transformMode = '';
+            this.updateCodePreview();
+            return;
+        }
+
         if (!this.isDrawing) return;
         this.isDrawing = false;
 
@@ -1269,6 +1396,256 @@ class GraphicsEditorLogic {
         // 繪製選中圖形的高亮邊框
         if (this.selectedShapeIndex !== -1) {
             this.drawSelectionHighlight();
+        }
+    }
+
+    // ==================== 圖形變換相關方法 ====================
+
+    /**
+     * 檢測鼠標是否在調整句柄上，返回句柄模式
+     */
+    private getHandleAtPosition(x: number, y: number): string | null {
+        if (this.selectedShapeIndex < 0 || this.selectedShapeIndex >= this.shapes.length) {
+            return null;
+        }
+
+        const shape = this.shapes[this.selectedShapeIndex];
+        let bounds: any = null;
+
+        // 計算邊界框
+        switch(shape.tool) {
+            case 'rect':
+                bounds = {
+                    x: Math.min(shape.startX, shape.endX),
+                    y: Math.min(shape.startY, shape.endY),
+                    width: Math.abs(shape.endX - shape.startX),
+                    height: Math.abs(shape.endY - shape.startY)
+                };
+                break;
+            case 'circle':
+                const radius = Math.sqrt(
+                    Math.pow(shape.endX - shape.startX, 2) + 
+                    Math.pow(shape.endY - shape.startY, 2)
+                );
+                bounds = {
+                    x: shape.startX - radius,
+                    y: shape.startY - radius,
+                    width: radius * 2,
+                    height: radius * 2
+                };
+                break;
+            case 'line':
+                bounds = {
+                    x: Math.min(shape.startX, shape.endX),
+                    y: Math.min(shape.startY, shape.endY),
+                    width: Math.abs(shape.endX - shape.startX),
+                    height: Math.abs(shape.endY - shape.startY)
+                };
+                break;
+            case 'polyline':
+                if (shape.points && shape.points.length > 0) {
+                    let minX = shape.points[0].x, maxX = shape.points[0].x;
+                    let minY = shape.points[0].y, maxY = shape.points[0].y;
+                    for (const p of shape.points) {
+                        minX = Math.min(minX, p.x);
+                        maxX = Math.max(maxX, p.x);
+                        minY = Math.min(minY, p.y);
+                        maxY = Math.max(maxY, p.y);
+                    }
+                    bounds = {
+                        x: minX,
+                        y: minY,
+                        width: maxX - minX,
+                        height: maxY - minY
+                    };
+                }
+                break;
+        }
+
+        if (!bounds) return null;
+
+        const h = this.handleSize;
+        const hh = h / 2;
+        const tolerance = hh + 3;
+
+        // 檢查8個角
+        const corners = [
+            { x: bounds.x, y: bounds.y, mode: 'nw' },
+            { x: bounds.x + bounds.width, y: bounds.y, mode: 'ne' },
+            { x: bounds.x, y: bounds.y + bounds.height, mode: 'sw' },
+            { x: bounds.x + bounds.width, y: bounds.y + bounds.height, mode: 'se' }
+        ];
+
+        // 檢查4個邊的中點
+        const edges = [
+            { x: bounds.x + bounds.width / 2, y: bounds.y, mode: 'n' },
+            { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height, mode: 's' },
+            { x: bounds.x, y: bounds.y + bounds.height / 2, mode: 'w' },
+            { x: bounds.x + bounds.width, y: bounds.y + bounds.height / 2, mode: 'e' }
+        ];
+
+        // 檢查中心點（用於移動）
+        const centerX = bounds.x + bounds.width / 2;
+        const centerY = bounds.y + bounds.height / 2;
+        const distToCenter = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+        if (distToCenter <= tolerance) {
+            return 'move';
+        }
+
+        // 檢查角的句柄
+        for (const handle of corners) {
+            const dist = Math.sqrt(Math.pow(x - handle.x, 2) + Math.pow(y - handle.y, 2));
+            if (dist <= tolerance) {
+                return handle.mode;
+            }
+        }
+
+        // 檢查邊的句柄
+        for (const handle of edges) {
+            const dist = Math.sqrt(Math.pow(x - handle.x, 2) + Math.pow(y - handle.y, 2));
+            if (dist <= tolerance) {
+                return handle.mode;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 更新圖形的變換（移動、調整大小）
+     */
+    private updateShapeTransform(deltaX: number, deltaY: number, e: MouseEvent) {
+        if (this.selectedShapeIndex < 0 || this.selectedShapeIndex >= this.shapes.length) {
+            return;
+        }
+
+        const shape = this.shapes[this.selectedShapeIndex];
+        const origShape = this.transformStartShape;
+
+        // 支援 Shift 鍵保持寬高比例
+        if (e.shiftKey) {
+            this.keepAspectRatio = true;
+        } else {
+            this.keepAspectRatio = false;
+        }
+
+        // 支援 Alt 鍵從中心變換
+        if (e.altKey) {
+            this.transformFromCenter = true;
+        } else {
+            this.transformFromCenter = false;
+        }
+
+        const snapPixel = this.snapToPixel ? Math.round : (x: number) => x;
+
+        switch(this.transformMode) {
+            case 'move':
+                // 移動整個圖形
+                shape.startX = snapPixel(origShape.startX + deltaX);
+                shape.startY = snapPixel(origShape.startY + deltaY);
+                shape.endX = snapPixel(origShape.endX + deltaX);
+                shape.endY = snapPixel(origShape.endY + deltaY);
+                
+                // 處理折線移動
+                if (shape.points) {
+                    shape.points = origShape.points.map((p: any) => ({
+                        x: snapPixel(p.x + deltaX),
+                        y: snapPixel(p.y + deltaY)
+                    }));
+                }
+                break;
+
+            case 'nw': // 左上角
+                if (this.transformFromCenter) {
+                    shape.startX = snapPixel(origShape.startX + deltaX * 2);
+                    shape.startY = snapPixel(origShape.startY + deltaY * 2);
+                } else {
+                    shape.startX = snapPixel(origShape.startX + deltaX);
+                    shape.startY = snapPixel(origShape.startY + deltaY);
+                }
+                
+                if (this.keepAspectRatio && shape.tool === 'rect') {
+                    const origW = origShape.endX - origShape.startX;
+                    const origH = origShape.endY - origShape.startY;
+                    const ratio = Math.abs(origW) / Math.abs(origH);
+                    const newW = shape.endX - shape.startX;
+                    const newH = Math.abs(newW) / ratio;
+                    shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
+                }
+                break;
+
+            case 'ne': // 右上角
+                if (this.transformFromCenter) {
+                    shape.endX = snapPixel(origShape.endX + deltaX * 2);
+                    shape.startY = snapPixel(origShape.startY + deltaY * 2);
+                } else {
+                    shape.endX = snapPixel(origShape.endX + deltaX);
+                    shape.startY = snapPixel(origShape.startY + deltaY);
+                }
+                
+                if (this.keepAspectRatio && shape.tool === 'rect') {
+                    const origW = origShape.endX - origShape.startX;
+                    const origH = origShape.endY - origShape.startY;
+                    const ratio = Math.abs(origW) / Math.abs(origH);
+                    const newW = shape.endX - shape.startX;
+                    const newH = Math.abs(newW) / ratio;
+                    shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
+                }
+                break;
+
+            case 'sw': // 左下角
+                if (this.transformFromCenter) {
+                    shape.startX = snapPixel(origShape.startX + deltaX * 2);
+                    shape.endY = snapPixel(origShape.endY + deltaY * 2);
+                } else {
+                    shape.startX = snapPixel(origShape.startX + deltaX);
+                    shape.endY = snapPixel(origShape.endY + deltaY);
+                }
+                
+                if (this.keepAspectRatio && shape.tool === 'rect') {
+                    const origW = origShape.endX - origShape.startX;
+                    const origH = origShape.endY - origShape.startY;
+                    const ratio = Math.abs(origW) / Math.abs(origH);
+                    const newW = shape.endX - shape.startX;
+                    const newH = Math.abs(newW) / ratio;
+                    shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
+                }
+                break;
+
+            case 'se': // 右下角
+                if (this.transformFromCenter) {
+                    shape.endX = snapPixel(origShape.endX + deltaX * 2);
+                    shape.endY = snapPixel(origShape.endY + deltaY * 2);
+                } else {
+                    shape.endX = snapPixel(origShape.endX + deltaX);
+                    shape.endY = snapPixel(origShape.endY + deltaY);
+                }
+                
+                if (this.keepAspectRatio && shape.tool === 'rect') {
+                    const origW = origShape.endX - origShape.startX;
+                    const origH = origShape.endY - origShape.startY;
+                    const ratio = Math.abs(origW) / Math.abs(origH);
+                    const newW = shape.endX - shape.startX;
+                    const newH = Math.abs(newW) / ratio;
+                    shape.endY = snapPixel(shape.startY + newH * (origH > 0 ? 1 : -1));
+                }
+                break;
+
+            case 'n': // 上邊中點
+                shape.startY = snapPixel(origShape.startY + deltaY);
+                break;
+
+            case 's': // 下邊中點
+                shape.endY = snapPixel(origShape.endY + deltaY);
+                break;
+
+            case 'w': // 左邊中點
+                shape.startX = snapPixel(origShape.startX + deltaX);
+                break;
+
+            case 'e': // 右邊中點
+                shape.endX = snapPixel(origShape.endX + deltaX);
+                break;
         }
     }
 
@@ -1433,7 +1810,7 @@ class GraphicsEditorLogic {
     }
 
     /**
-     * 繪製選中圖形的高亮邊框
+     * 繪製選中圖形的高亮邊框和變換句柄
      */
     drawSelectionHighlight() {
         if (this.selectedShapeIndex < 0 || this.selectedShapeIndex >= this.shapes.length) {
@@ -1445,14 +1822,20 @@ class GraphicsEditorLogic {
         
         // 高亮邊框樣式
         this.drawCtx.strokeStyle = '#00BFFF'; // 亮藍色
-        this.drawCtx.lineWidth = 3;
+        this.drawCtx.lineWidth = 2;
         this.drawCtx.setLineDash([5, 5]); // 虛線
+
+        let bounds: any = null;
 
         switch(shape.tool) {
             case 'rect':
-                const width = shape.endX - shape.startX;
-                const height = shape.endY - shape.startY;
-                this.drawCtx.strokeRect(shape.startX - 2, shape.startY - 2, width + 4, height + 4);
+                bounds = {
+                    x: Math.min(shape.startX, shape.endX),
+                    y: Math.min(shape.startY, shape.endY),
+                    width: Math.abs(shape.endX - shape.startX),
+                    height: Math.abs(shape.endY - shape.startY)
+                };
+                this.drawCtx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
                 break;
                 
             case 'circle':
@@ -1461,8 +1844,16 @@ class GraphicsEditorLogic {
                     Math.pow(shape.endY - shape.startY, 2)
                 );
                 this.drawCtx.beginPath();
-                this.drawCtx.arc(shape.startX, shape.startY, radius + 2, 0, Math.PI * 2);
+                this.drawCtx.arc(shape.startX, shape.startY, radius, 0, Math.PI * 2);
                 this.drawCtx.stroke();
+                
+                // 圓形的邊界框
+                bounds = {
+                    x: shape.startX - radius,
+                    y: shape.startY - radius,
+                    width: radius * 2,
+                    height: radius * 2
+                };
                 break;
                 
             case 'line':
@@ -1470,6 +1861,14 @@ class GraphicsEditorLogic {
                 this.drawCtx.moveTo(shape.startX, shape.startY);
                 this.drawCtx.lineTo(shape.endX, shape.endY);
                 this.drawCtx.stroke();
+                
+                // 線條的邊界框
+                bounds = {
+                    x: Math.min(shape.startX, shape.endX),
+                    y: Math.min(shape.startY, shape.endY),
+                    width: Math.abs(shape.endX - shape.startX),
+                    height: Math.abs(shape.endY - shape.startY)
+                };
                 break;
                 
             case 'polyline':
@@ -1483,9 +1882,108 @@ class GraphicsEditorLogic {
                         this.drawCtx.closePath();
                     }
                     this.drawCtx.stroke();
+                    
+                    // 折線的邊界框
+                    let minX = shape.points[0].x, maxX = shape.points[0].x;
+                    let minY = shape.points[0].y, maxY = shape.points[0].y;
+                    for (const p of shape.points) {
+                        minX = Math.min(minX, p.x);
+                        maxX = Math.max(maxX, p.x);
+                        minY = Math.min(minY, p.y);
+                        maxY = Math.max(maxY, p.y);
+                    }
+                    bounds = {
+                        x: minX,
+                        y: minY,
+                        width: maxX - minX,
+                        height: maxY - minY
+                    };
                 }
                 break;
         }
+
+        // 繪製調整句柄
+        if (bounds) {
+            this.drawTransformHandles(bounds);
+        }
+
+        this.drawCtx.restore();
+    }
+
+    /**
+     * 繪製變換句柄（8個角 + 4個邊中點）
+     */
+    private drawTransformHandles(bounds: any) {
+        this.drawCtx.save();
+        this.drawCtx.fillStyle = '#FFFFFF'; // 白色
+        this.drawCtx.strokeStyle = '#00BFFF'; // 亮藍色
+        this.drawCtx.lineWidth = 1;
+        this.drawCtx.setLineDash([]); // 實線
+
+        const h = this.handleSize;
+        const hh = h / 2;
+
+        // 8個角
+        const corners = [
+            { x: bounds.x, y: bounds.y, cursor: 'nwse-resize', mode: 'nw' },
+            { x: bounds.x + bounds.width, y: bounds.y, cursor: 'nesw-resize', mode: 'ne' },
+            { x: bounds.x, y: bounds.y + bounds.height, cursor: 'nesw-resize', mode: 'sw' },
+            { x: bounds.x + bounds.width, y: bounds.y + bounds.height, cursor: 'nwse-resize', mode: 'se' }
+        ];
+
+        // 4個邊中點
+        const edges = [
+            { x: bounds.x + bounds.width / 2, y: bounds.y, cursor: 'ns-resize', mode: 'n' },
+            { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height, cursor: 'ns-resize', mode: 's' },
+            { x: bounds.x, y: bounds.y + bounds.height / 2, cursor: 'ew-resize', mode: 'w' },
+            { x: bounds.x + bounds.width, y: bounds.y + bounds.height / 2, cursor: 'ew-resize', mode: 'e' }
+        ];
+
+        // 繪製角的句柄
+        for (const handle of corners) {
+            this.drawCtx.fillRect(handle.x - hh, handle.y - hh, h, h);
+            this.drawCtx.strokeRect(handle.x - hh, handle.y - hh, h, h);
+        }
+
+        // 繪製邊的句柄
+        for (const handle of edges) {
+            this.drawCtx.fillRect(handle.x - hh, handle.y - hh, h, h);
+            this.drawCtx.strokeRect(handle.x - hh, handle.y - hh, h, h);
+        }
+
+        // 繪製中心點（用於移動）
+        const centerX = bounds.x + bounds.width / 2;
+        const centerY = bounds.y + bounds.height / 2;
+        this.drawCtx.beginPath();
+        this.drawCtx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+        this.drawCtx.fillStyle = '#FFD700'; // 金色
+        this.drawCtx.fill();
+        this.drawCtx.strokeStyle = '#00BFFF';
+        this.drawCtx.stroke();
+
+        // 繪製尺寸標籤
+        this.drawCtx.fillStyle = '#FFFFFF';
+        this.drawCtx.strokeStyle = '#00BFFF';
+        this.drawCtx.lineWidth = 1;
+        this.drawCtx.font = '12px Arial';
+        this.drawCtx.textAlign = 'center';
+        this.drawCtx.textBaseline = 'middle';
+
+        // 寬度標籤
+        const widthLabel = `W: ${Math.round(bounds.width)}`;
+        const widthLabelY = bounds.y - 10;
+        this.drawCtx.strokeText(widthLabel, centerX, widthLabelY);
+        this.drawCtx.fillText(widthLabel, centerX, widthLabelY);
+
+        // 高度標籤
+        const heightLabel = `H: ${Math.round(bounds.height)}`;
+        const heightLabelX = bounds.x - 30;
+        this.drawCtx.save();
+        this.drawCtx.translate(heightLabelX, centerY);
+        this.drawCtx.rotate(-Math.PI / 2);
+        this.drawCtx.strokeText(heightLabel, 0, 0);
+        this.drawCtx.fillText(heightLabel, 0, 0);
+        this.drawCtx.restore();
 
         this.drawCtx.restore();
     }
