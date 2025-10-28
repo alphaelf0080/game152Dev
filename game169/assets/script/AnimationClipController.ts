@@ -46,6 +46,9 @@ export class AnimationClipController extends Component {
     @property(Label)
     public labelClipIndex: Label | null = null; // 顯示當前動畫索引
 
+    @property({ type: Boolean, tooltip: '自動從 Animation 節點查找 Label' })
+    public autoFindLabels: boolean = true; // 自動查找標籤
+
     // 配置
     @property({ type: Number, tooltip: '動畫播放速度' })
     public playbackSpeed: number = 1.0;
@@ -59,8 +62,67 @@ export class AnimationClipController extends Component {
     private isPlaying: boolean = false;
 
     onLoad() {
+        this.autoFindLabelsFromAnimationNode();
         this.initializeAnimationClips();
         this.attachButtonListeners();
+    }
+
+    /**
+     * 自動從 Animation 節點查找標籤
+     */
+    private autoFindLabelsFromAnimationNode() {
+        if (!this.autoFindLabels || !this.animationComponent) {
+            return;
+        }
+
+        // 如果已經手動指定了標籤，則跳過自動查找
+        if (this.labelClipName && this.labelClipIndex) {
+            console.log('[AnimationClipController] 標籤已手動指定，跳過自動查找');
+            return;
+        }
+
+        const animNode = this.animationComponent.node;
+        if (!animNode) {
+            console.warn('[AnimationClipController] Animation 節點未找到');
+            return;
+        }
+
+        // 遞迴查找所有子節點的 Label 組件
+        const findLabelsByName = (node: Node, name: string): Label | null => {
+            // 檢查當前節點
+            if (node.name.toLowerCase().includes(name.toLowerCase())) {
+                const label = node.getComponent(Label);
+                if (label) return label;
+            }
+
+            // 遞迴檢查子節點
+            for (const child of node.children) {
+                const result = findLabelsByName(child, name);
+                if (result) return result;
+            }
+
+            return null;
+        };
+
+        // 嘗試查找名稱中包含特定關鍵字的 Label 節點
+        if (!this.labelClipName) {
+            this.labelClipName = findLabelsByName(animNode, 'name') || 
+                               findLabelsByName(animNode, 'clipname') ||
+                               findLabelsByName(animNode, 'animation');
+            if (this.labelClipName) {
+                console.log('[AnimationClipController] 自動查找到 Label - ClipName:', this.labelClipName.node.name);
+            }
+        }
+
+        if (!this.labelClipIndex) {
+            this.labelClipIndex = findLabelsByName(animNode, 'index') || 
+                                 findLabelsByName(animNode, 'progress');
+            if (this.labelClipIndex) {
+                console.log('[AnimationClipController] 自動查找到 Label - ClipIndex:', this.labelClipIndex.node.name);
+            }
+        }
+
+        console.log(`[AnimationClipController] 自動查找標籤完成 - Name: ${this.labelClipName ? '✓' : '✗'}, Index: ${this.labelClipIndex ? '✓' : '✗'}`);
     }
 
     /**
