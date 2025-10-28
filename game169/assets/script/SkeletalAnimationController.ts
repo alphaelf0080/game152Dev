@@ -193,7 +193,6 @@ export class SkeletalAnimationController extends Component {
         console.log(`\n[SkeletalAnimationController] ==== NEXT CLIP ====`);
         console.log(`[SkeletalAnimationController] 從 [${prevIndex}] 轉換到 [${this.currentClipIndex}] ${nextClipName}`);
         
-        this.updateDisplay();
         this.playCurrentClip();
     }
 
@@ -217,7 +216,6 @@ export class SkeletalAnimationController extends Component {
         console.log(`\n[SkeletalAnimationController] ==== PREV CLIP ====`);
         console.log(`[SkeletalAnimationController] 從 [${prevIndex}] 轉換到 [${this.currentClipIndex}] ${prevClipName}`);
         
-        this.updateDisplay();
         this.playCurrentClip();
     }
 
@@ -446,7 +444,7 @@ export class SkeletalAnimationController extends Component {
     }
 
     /**
-     * 更新 UI 顯示
+     * 更新顯示（Label 和日誌）
      */
     private updateDisplay() {
         const clipName = this.animationClips[this.currentClipIndex]?.name || '無';
@@ -456,7 +454,9 @@ export class SkeletalAnimationController extends Component {
         // 更新 Label 顯示
         if (this.labelClipName) {
             this.labelClipName.string = `${clipName}`;
-            console.log(`[SkeletalAnimationController] Label 更新: ${clipName}`);
+            console.log(`[SkeletalAnimationController] ✓ Label 更新成功: ${clipName}`);
+        } else {
+            console.warn(`[SkeletalAnimationController] ⚠️ Label 節點未設置 (labelClipName 為 null)`);
         }
 
         console.debug(`[SkeletalAnimationController] 當前動畫: ${clipName} (${clipIndex}/${totalClips})`);
