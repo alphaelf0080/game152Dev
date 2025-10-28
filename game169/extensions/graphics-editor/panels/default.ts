@@ -1720,11 +1720,28 @@ class GraphicsEditorLogic {
         const origWidth = origMaxX - origMinX;
         const origHeight = origMaxY - origMinY;
         
-        // 新的邊界框
-        const newMinX = Math.min(shape.startX, shape.endX);
-        const newMaxX = Math.max(shape.startX, shape.endX);
-        const newMinY = Math.min(shape.startY, shape.endY);
-        const newMaxY = Math.max(shape.startY, shape.endY);
+        // 新的邊界框 - 從 shape.startX/endX 或 從 shape.points 計算
+        let newMinX, newMaxX, newMinY, newMaxY;
+        
+        if (shape.startX !== undefined && shape.endX !== undefined) {
+            // 如果有 startX/endX，使用這些值
+            newMinX = Math.min(shape.startX, shape.endX);
+            newMaxX = Math.max(shape.startX, shape.endX);
+            newMinY = Math.min(shape.startY, shape.endY);
+            newMaxY = Math.max(shape.startY, shape.endY);
+        } else {
+            // 否則從當前的 points 計算（這種情況不應該發生，但作為後備）
+            newMinX = shape.points[0].x;
+            newMaxX = shape.points[0].x;
+            newMinY = shape.points[0].y;
+            newMaxY = shape.points[0].y;
+            for (const p of shape.points) {
+                newMinX = Math.min(newMinX, p.x);
+                newMaxX = Math.max(newMaxX, p.x);
+                newMinY = Math.min(newMinY, p.y);
+                newMaxY = Math.max(newMaxY, p.y);
+            }
+        }
         
         const newWidth = newMaxX - newMinX;
         const newHeight = newMaxY - newMinY;
@@ -1897,6 +1914,24 @@ class GraphicsEditorLogic {
             }
         } else {
             this.panel.$.cornerRadiusSection.style.display = 'none';
+        }
+        
+        // 如果是折線，確保有 startX/endX/startY/endY 屬性（用於變換）
+        if (shape && shape.tool === 'polyline' && shape.points && shape.points.length > 0) {
+            if (shape.startX === undefined || shape.endX === undefined) {
+                let minX = shape.points[0].x, maxX = shape.points[0].x;
+                let minY = shape.points[0].y, maxY = shape.points[0].y;
+                for (const p of shape.points) {
+                    minX = Math.min(minX, p.x);
+                    maxX = Math.max(maxX, p.x);
+                    minY = Math.min(minY, p.y);
+                    maxY = Math.max(maxY, p.y);
+                }
+                shape.startX = minX;
+                shape.endX = maxX;
+                shape.startY = minY;
+                shape.endY = maxY;
+            }
         }
         
         this.redraw();
