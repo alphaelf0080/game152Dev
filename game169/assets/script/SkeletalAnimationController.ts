@@ -10,7 +10,7 @@
  * - 支持動畫混合和轉換
  */
 
-import { _decorator, Component, Node, SkeletalAnimation, Button, Label } from 'cc';
+import { _decorator, Component, Node, SkeletalAnimation, Button, AnimationClip } from 'cc';
 
 const { ccclass, property } = _decorator;
 
@@ -42,18 +42,9 @@ export class SkeletalAnimationController extends Component {
     @property(Button)
     public btnStop: Button | null = null; // 停止按鈕
 
-    // UI 標籤
-    @property(Label)
-    public labelClipName: Label | null = null; // 顯示當前動畫名稱
-
-    @property(Label)
-    public labelClipIndex: Label | null = null; // 顯示當前動畫索引
-
-    @property(Label)
-    public labelClipDuration: Label | null = null; // 顯示動畫時長
-
-    @property({ type: Boolean, tooltip: '自動從 SkeletalAnimation 節點查找 Label' })
-    public autoFindLabels: boolean = true; // 自動查找標籤
+    // 動畫 Clip 資源
+    @property({ type: [AnimationClip], tooltip: '拖入動畫 Clip 資源' })
+    public animationClipResources: AnimationClip[] = [];
 
     // 配置
     @property({ type: Number, tooltip: '動畫播放速度' })
@@ -72,107 +63,58 @@ export class SkeletalAnimationController extends Component {
     private currentAnimationName: string = '';
 
     onLoad() {
-        this.autoFindLabelsFromSkeletalNode();
         this.initializeAnimationClips();
         this.attachButtonListeners();
     }
 
     /**
-     * 自動從 SkeletalAnimation 節點查找標籤
-     */
-    private autoFindLabelsFromSkeletalNode() {
-        if (!this.autoFindLabels || !this.skeletalAnimation) {
-            return;
-        }
-
-        // 如果已經手動指定了標籤，則跳過自動查找
-        if (this.labelClipName && this.labelClipIndex && this.labelClipDuration) {
-            console.log('[SkeletalAnimationController] 標籤已手動指定，跳過自動查找');
-            return;
-        }
-
-        const skeletalNode = this.skeletalAnimation.node;
-        if (!skeletalNode) {
-            console.warn('[SkeletalAnimationController] SkeletalAnimation 節點未找到');
-            return;
-        }
-
-        // 遞迴查找所有子節點的 Label 組件
-        const findLabelsByName = (node: Node, name: string): Label | null => {
-            // 檢查當前節點
-            if (node.name.toLowerCase().includes(name.toLowerCase())) {
-                const label = node.getComponent(Label);
-                if (label) return label;
-            }
-
-            // 遞迴檢查子節點
-            for (const child of node.children) {
-                const result = findLabelsByName(child, name);
-                if (result) return result;
-            }
-
-            return null;
-        };
-
-        // 嘗試查找名稱中包含特定關鍵字的 Label 節點
-        if (!this.labelClipName) {
-            this.labelClipName = findLabelsByName(skeletalNode, 'name') || 
-                               findLabelsByName(skeletalNode, 'clipname') ||
-                               findLabelsByName(skeletalNode, 'animation');
-            if (this.labelClipName) {
-                console.log('[SkeletalAnimationController] 自動查找到 Label - ClipName:', this.labelClipName.node.name);
-            }
-        }
-
-        if (!this.labelClipIndex) {
-            this.labelClipIndex = findLabelsByName(skeletalNode, 'index') || 
-                                 findLabelsByName(skeletalNode, 'progress');
-            if (this.labelClipIndex) {
-                console.log('[SkeletalAnimationController] 自動查找到 Label - ClipIndex:', this.labelClipIndex.node.name);
-            }
-        }
-
-        if (!this.labelClipDuration) {
-            this.labelClipDuration = findLabelsByName(skeletalNode, 'duration') || 
-                                    findLabelsByName(skeletalNode, 'time');
-            if (this.labelClipDuration) {
-                console.log('[SkeletalAnimationController] 自動查找到 Label - ClipDuration:', this.labelClipDuration.node.name);
-            }
-        }
-
-        console.log(`[SkeletalAnimationController] 自動查找標籤完成 - Name: ${this.labelClipName ? '✓' : '✗'}, Index: ${this.labelClipIndex ? '✓' : '✗'}, Duration: ${this.labelClipDuration ? '✓' : '✗'}`);
-    }
-
-    /**
      * 初始化動畫片段列表
+     * 優先使用拖入的 animationClipResources，其次使用 SkeletalAnimation 組件中的 clips
      */
     private initializeAnimationClips() {
-        if (!this.skeletalAnimation) {
-            console.warn('[SkeletalAnimationController] 未指定 SkeletalAnimation 組件');
-            return;
-        }
-
-        // 從 SkeletalAnimation 組件獲取所有動畫片段
-        const clips = this.skeletalAnimation.clips;
         this.animationClips = [];
 
-        if (clips && clips.length > 0) {
-            clips.forEach((clip, index) => {
-                this.animationClips.push({
-                    name: clip.name,
-                    index: index,
-                    duration: clip.duration || 0
-                });
+        // 優先使用拖入的 Clip 資源
+        if (this.animationClipResources && this.animationClipResources.length > 0) {
+            this.animationClipResources.forEach((clip, index) => {
+                if (clip) {
+                    this.animationClips.push({
+                        name: clip.name,
+                        index: index,
+                        duration: clip.duration || 0
+                    });
+                }
             });
 
-            console.log(`[SkeletalAnimationController] 已加載 ${this.animationClips.length} 個動畫片段`);
+            console.log(`[SkeletalAnimationController] 已從拖入資源加載 ${this.animationClips.length} 個動畫片段`);
+        } 
+        // 備選方案：從 SkeletalAnimation 組件獲取動畫片段
+        else if (this.skeletalAnimation) {
+            const clips = this.skeletalAnimation.clips;
+            if (clips && clips.length > 0) {
+                clips.forEach((clip, index) => {
+                    this.animationClips.push({
+                        name: clip.name,
+                        index: index,
+                        duration: clip.duration || 0
+                    });
+                });
+
+                console.log(`[SkeletalAnimationController] 已從 SkeletalAnimation 組件加載 ${this.animationClips.length} 個動畫片段`);
+            } else {
+                console.warn('[SkeletalAnimationController] SkeletalAnimation 組件中未找到任何動畫片段');
+            }
+        } else {
+            console.warn('[SkeletalAnimationController] 未指定 SkeletalAnimation 組件，且未拖入任何 Clip 資源');
+        }
+
+        if (this.animationClips.length > 0) {
             this.currentClipIndex = 0;
-            this.updateDisplay();
             
             // 自動播放第一個動畫
             this.playCurrentClip();
         } else {
-            console.warn('[SkeletalAnimationController] 未找到任何動畫片段');
+            console.error('[SkeletalAnimationController] 沒有可用的動畫片段');
         }
     }
 
@@ -439,22 +381,7 @@ export class SkeletalAnimationController extends Component {
      * 更新 UI 顯示
      */
     private updateDisplay() {
-        if (this.labelClipName) {
-            const clipName = this.animationClips[this.currentClipIndex]?.name || '無';
-            this.labelClipName.string = `動畫: ${clipName}`;
-        }
-
-        if (this.labelClipIndex) {
-            const indexText = `${this.currentClipIndex + 1} / ${this.animationClips.length}`;
-            this.labelClipIndex.string = indexText;
-        }
-
-        if (this.labelClipDuration) {
-            const duration = this.animationClips[this.currentClipIndex]?.duration || 0;
-            this.labelClipDuration.string = `時長: ${duration.toFixed(2)}s`;
-        }
-
-        console.debug(`[SkeletalAnimationController] UI 已更新 - 當前: ${this.currentClipIndex + 1}/${this.animationClips.length}`);
+        console.debug(`[SkeletalAnimationController] 當前動畫: ${this.animationClips[this.currentClipIndex]?.name || '無'} (${this.currentClipIndex + 1}/${this.animationClips.length})`);
     }
 
     /**
