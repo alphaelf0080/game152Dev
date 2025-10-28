@@ -1117,6 +1117,12 @@ class GraphicsEditorLogic {
     onMouseDown(e: MouseEvent) {
         const pos = this.screenToCanvas(e.clientX, e.clientY);
         
+        // 中鍵用於 Pan 平移，不要進行繪製操作
+        if (e.button === 1) {
+            e.preventDefault();
+            return;
+        }
+        
         // 檢查是否有圖形被選中並且點擊到變換句柄
         if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline) {
             const shape = this.shapes[this.selectedShapeIndex];
