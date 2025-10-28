@@ -73,6 +73,14 @@ export const template = `
             <span id="zoomLevel" style="margin-left: 5px; font-size: 11px;">100%</span>
         </div>
 
+        <!-- 圓角設置（針對選中矩形） -->
+        <div class="toolbar-section" id="cornerRadiusSection" style="display:none;">
+            <label>矩形圓角:</label>
+            <ui-num-input id="cornerRadius" value="10" min="0" max="100"></ui-num-input>
+            <span style="font-size: 11px; color: #888;">px</span>
+            <ui-button id="btnApplyCornerRadius" style="margin-left: 5px;">應用圓角</ui-button>
+        </div>
+
         <!-- 操作按鈕 -->
         <div class="toolbar-section">
             <ui-button id="btnUndo">撤銷</ui-button>
@@ -363,6 +371,9 @@ export const $ = {
     btnExport: '#btnExport',
     btnExportMask: '#btnExportMask',
     btnClearAll: '#btnClearAll',
+    cornerRadiusSection: '#cornerRadiusSection',
+    cornerRadius: '#cornerRadius',
+    btnApplyCornerRadius: '#btnApplyCornerRadius',
     canvasWidth: '#canvasWidth',
     canvasHeight: '#canvasHeight',
     btnApplySize: '#btnApplySize',
@@ -421,6 +432,7 @@ class GraphicsEditorLogic {
 
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
+    private cornerRadius: number = 10; // 圓角半徑
 
     // 視圖控制
     private zoom: number = 1.0;
@@ -982,6 +994,12 @@ class GraphicsEditorLogic {
         this.panel.$.btnExport.addEventListener('click', () => this.exportScript());
         this.panel.$.btnExportMask.addEventListener('click', () => this.exportMaskScript());
         this.panel.$.btnClearAll.addEventListener('click', () => this.clearAll());
+
+        // 圓角化
+        this.panel.$.cornerRadius.addEventListener('change', (e: any) => {
+            this.cornerRadius = parseInt(e.target.value);
+        });
+        this.panel.$.btnApplyCornerRadius.addEventListener('click', () => this.applyCornerRadius());
     }
 
     selectTool(tool: string, button: any) {
@@ -1180,8 +1198,16 @@ class GraphicsEditorLogic {
                 case 'rect':
                     const width = shape.endX - shape.startX;
                     const height = shape.endY - shape.startY;
-                    if (shape.fillMode) this.drawCtx.fillRect(shape.startX, shape.startY, width, height);
-                    if (shape.strokeMode) this.drawCtx.strokeRect(shape.startX, shape.startY, width, height);
+                    
+                    // 檢查是否有圓角半徑
+                    if (shape.radius && shape.radius > 0) {
+                        // 繪製圓角矩形
+                        this.drawRoundedRect(shape.startX, shape.startY, width, height, shape.radius, shape.fillMode, shape.strokeMode);
+                    } else {
+                        // 繪製普通矩形
+                        if (shape.fillMode) this.drawCtx.fillRect(shape.startX, shape.startY, width, height);
+                        if (shape.strokeMode) this.drawCtx.strokeRect(shape.startX, shape.startY, width, height);
+                    }
                     break;
                 case 'circle':
                     const radius = Math.sqrt(Math.pow(shape.endX - shape.startX, 2) + Math.pow(shape.endY - shape.startY, 2));
@@ -1353,6 +1379,20 @@ class GraphicsEditorLogic {
     selectShape(index: number) {
         this.selectedShapeIndex = index;
         this.panel.$.btnDelete.style.display = 'block';
+        
+        // 如果是矩形，顯示圓角化選項
+        const shape = this.shapes[index];
+        if (shape && shape.tool === 'rect') {
+            this.panel.$.cornerRadiusSection.style.display = 'block';
+            // 如果矩形已有圓角半徑，更新輸入框
+            if (shape.radius !== undefined && shape.radius > 0) {
+                this.panel.$.cornerRadius.value = String(shape.radius);
+                this.cornerRadius = shape.radius;
+            }
+        } else {
+            this.panel.$.cornerRadiusSection.style.display = 'none';
+        }
+        
         this.redraw();
         console.log('[Graphics Editor] 已選取圖形', index + 1);
     }
@@ -1363,6 +1403,7 @@ class GraphicsEditorLogic {
     deselectShape() {
         this.selectedShapeIndex = -1;
         this.panel.$.btnDelete.style.display = 'none';
+        this.panel.$.cornerRadiusSection.style.display = 'none';
         this.redraw();
     }
 
@@ -1446,6 +1487,84 @@ class GraphicsEditorLogic {
         this.redraw();
         this.updateCommandList();
         this.updateCodePreview();
+    }
+
+    /**
+     * 為選中的矩形應用圓角
+     */
+    applyCornerRadius() {
+        if (this.selectedShapeIndex === -1) {
+            return;
+        }
+
+        const shape = this.shapes[this.selectedShapeIndex];
+        if (!shape || shape.tool !== 'rect') {
+            console.warn('[Graphics Editor] 只能為矩形應用圓角');
+            return;
+        }
+
+        // 設置圓角半徑
+        shape.radius = this.cornerRadius;
+
+        console.log('[Graphics Editor] 已為矩形應用圓角半徑:', this.cornerRadius);
+
+        // 重繪和更新
+        this.redraw();
+        this.updateCommandList();
+        this.updateCodePreview();
+    }
+
+    /**
+     * 繪製圓角矩形
+     */
+    private drawRoundedRect(x: number, y: number, width: number, height: number, radius: number, fill: boolean, stroke: boolean) {
+        // 確保 radius 不超過矩形尺寸的一半
+        const maxRadius = Math.min(Math.abs(width) / 2, Math.abs(height) / 2);
+        const r = Math.min(Math.abs(radius), maxRadius);
+
+        // 處理負寬度/高度的情況
+        const actualX = width < 0 ? x + width : x;
+        const actualY = height < 0 ? y + height : y;
+        const actualWidth = Math.abs(width);
+        const actualHeight = Math.abs(height);
+
+        this.drawCtx.beginPath();
+        
+        // 左上角圓弧起點
+        this.drawCtx.moveTo(actualX + r, actualY);
+        
+        // 上邊線
+        this.drawCtx.lineTo(actualX + actualWidth - r, actualY);
+        
+        // 右上角圓弧
+        this.drawCtx.arc(actualX + actualWidth - r, actualY + r, r, -Math.PI / 2, 0, false);
+        
+        // 右邊線
+        this.drawCtx.lineTo(actualX + actualWidth, actualY + actualHeight - r);
+        
+        // 右下角圓弧
+        this.drawCtx.arc(actualX + actualWidth - r, actualY + actualHeight - r, r, 0, Math.PI / 2, false);
+        
+        // 下邊線
+        this.drawCtx.lineTo(actualX + r, actualY + actualHeight);
+        
+        // 左下角圓弧
+        this.drawCtx.arc(actualX + r, actualY + actualHeight - r, r, Math.PI / 2, Math.PI, false);
+        
+        // 左邊線
+        this.drawCtx.lineTo(actualX, actualY + r);
+        
+        // 左上角圓弧
+        this.drawCtx.arc(actualX + r, actualY + r, r, Math.PI, -Math.PI / 2, false);
+        
+        this.drawCtx.closePath();
+
+        if (fill) {
+            this.drawCtx.fill();
+        }
+        if (stroke) {
+            this.drawCtx.stroke();
+        }
     }
 
     // ==================== 命令相關方法 ====================
