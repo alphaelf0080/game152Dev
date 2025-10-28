@@ -323,7 +323,12 @@ export class StateConsole extends Component {
                 freeSpinNum.active = true;
   
                 this.SwitchFreeUiNode('1');
-                find("Canvas/BaseGame/Layer/Shake/UI/InfoController").setPosition(360, 32);
+                const infoCtrl = find("Canvas/BaseGame/Layer/Shake/UI/InfoController");
+                if (infoCtrl) {
+                    infoCtrl.setPosition(360, 32);
+                } else {
+                    console.warn('[StateConsole] ⚠️ 找不到 InfoController');
+                }
                 this.BannerBgNode.getComponent(Sprite).spriteFrame = this.Banner[1];
                 this.BannerWinNode.getComponent(Sprite).spriteFrame = this.Banner[1];
                 Data.Library.MathConsole.CurModuleid = Data.Library.MathConsole.NextModuleid;
@@ -432,7 +437,12 @@ export class StateConsole extends Component {
                     this.BannerTextNode.active = true;
                     this.ChangeBackGround('bs');
                     this.SwitchFreeUiNode('-1');
-                    find("Canvas/BaseGame/Layer/Shake/UI/InfoController").setPosition(360, 225);
+                    const infoCtrl = find("Canvas/BaseGame/Layer/Shake/UI/InfoController");
+                    if (infoCtrl) {
+                        infoCtrl.setPosition(360, 225);
+                    } else {
+                        console.warn('[StateConsole] ⚠️ 找不到 InfoController');
+                    }
                     this.BannerBgNode.getComponent(Sprite).spriteFrame = this.Banner[0];
                     this.BannerWinNode.getComponent(Sprite).spriteFrame = this.Banner[0];
                     this.BannerWinNode.getComponent(Sprite).color = new Color(255, 255, 255, 0);
@@ -587,7 +597,11 @@ export class StateConsole extends Component {
     }
 
     SendEvent(type: string, data: any) {
-        EVENTController.HandleBroadcast(type, data);
+        if (EVENTController) {
+            EVENTController.HandleBroadcast(type, data);
+        } else {
+            console.warn('[StateConsole] ⚠️ EVENTController 未初始化，無法發送事件');
+        }
     }
 
     NetInitReady() {
@@ -635,9 +649,12 @@ export class StateConsole extends Component {
                     if (this.ServerRecoverData != null && this.ServerRecoverData != undefined) {
                         this.Recover();
                     } else {
-                        if (find("APIConsole")) {
+                        const apiConsole = find("APIConsole");
+                        if (apiConsole) {
                             Data.Library.yieldLess(1);
                             console.log("enter NetInitReady (LocalServer mode)")
+                        } else {
+                            console.warn('[StateConsole] ⚠️ 找不到 APIConsole 節點');
                         }
                     }
                 }).catch(error => {
@@ -830,9 +847,15 @@ export class StateConsole extends Component {
             this.notifyStateChange();
         }
 
-        if (find("Canvas/Loader")) {
+        const loaderNode = find("Canvas/Loader");
+        if (loaderNode) {
             this.scheduleOnce(function () {
-                find("Canvas/Loader").active = false;
+                const loader = find("Canvas/Loader");
+                if (loader) {
+                    loader.active = false;
+                } else {
+                    console.warn('[StateConsole] ⚠️ Canvas/Loader 在 scheduleOnce 中不存在');
+                }
             }, wait);
         }
     }
@@ -1041,8 +1064,25 @@ export class StateConsole extends Component {
             if (this.BuyFs == true) {
                 if (this.isTurboOn == true) {
                     this.isTurboOn = false;
-                    find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage/TurboBtn").getComponent(Sprite).spriteFrame = mUIController.Tubro_off;
-                    find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage/TurboBtn/TurboAnm").getComponent(sp.Skeleton).addAnimation(1, 'end', false);
+                    const turboBtnNode = find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage/TurboBtn");
+                    if (turboBtnNode) {
+                        const sprite = turboBtnNode.getComponent(Sprite);
+                        if (sprite && mUIController) {
+                            sprite.spriteFrame = mUIController.Tubro_off;
+                        }
+                    } else {
+                        console.warn('[StateConsole] ⚠️ 找不到 TurboBtn');
+                    }
+                    
+                    const turboAimNode = find("Canvas/BaseGame/Layer/Shake/UI/SettingsPage/TurboBtn/TurboAnm");
+                    if (turboAimNode) {
+                        const skeleton = turboAimNode.getComponent(sp.Skeleton);
+                        if (skeleton) {
+                            skeleton.addAnimation(1, 'end', false);
+                        }
+                    } else {
+                        console.warn('[StateConsole] ⚠️ 找不到 TurboAnm');
+                    }
                 }
             }
             this.nextState();
@@ -1053,7 +1093,12 @@ export class StateConsole extends Component {
         if (this.CurState == Mode.FSM.K_SPIN || this.CurState == Mode.FSM.K_FEATURE_SPIN) {
             if (this.CurState == Mode.FSM.K_FEATURE_SPIN && this.ServerRecoverData != null && this.ServerRecoverData != undefined) {
                 this.ChangeBackGround('fs');
-                find("Canvas/BaseGame/Layer/Shake/UI/InfoController").setPosition(360, 32);
+                const infoCtrl = find("Canvas/BaseGame/Layer/Shake/UI/InfoController");
+                if (infoCtrl) {
+                    infoCtrl.setPosition(360, 32);
+                } else {
+                    console.warn('[StateConsole] ⚠️ 找不到 InfoController');
+                }
                 this.BannerBgNode.getComponent(Sprite).spriteFrame = this.Banner[1];
                 this.BannerWinNode.getComponent(Sprite).spriteFrame = this.Banner[1];
 
