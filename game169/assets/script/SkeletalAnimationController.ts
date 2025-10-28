@@ -72,6 +72,14 @@ export class SkeletalAnimationController extends Component {
         this.validateLabelSetup();
     }
 
+    start() {
+        // 在 start 中播放第一個動畫，確保所有組件都已初始化
+        if (this.animationClips.length > 0) {
+            console.log(`[SkeletalAnimationController] start() 開始自動播放第一個動畫...`);
+            this.playCurrentClip();
+        }
+    }
+
     /**
      * 驗證 Label 設置
      */
@@ -166,12 +174,6 @@ export class SkeletalAnimationController extends Component {
             this.currentClipIndex = 0;
             console.log(`[SkeletalAnimationController] ✓ 初始化完成，共 ${this.animationClips.length} 個動畫`);
             console.log(`[SkeletalAnimationController] ========== 初始化結束 ==========\n`);
-            
-            // 延遲播放確保組件已完全初始化
-            setTimeout(() => {
-                console.log(`[SkeletalAnimationController] 開始自動播放第一個動畫...`);
-                this.playCurrentClip();
-            }, 100);
         } else {
             console.error('[SkeletalAnimationController] ❌ 沒有可用的動畫片段');
         }
@@ -208,6 +210,8 @@ export class SkeletalAnimationController extends Component {
      * 播放下一個動畫片段
      */
     public nextClip() {
+        console.log(`\n[SkeletalAnimationController] ━━━━━ nextClip() 被調用 ━━━━━`);
+        
         if (this.animationClips.length === 0) {
             console.warn('[SkeletalAnimationController] ❌ 沒有可用的動畫片段');
             return;
@@ -221,16 +225,22 @@ export class SkeletalAnimationController extends Component {
         }
 
         const nextClipName = this.animationClips[this.currentClipIndex].name;
-        console.log(`\n[SkeletalAnimationController] ==== NEXT CLIP ====`);
+        console.log(`[SkeletalAnimationController] ==== NEXT CLIP ====`);
         console.log(`[SkeletalAnimationController] 從 [${prevIndex}] 轉換到 [${this.currentClipIndex}] ${nextClipName}`);
+        console.log(`[SkeletalAnimationController] 準備調用 playCurrentClip()...`);
         
         this.playCurrentClip();
+        
+        console.log(`[SkeletalAnimationController] playCurrentClip() 調用完成`);
+        console.log(`[SkeletalAnimationController] ━━━━━ nextClip() 結束 ━━━━━\n`);
     }
 
     /**
      * 播放上一個動畫片段
      */
     public prevClip() {
+        console.log(`\n[SkeletalAnimationController] ━━━━━ prevClip() 被調用 ━━━━━`);
+        
         if (this.animationClips.length === 0) {
             console.warn('[SkeletalAnimationController] ❌ 沒有可用的動畫片段');
             return;
@@ -244,10 +254,14 @@ export class SkeletalAnimationController extends Component {
         }
 
         const prevClipName = this.animationClips[this.currentClipIndex].name;
-        console.log(`\n[SkeletalAnimationController] ==== PREV CLIP ====`);
+        console.log(`[SkeletalAnimationController] ==== PREV CLIP ====`);
         console.log(`[SkeletalAnimationController] 從 [${prevIndex}] 轉換到 [${this.currentClipIndex}] ${prevClipName}`);
+        console.log(`[SkeletalAnimationController] 準備調用 playCurrentClip()...`);
         
         this.playCurrentClip();
+        
+        console.log(`[SkeletalAnimationController] playCurrentClip() 調用完成`);
+        console.log(`[SkeletalAnimationController] ━━━━━ prevClip() 結束 ━━━━━\n`);
     }
 
     /**
