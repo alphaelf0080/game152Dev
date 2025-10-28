@@ -638,6 +638,21 @@ export class StateConsole extends Component {
     applyInitialBoard(boardData: any) {
         console.log('[StateConsole] 🎮 設定初始盤面');
         
+        // 輸出初始盤面的完整資料
+        console.log('[StateConsole] 📋 初始盤面完整資料:', boardData);
+        
+        // 詳細輸出各項資料
+        if (boardData) {
+            console.log('[StateConsole] 📊 盤面詳細資訊:');
+            console.log('  ├─ RNG 資料:', boardData.rng);
+            console.log('  ├─ 模組 ID:', boardData.module_id);
+            console.log('  ├─ Session ID:', boardData.session_id);
+            console.log('  ├─ 信用額度:', boardData.credit);
+            console.log('  ├─ 贏分:', boardData.win);
+            console.log('  ├─ 倍率:', boardData.multiplier);
+            console.log('  └─ 完整物件:', JSON.stringify(boardData, null, 2));
+        }
+        
         try {
             // 獲取 ReelController
             const reelNode = find("Canvas/BaseGame/Layer/Shake/Reel");
@@ -645,6 +660,7 @@ export class StateConsole extends Component {
                 const reelController = reelNode.getComponent(ReelController);
                 if (reelController && typeof reelController['SetInitBoard'] === 'function') {
                     // 調用 ReelController 的初始盤面設定方法
+                    console.log('[StateConsole] 🔄 正在設定 RNG 盤面資料...');
                     reelController['SetInitBoard'](boardData.rng);
                     console.log('[StateConsole] ✅ 初始盤面設定完成');
                 } else {
@@ -659,7 +675,9 @@ export class StateConsole extends Component {
             
             // 設定模組ID
             if (Data.Library.MathConsole) {
+                const oldModuleId = Data.Library.MathConsole.CurModuleid;
                 Data.Library.MathConsole.CurModuleid = boardData.module_id;
+                console.log('[StateConsole] 🔄 模組 ID 變更: ' + oldModuleId + ' → ' + boardData.module_id);
             }
             
         } catch (error) {
