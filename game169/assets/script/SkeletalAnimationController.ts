@@ -69,6 +69,37 @@ export class SkeletalAnimationController extends Component {
     onLoad() {
         this.initializeAnimationClips();
         this.attachButtonListeners();
+        this.validateLabelSetup();
+    }
+
+    /**
+     * 驗證 Label 設置
+     */
+    private validateLabelSetup() {
+        console.log(`[SkeletalAnimationController] ===== Label 設置驗證 =====`);
+        
+        if (!this.labelClipName) {
+            console.error(`[SkeletalAnimationController] ❌ CRITICAL: labelClipName 未設置！`);
+            console.error(`[SkeletalAnimationController]    請在 Inspector 中拖入 Label 節點到 labelClipName 欄位`);
+            return;
+        }
+
+        console.log(`[SkeletalAnimationController] ✓ labelClipName 已設置: ${this.labelClipName.name}`);
+        
+        if (!this.labelClipName.enabled) {
+            console.warn(`[SkeletalAnimationController] ⚠️ Label 組件已禁用，啟用中...`);
+            this.labelClipName.enabled = true;
+        }
+
+        const labelNode = this.labelClipName.node;
+        if (!labelNode.active) {
+            console.warn(`[SkeletalAnimationController] ⚠️ Label 節點未激活，激活中...`);
+            labelNode.active = true;
+        }
+
+        console.log(`[SkeletalAnimationController] ✓ Label 組件已啟用`);
+        console.log(`[SkeletalAnimationController] ✓ Label 節點已激活`);
+        console.log(`[SkeletalAnimationController] ===== 驗證完成 =====\n`);
     }
 
     /**
@@ -451,15 +482,46 @@ export class SkeletalAnimationController extends Component {
         const clipIndex = this.currentClipIndex + 1;
         const totalClips = this.animationClips.length;
 
+        console.log(`[SkeletalAnimationController] ====== Label 更新 ======`);
+        console.log(`[SkeletalAnimationController] 當前 Clip: [${this.currentClipIndex}/${this.animationClips.length}] ${clipName}`);
+
         // 更新 Label 顯示
         if (this.labelClipName) {
-            this.labelClipName.string = `${clipName}`;
-            console.log(`[SkeletalAnimationController] ✓ Label 更新成功: ${clipName}`);
+            try {
+                // 檢查 Label 組件狀態
+                if (!this.labelClipName.enabled) {
+                    console.warn(`[SkeletalAnimationController] ⚠️ Label 組件已禁用，自動啟用...`);
+                    this.labelClipName.enabled = true;
+                }
+
+                if (!this.labelClipName.node.active) {
+                    console.warn(`[SkeletalAnimationController] ⚠️ Label 節點已禁用，自動激活...`);
+                    this.labelClipName.node.active = true;
+                }
+
+                // 更新文本
+                const oldText = this.labelClipName.string;
+                this.labelClipName.string = `${clipName}`;
+                
+                if (oldText !== clipName) {
+                    console.log(`[SkeletalAnimationController] ✓ Label 文本已更新: "${oldText}" → "${clipName}"`);
+                } else {
+                    console.log(`[SkeletalAnimationController] ℹ️  Label 文本未變更（仍為 "${clipName}"）`);
+                }
+
+                console.log(`[SkeletalAnimationController] ✓ Label 組件狀態:`);
+                console.log(`[SkeletalAnimationController]    - 啟用: ${this.labelClipName.enabled}`);
+                console.log(`[SkeletalAnimationController]    - 節點激活: ${this.labelClipName.node.active}`);
+                console.log(`[SkeletalAnimationController]    - 當前文本: "${this.labelClipName.string}"`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ Label 更新失敗:`, error);
+            }
         } else {
-            console.warn(`[SkeletalAnimationController] ⚠️ Label 節點未設置 (labelClipName 為 null)`);
+            console.error(`[SkeletalAnimationController] ❌ CRITICAL: labelClipName 為 null，無法更新 Label`);
+            console.error(`[SkeletalAnimationController]    請檢查 Inspector 中 labelClipName 是否正確配置`);
         }
 
-        console.debug(`[SkeletalAnimationController] 當前動畫: ${clipName} (${clipIndex}/${totalClips})`);
+        console.log(`[SkeletalAnimationController] ====== 更新完成 ======\n`);
     }
 
     /**
