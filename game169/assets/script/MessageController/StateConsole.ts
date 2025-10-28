@@ -111,10 +111,28 @@ export class StateConsole extends Component {
 
     start() {
         MessageConsole = find("MessageController");
-        EVENTController = find("EventController").getComponent(EventController);
-        mUIController = find("Canvas/BaseGame/Layer/Shake/UI").getComponent(UIController);
+        const eventNode = find("EventController");
+        if (eventNode) {
+            EVENTController = eventNode.getComponent(EventController);
+        } else {
+            console.warn('[StateConsole] ⚠️ 找不到 EventController');
+        }
+        
+        const uiNode = find("Canvas/BaseGame/Layer/Shake/UI");
+        if (uiNode) {
+            mUIController = uiNode.getComponent(UIController);
+        } else {
+            console.warn('[StateConsole] ⚠️ 找不到 UI 節點');
+        }
+        
         DropSymbolMap = Data.Library.GameData.DropSymbolMap;
-        AutoPage = find("Canvas/BaseGame/Page/AutoPage").getComponent(AutoPages);
+        
+        const autoPageNode = find("Canvas/BaseGame/Page/AutoPage");
+        if (autoPageNode) {
+            AutoPage = autoPageNode.getComponent(AutoPages);
+        } else {
+            console.warn('[StateConsole] ⚠️ 找不到 AutoPage 節點');
+        }
 
         this.CurState = Mode.FSM.K_IDLE;
         this.PreState = Mode.FSM.K_SHOWUC;
@@ -348,8 +366,14 @@ export class StateConsole extends Component {
                 }, delay);
                 break;
             case Mode.FSM.K_FEATURE_RETRIGGER:
-                if(find("AudioController/Tigger").getComponent(AudioSource).playing ==false){
-                    find("AudioController/Tigger").getComponent(AudioSource).play();
+                const tigerAudio = find("AudioController/Tigger");
+                if (tigerAudio) {
+                    const audioComp = tigerAudio.getComponent(AudioSource);
+                    if (audioComp && !audioComp.playing) {
+                        audioComp.play();
+                    }
+                } else {
+                    console.warn('[StateConsole] ⚠️ 找不到 AudioController/Tigger');
                 }
                 let start = this.FeatureGameCurTotalspins - this.FeatureGameCurSpins - this.FeatureTriggerTimes - 1;
                 if (start <= 0) {
@@ -383,7 +407,15 @@ export class StateConsole extends Component {
                 this.notifyStateChange();
                 break;
             case Mode.FSM.K_FEATURE_CHEKRESULT:
-                find("AudioController/CheckBonus").getComponent(AudioSource).play();
+                const checkAudio = find("AudioController/CheckBonus");
+                if (checkAudio) {
+                    const audioComp = checkAudio.getComponent(AudioSource);
+                    if (audioComp) {
+                        audioComp.play();
+                    }
+                } else {
+                    console.warn('[StateConsole] ⚠️ 找不到 AudioController/CheckBonus');
+                }
                 this.FeatureTriggerTimes = 0;
                 this.FeatureGameCurSpins = 0;
                 this.FeatureGameCurTotalspins = 0;
@@ -499,13 +531,23 @@ export class StateConsole extends Component {
     }
 
     reelPassSpin() {
-        if (Data.Library.SPIN_LATE == true) {
-            if (Data.Library.SPIN_PASS_CHECK == true) {
-                find("Canvas/BaseGame/Layer/Shake/Reel").getComponent(ReelController).StopAllSymbolAnimation();
+        const reelNode = find("Canvas/BaseGame/Layer/Shake/Reel");
+        if (reelNode) {
+            const reelController = reelNode.getComponent(ReelController);
+            if (reelController) {
+                if (Data.Library.SPIN_LATE == true) {
+                    if (Data.Library.SPIN_PASS_CHECK == true) {
+                        reelController.StopAllSymbolAnimation();
+                    }
+                }
+                else {
+                    reelController.StopAllSymbolAnimation();
+                }
+            } else {
+                console.warn('[StateConsole] ⚠️ 找不到 ReelController');
             }
-        }
-        else {
-            find("Canvas/BaseGame/Layer/Shake/Reel").getComponent(ReelController).StopAllSymbolAnimation();
+        } else {
+            console.warn('[StateConsole] ⚠️ 找不到 Reel 節點');
         }
     }
 
@@ -687,7 +729,12 @@ export class StateConsole extends Component {
 
     Recover() {
         console.log(this.ServerRecoverData)
-        find("Canvas/Activity/ActBanner").active = false;
+        const actBanner = find("Canvas/Activity/ActBanner");
+        if (actBanner) {
+            actBanner.active = false;
+        } else {
+            console.warn('[StateConsole] ⚠️ 找不到 Canvas/Activity/ActBanner 節點');
+        }
         // Mode.ShowSpine(AllNode.Data.Map.get("BkgAnm").getComponent(sp.Skeleton), 0, "idle", true, "fs");
         AnimationController.Instance.BkgAnmActive('');
 
@@ -1023,8 +1070,18 @@ export class StateConsole extends Component {
 
     wallet = null;
     setCredit(cent) {
-        if (this.wallet == null) this.wallet = find("Canvas/BaseGame/Layer/Shake/UI/InfoController/Credit").getComponent(Label);
-        if (UCoin.running == false) this.wallet.string = this.NumberToCent(cent);
+        if (this.wallet == null) {
+            const creditNode = find("Canvas/BaseGame/Layer/Shake/UI/InfoController/Credit");
+            if (creditNode) {
+                this.wallet = creditNode.getComponent(Label);
+            } else {
+                console.warn('[StateConsole] ⚠️ 找不到 Credit 節點');
+                return;
+            }
+        }
+        if (this.wallet && UCoin.running == false) {
+            this.wallet.string = this.NumberToCent(cent);
+        }
     }
 
     dataCall() {
