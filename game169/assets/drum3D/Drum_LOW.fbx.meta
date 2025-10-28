@@ -311,7 +311,7 @@
       "name": "Take 000.animation",
       "userData": {
         "gltfIndex": 0,
-        "wrapMode": 2,
+        "wrapMode": 1,
         "speed": 1,
         "sample": 30,
         "span": {
@@ -458,7 +458,7 @@
             "name": "Take 000",
             "from": 0,
             "to": 8.533333778381348,
-            "wrapMode": 2,
+            "wrapMode": 1,
             "speed": 1,
             "previousId": "2fe58"
           }

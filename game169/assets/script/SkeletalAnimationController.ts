@@ -231,72 +231,79 @@ export class SkeletalAnimationController extends Component {
         console.log(`\n[SkeletalAnimationController] ========== 附加按鈕監聽器 ==========`);
 
         // 附加 Next 按鈕
-        if (this.btnNext) {
+        if (this.btnNext && this.btnNext.node) {
             try {
-                this.btnNext.node.on(Button.EventType.click, () => {
+                // 使用 'click' 字符串事件
+                this.btnNext.node.on('click', () => {
                     console.log(`[SkeletalAnimationController] 🔘 btnNext 被點擊`);
                     this.nextClip();
-                });
+                }, this);
                 console.log(`[SkeletalAnimationController] ✓ btnNext 監聽器已附加`);
             } catch (error) {
                 console.error(`[SkeletalAnimationController] ❌ 附加 btnNext 監聽器失敗:`, error);
             }
         } else {
-            console.error(`[SkeletalAnimationController] ❌ btnNext 為 null，無法附加監聽器`);
+            console.error(`[SkeletalAnimationController] ❌ btnNext 或其 node 為 null，無法附加監聽器`);
         }
 
         // 附加 Prev 按鈕
-        if (this.btnPrev) {
+        if (this.btnPrev && this.btnPrev.node) {
             try {
-                this.btnPrev.node.on(Button.EventType.click, () => {
+                this.btnPrev.node.on('click', () => {
                     console.log(`[SkeletalAnimationController] 🔘 btnPrev 被點擊`);
                     this.prevClip();
-                });
+                }, this);
                 console.log(`[SkeletalAnimationController] ✓ btnPrev 監聽器已附加`);
             } catch (error) {
                 console.error(`[SkeletalAnimationController] ❌ 附加 btnPrev 監聽器失敗:`, error);
             }
         } else {
-            console.error(`[SkeletalAnimationController] ❌ btnPrev 為 null，無法附加監聽器`);
+            console.error(`[SkeletalAnimationController] ❌ btnPrev 或其 node 為 null，無法附加監聽器`);
         }
 
         // 附加 Play 按鈕
-        if (this.btnPlay) {
+        if (this.btnPlay && this.btnPlay.node) {
             try {
-                this.btnPlay.node.on(Button.EventType.click, () => {
+                this.btnPlay.node.on('click', () => {
                     console.log(`[SkeletalAnimationController] 🔘 btnPlay 被點擊`);
                     this.playCurrentClip();
-                });
+                }, this);
                 console.log(`[SkeletalAnimationController] ✓ btnPlay 監聽器已附加`);
             } catch (error) {
                 console.error(`[SkeletalAnimationController] ❌ 附加 btnPlay 監聽器失敗:`, error);
             }
+        } else {
+            console.error(`[SkeletalAnimationController] ❌ btnPlay 或其 node 為 null`);
         }
 
         // 附加 Pause 按鈕
-        if (this.btnPause) {
+        if (this.btnPause && this.btnPause.node) {
             try {
-                this.btnPause.node.on(Button.EventType.click, () => {
+                this.btnPause.node.on('click', () => {
                     console.log(`[SkeletalAnimationController] 🔘 btnPause 被點擊`);
                     this.pauseClip();
-                });
+                }, this);
                 console.log(`[SkeletalAnimationController] ✓ btnPause 監聽器已附加`);
             } catch (error) {
                 console.error(`[SkeletalAnimationController] ❌ 附加 btnPause 監聽器失敗:`, error);
             }
+        } else {
+            console.error(`[SkeletalAnimationController] ❌ btnPause 或其 node 為 null`);
         }
 
         // 附加 Stop 按鈕
-        if (this.btnStop) {
+        if (this.btnStop && this.btnStop.node) {
             try {
-                this.btnStop.node.on(Button.EventType.click, () => {
+                this.btnStop.node.on('click', () => {
                     console.log(`[SkeletalAnimationController] 🔘 btnStop 被點擊`);
                     this.stopClip();
-                });
+                }, this);
                 console.log(`[SkeletalAnimationController] ✓ btnStop 監聽器已附加`);
             } catch (error) {
                 console.error(`[SkeletalAnimationController] ❌ 附加 btnStop 監聽器失敗:`, error);
             }
+        } else {
+            console.error(`[SkeletalAnimationController] ❌ btnStop 或其 node 為 null`);
         }
 
         console.log(`[SkeletalAnimationController] ========== 按鈕監聽器附加完成 ==========\n`);
