@@ -125,6 +125,20 @@ export const template = `
 
             <div class="export-section">
                 <h3>生成的腳本代碼</h3>
+                
+                <!-- 导出选项 -->
+                <div style="margin-bottom: 10px; padding: 8px; background: #2d2d2d; border-radius: 4px;">
+                    <label style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <ui-checkbox id="syncInspectorColors" checked></ui-checkbox>
+                        <span style="margin-left: 5px;">同步 Inspector 颜色</span>
+                        <span style="font-size: 10px; color: #888; margin-left: 5px;">（忽略导出时的颜色设置）</span>
+                    </label>
+                    <div style="font-size: 11px; color: #aaa; padding-left: 20px;">
+                        ✓ 启用：使用 Inspector 中 Graphics 组件的颜色<br>
+                        ✗ 禁用：使用导出时设置的颜色
+                    </div>
+                </div>
+                
                 <ui-code id="codePreview" language="typescript">// TypeScript 代碼將顯示在這裡</ui-code>
                 <ui-button id="btnCopyCode" class="green">複製代碼</ui-button>
                 <ui-button id="btnExport" class="blue">導出為 TypeScript 腳本</ui-button>
@@ -371,6 +385,7 @@ export const $ = {
     btnExport: '#btnExport',
     btnExportMask: '#btnExportMask',
     btnClearAll: '#btnClearAll',
+    syncInspectorColors: '#syncInspectorColors',
     cornerRadiusSection: '#cornerRadiusSection',
     cornerRadius: '#cornerRadius',
     btnApplyCornerRadius: '#btnApplyCornerRadius',
@@ -421,6 +436,7 @@ class GraphicsEditorLogic {
     private originMode: string = 'bottomLeft';
     private canvasWidth: number = 600;
     private canvasHeight: number = 400;
+    private syncInspectorColors: boolean = true; // 是否同步 Inspector 颜色
 
     // 折線相關
     private isDrawingPolyline: boolean = false;
@@ -1000,6 +1016,15 @@ class GraphicsEditorLogic {
             this.cornerRadius = parseInt(e.target.value);
         });
         this.panel.$.btnApplyCornerRadius.addEventListener('click', () => this.applyCornerRadius());
+
+        // 同步 Inspector 颜色选项
+        this.panel.$.syncInspectorColors.addEventListener('change', (e: any) => {
+            this.syncInspectorColors = e.target.checked;
+            console.log('[Graphics Editor] 同步 Inspector 颜色:', this.syncInspectorColors ? '启用' : '禁用');
+            // 更新代码预览
+            const code = this.generateTypeScriptCode();
+            this.panel.$.codePreview.value = code;
+        });
     }
 
     selectTool(tool: string, button: any) {
@@ -1611,12 +1636,15 @@ class GraphicsEditorLogic {
             return '// 請先繪製一些圖形';
         }
 
+        const syncMode = this.syncInspectorColors;
+        
         let code = `import { _decorator, Component, Graphics, Color } from 'cc';
 const { ccclass, property } = _decorator;
 
 /**
  * 使用 Graphics Editor 生成的圖形代碼
  * 坐標系統: ${this.getOriginModeName()}
+${syncMode ? ' * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色' : ' * 颜色模式: 使用导出时的颜色'}
  */
 @ccclass('CustomGraphics')
 export class CustomGraphics extends Component {
@@ -1642,16 +1670,25 @@ export class CustomGraphics extends Component {
             code += `        // 形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
             code += `        g.lineWidth = ${shape.lineWidth};\n`;
             
-            if (shape.fillMode) {
-                const fillRGB = this.hexToRgb(shape.fillColor);
-                const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
-                code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, ${fillAlpha});\n`;
-            }
-            
-            if (shape.strokeMode) {
-                const strokeRGB = this.hexToRgb(shape.strokeColor);
-                const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
-                code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, ${strokeAlpha});\n`;
+            // 🔧 根据 syncMode 决定是否输出颜色设置
+            if (!syncMode) {
+                // 禁用同步模式：输出硬编码的颜色
+                if (shape.fillMode) {
+                    const fillRGB = this.hexToRgb(shape.fillColor);
+                    const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
+                    code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, ${fillAlpha});\n`;
+                }
+                
+                if (shape.strokeMode) {
+                    const strokeRGB = this.hexToRgb(shape.strokeColor);
+                    const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
+                    code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, ${strokeAlpha});\n`;
+                }
+            } else {
+                // 启用同步模式：输出注释说明使用 Inspector 颜色
+                code += `        // 🎨 使用 Inspector 中设置的颜色\n`;
+                code += `        // g.fillColor = ... // 从 Inspector 继承\n`;
+                code += `        // g.strokeColor = ... // 从 Inspector 继承\n`;
             }
 
             switch(shape.tool) {

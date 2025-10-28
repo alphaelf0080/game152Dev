@@ -20,9 +20,9 @@ export class CustomGraphics extends Component {
         
         // 形狀 1: 矩形
         g.lineWidth = 2;
-        g.fillColor = new Color(255, 255, 255, 255);
-        g.strokeColor = new Color(255, 255, 255, 255);
-        g.rect(-101, 26, 201, -54);
+        g.fillColor = new Color(0, 0, 0, 128);
+        g.strokeColor = new Color(0, 0, 0, 128);
+        g.roundRect(-100, 50, 200, -100, 20);
         g.fill();
         g.stroke();
 
