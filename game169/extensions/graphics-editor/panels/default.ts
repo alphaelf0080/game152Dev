@@ -1658,7 +1658,17 @@ export class CustomGraphics extends Component {
                 case 'rect':
                     const width = cocosEndX - cocosStartX;
                     const height = cocosEndY - cocosStartY;
-                    code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    
+                    // 🔧 检查是否有圆角半径
+                    if (shape.radius && shape.radius > 0) {
+                        // 使用 roundRect 绘制圆角矩形
+                        const radius = Math.round(shape.radius);
+                        code += `        g.roundRect(${cocosStartX}, ${cocosStartY}, ${width}, ${height}, ${radius});\n`;
+                    } else {
+                        // 使用普通 rect 绘制矩形
+                        code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    }
+                    
                     if (shape.fillMode) code += `        g.fill();\n`;
                     if (shape.strokeMode) code += `        g.stroke();\n`;
                     break;
@@ -1782,7 +1792,17 @@ export class CustomMask extends Component {
                 case 'rect':
                     const width = cocosEndX - cocosStartX;
                     const height = cocosEndY - cocosStartY;
-                    code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    
+                    // 🔧 检查是否有圆角半径
+                    if (shape.radius && shape.radius > 0) {
+                        // 使用 roundRect 绘制圆角矩形
+                        const radius = Math.round(shape.radius);
+                        code += `        g.roundRect(${cocosStartX}, ${cocosStartY}, ${width}, ${height}, ${radius});\n`;
+                    } else {
+                        // 使用普通 rect 绘制矩形
+                        code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
+                    }
+                    
                     code += `        g.fill();\n`;
                     break;
                 case 'circle':
