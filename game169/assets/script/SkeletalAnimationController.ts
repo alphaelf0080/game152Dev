@@ -10,7 +10,7 @@
  * - 支持動畫混合和轉換
  */
 
-import { _decorator, Component, Node, SkeletalAnimation, Button, AnimationClip } from 'cc';
+import { _decorator, Component, Node, SkeletalAnimation, Button, Label, AnimationClip } from 'cc';
 
 const { ccclass, property } = _decorator;
 
@@ -41,6 +41,10 @@ export class SkeletalAnimationController extends Component {
 
     @property(Button)
     public btnStop: Button | null = null; // 停止按鈕
+
+    // UI 標籤
+    @property(Label)
+    public labelClipName: Label | null = null; // 顯示當前動畫名稱
 
     // 動畫 Clip 資源
     @property({ type: [AnimationClip], tooltip: '拖入動畫 Clip 資源' })
@@ -445,7 +449,17 @@ export class SkeletalAnimationController extends Component {
      * 更新 UI 顯示
      */
     private updateDisplay() {
-        console.debug(`[SkeletalAnimationController] 當前動畫: ${this.animationClips[this.currentClipIndex]?.name || '無'} (${this.currentClipIndex + 1}/${this.animationClips.length})`);
+        const clipName = this.animationClips[this.currentClipIndex]?.name || '無';
+        const clipIndex = this.currentClipIndex + 1;
+        const totalClips = this.animationClips.length;
+
+        // 更新 Label 顯示
+        if (this.labelClipName) {
+            this.labelClipName.string = `${clipName}`;
+            console.log(`[SkeletalAnimationController] Label 更新: ${clipName}`);
+        }
+
+        console.debug(`[SkeletalAnimationController] 當前動畫: ${clipName} (${clipIndex}/${totalClips})`);
     }
 
     /**
