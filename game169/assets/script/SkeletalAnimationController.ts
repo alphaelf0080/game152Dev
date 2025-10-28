@@ -67,9 +67,54 @@ export class SkeletalAnimationController extends Component {
     private currentAnimationName: string = '';
 
     onLoad() {
+        this.validateSetup();
         this.initializeAnimationClips();
         this.attachButtonListeners();
         this.validateLabelSetup();
+    }
+
+    /**
+     * 驗證所有必要組件是否已設置
+     */
+    private validateSetup() {
+        console.log(`\n[SkeletalAnimationController] ========== Setup 驗證 ==========`);
+
+        // 檢查 SkeletalAnimation
+        if (!this.skeletalAnimation) {
+            console.error(`[SkeletalAnimationController] ❌ CRITICAL: skeletalAnimation 未設置！`);
+            console.error(`[SkeletalAnimationController]    請在 Inspector 中拖入 SkeletalAnimation 組件`);
+        } else {
+            console.log(`[SkeletalAnimationController] ✓ SkeletalAnimation 已設置: ${this.skeletalAnimation.name}`);
+        }
+
+        // 檢查按鈕
+        if (!this.btnNext) {
+            console.error(`[SkeletalAnimationController] ❌ btnNext 未設置！`);
+        } else {
+            console.log(`[SkeletalAnimationController] ✓ btnNext 已設置: ${this.btnNext.name}`);
+        }
+
+        if (!this.btnPrev) {
+            console.error(`[SkeletalAnimationController] ❌ btnPrev 未設置！`);
+        } else {
+            console.log(`[SkeletalAnimationController] ✓ btnPrev 已設置: ${this.btnPrev.name}`);
+        }
+
+        // 檢查 Label
+        if (!this.labelClipName) {
+            console.error(`[SkeletalAnimationController] ❌ labelClipName 未設置！`);
+        } else {
+            console.log(`[SkeletalAnimationController] ✓ labelClipName 已設置: ${this.labelClipName.name}`);
+        }
+
+        // 檢查 Clip 資源
+        if (!this.animationClipResources || this.animationClipResources.length === 0) {
+            console.warn(`[SkeletalAnimationController] ⚠️ animationClipResources 為空`);
+        } else {
+            console.log(`[SkeletalAnimationController] ✓ 已配置 ${this.animationClipResources.length} 個 Clip 資源`);
+        }
+
+        console.log(`[SkeletalAnimationController] ========== 驗證完成 ==========\n`);
     }
 
     start() {
@@ -183,27 +228,78 @@ export class SkeletalAnimationController extends Component {
      * 附加按鈕監聽器
      */
     private attachButtonListeners() {
+        console.log(`\n[SkeletalAnimationController] ========== 附加按鈕監聽器 ==========`);
+
+        // 附加 Next 按鈕
         if (this.btnNext) {
-            this.btnNext.node.on(Button.EventType.click, () => this.nextClip());
+            try {
+                this.btnNext.node.on(Button.EventType.click, () => {
+                    console.log(`[SkeletalAnimationController] 🔘 btnNext 被點擊`);
+                    this.nextClip();
+                });
+                console.log(`[SkeletalAnimationController] ✓ btnNext 監聽器已附加`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ 附加 btnNext 監聽器失敗:`, error);
+            }
+        } else {
+            console.error(`[SkeletalAnimationController] ❌ btnNext 為 null，無法附加監聽器`);
         }
 
+        // 附加 Prev 按鈕
         if (this.btnPrev) {
-            this.btnPrev.node.on(Button.EventType.click, () => this.prevClip());
+            try {
+                this.btnPrev.node.on(Button.EventType.click, () => {
+                    console.log(`[SkeletalAnimationController] 🔘 btnPrev 被點擊`);
+                    this.prevClip();
+                });
+                console.log(`[SkeletalAnimationController] ✓ btnPrev 監聽器已附加`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ 附加 btnPrev 監聽器失敗:`, error);
+            }
+        } else {
+            console.error(`[SkeletalAnimationController] ❌ btnPrev 為 null，無法附加監聽器`);
         }
 
+        // 附加 Play 按鈕
         if (this.btnPlay) {
-            this.btnPlay.node.on(Button.EventType.click, () => this.playCurrentClip());
+            try {
+                this.btnPlay.node.on(Button.EventType.click, () => {
+                    console.log(`[SkeletalAnimationController] 🔘 btnPlay 被點擊`);
+                    this.playCurrentClip();
+                });
+                console.log(`[SkeletalAnimationController] ✓ btnPlay 監聽器已附加`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ 附加 btnPlay 監聽器失敗:`, error);
+            }
         }
 
+        // 附加 Pause 按鈕
         if (this.btnPause) {
-            this.btnPause.node.on(Button.EventType.click, () => this.pauseClip());
+            try {
+                this.btnPause.node.on(Button.EventType.click, () => {
+                    console.log(`[SkeletalAnimationController] 🔘 btnPause 被點擊`);
+                    this.pauseClip();
+                });
+                console.log(`[SkeletalAnimationController] ✓ btnPause 監聽器已附加`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ 附加 btnPause 監聽器失敗:`, error);
+            }
         }
 
+        // 附加 Stop 按鈕
         if (this.btnStop) {
-            this.btnStop.node.on(Button.EventType.click, () => this.stopClip());
+            try {
+                this.btnStop.node.on(Button.EventType.click, () => {
+                    console.log(`[SkeletalAnimationController] 🔘 btnStop 被點擊`);
+                    this.stopClip();
+                });
+                console.log(`[SkeletalAnimationController] ✓ btnStop 監聽器已附加`);
+            } catch (error) {
+                console.error(`[SkeletalAnimationController] ❌ 附加 btnStop 監聽器失敗:`, error);
+            }
         }
 
-        console.log('[SkeletalAnimationController] 按鈕監聽器已附加');
+        console.log(`[SkeletalAnimationController] ========== 按鈕監聽器附加完成 ==========\n`);
     }
 
     /**
@@ -271,11 +367,15 @@ export class SkeletalAnimationController extends Component {
     public playCurrentClip() {
         if (!this.skeletalAnimation) {
             console.error('[SkeletalAnimationController] ❌ SkeletalAnimation 未指定');
+            console.error('[SkeletalAnimationController] ⚠️ 解決方案：在 Inspector 中拖入 SkeletalAnimation 組件');
             return;
         }
 
         if (this.animationClips.length === 0) {
             console.error('[SkeletalAnimationController] ❌ 沒有可用的動畫片段');
+            console.error('[SkeletalAnimationController] ⚠️ 解決方案：');
+            console.error('[SkeletalAnimationController]    1. 將 Clip 資源拖入 animationClipResources 欄位');
+            console.error('[SkeletalAnimationController]    2. 或確保 SkeletalAnimation 組件中有 Clips');
             return;
         }
 
@@ -322,7 +422,10 @@ export class SkeletalAnimationController extends Component {
             console.error(`[SkeletalAnimationController] ❌ 播放失敗:`);
             console.error(`     Clip 名稱: ${clipName}`);
             console.error(`     錯誤: ${error}`);
-            console.error(`[SkeletalAnimationController] 請檢查 Clip 名稱是否正確\n`);
+            console.error(`[SkeletalAnimationController] ⚠️ 可能的原因：`);
+            console.error(`     1. Clip 名稱拼寫錯誤`);
+            console.error(`     2. Clip 尚未加載`);
+            console.error(`     3. SkeletalAnimation 狀態異常\n`);
         }
 
         this.updateDisplay();
