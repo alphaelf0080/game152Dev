@@ -3,8 +3,8 @@ const { ccclass, property, executeInEditMode } = _decorator;
 
 /**
  * 使用 Graphics Editor 生成的圖形代碼
- * 坐標系統: 中心 (0,0)
- * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色
+ * 坐標系統: 左下 - Cocos Creator 預設
+ * 颜色模式: 使用导出时的颜色
  * 
  * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽圖形
  */
@@ -15,11 +15,11 @@ export class CustomGraphics extends Component {
     graphics: Graphics = null;
 
     @property({ tooltip: '同步 Inspector 顏色（fillColor / strokeColor）' })
-    syncInspectorColors: boolean = true;
+    syncInspectorColors: boolean = false;
 
     private _lastStrokeKey: string = '';
     private _lastFillKey: string = '';
-    private _lastSync: boolean = true;
+    private _lastSync: boolean = false;
 
     onLoad() {
         // 在編輯器和運行時都執行繪製
@@ -72,10 +72,10 @@ export class CustomGraphics extends Component {
         } else {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
-        // 個別圓角矩形 (TL=30, TR=60, BR=0, BL=0)
-        const x = -330, y = -56;
-        const w = 657, h = 173;
-        const rTL = 30, rTR = 60, rBR = 0, rBL = 0;
+        // 個別圓角矩形 (TL=30, TR=30, BR=0, BL=0)
+        const x = 90, y = 160;
+        const w = 459, h = 171;
+        const rTL = 30, rTR = 30, rBR = 0, rBL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
         if (rTR > 0) {

@@ -2978,7 +2978,7 @@ class GraphicsEditorLogic {
         
         // 右上角圓弧
         if (rTR > 0) {
-            this.drawCtx.arc(actualX + actualWidth - rTR, actualY + rTR, rTR, -Math.PI / 2, 0, false);
+            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY, actualX + actualWidth, actualY + rTR);
         }
         
         // 右邊線到右下角
@@ -2986,7 +2986,7 @@ class GraphicsEditorLogic {
         
         // 右下角圓弧
         if (rBR > 0) {
-            this.drawCtx.arc(actualX + actualWidth - rBR, actualY + actualHeight - rBR, rBR, 0, Math.PI / 2, false);
+            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY + actualHeight, actualX + actualWidth - rBR, actualY + actualHeight);
         }
         
         // 下邊線到左下角
@@ -2994,7 +2994,7 @@ class GraphicsEditorLogic {
         
         // 左下角圓弧
         if (rBL > 0) {
-            this.drawCtx.arc(actualX + rBL, actualY + actualHeight - rBL, rBL, Math.PI / 2, Math.PI, false);
+            this.drawCtx.quadraticCurveTo(actualX, actualY + actualHeight, actualX, actualY + actualHeight - rBL);
         }
         
         // 左邊線到左上角
@@ -3002,7 +3002,7 @@ class GraphicsEditorLogic {
         
         // 左上角圓弧
         if (rTL > 0) {
-            this.drawCtx.arc(actualX + rTL, actualY + rTL, rTL, Math.PI, -Math.PI / 2, false);
+            this.drawCtx.quadraticCurveTo(actualX, actualY, actualX + rTL, actualY);
         }
         
         this.drawCtx.closePath();
@@ -3205,29 +3205,13 @@ export class CustomGraphics extends Component {
                         code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                         code += `        g.moveTo(x + rTL, y);\n`;
                         code += `        g.lineTo(x + w - rTR, y);\n`;
-                        code += `        if (rTR > 0) {\n`;
-                        code += `            g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
-                        code += `        } else {\n`;
-                        code += `            g.lineTo(x + w, y);\n`;
-                        code += `        }\n`;
+                        code += `        if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);\n`;
                         code += `        g.lineTo(x + w, y + h - rBR);\n`;
-                        code += `        if (rBR > 0) {\n`;
-                        code += `            g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
-                        code += `        } else {\n`;
-                        code += `            g.lineTo(x + w, y + h);\n`;
-                        code += `        }\n`;
+                        code += `        if (rBR > 0) g.quadraticCurveTo(x + w, y + h, x + w - rBR, y + h);\n`;
                         code += `        g.lineTo(x + rBL, y + h);\n`;
-                        code += `        if (rBL > 0) {\n`;
-                        code += `            g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
-                        code += `        } else {\n`;
-                        code += `            g.lineTo(x, y + h);\n`;
-                        code += `        }\n`;
+                        code += `        if (rBL > 0) g.quadraticCurveTo(x, y + h, x, y + h - rBL);\n`;
                         code += `        g.lineTo(x, y + rTL);\n`;
-                        code += `        if (rTL > 0) {\n`;
-                        code += `            g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
-                        code += `        } else {\n`;
-                        code += `            g.lineTo(x, y);\n`;
-                        code += `        }\n`;
+                        code += `        if (rTL > 0) g.quadraticCurveTo(x, y, x + rTL, y);\n`;
                         code += `        g.close();\n`;
                     } else if (shape.radius && shape.radius > 0) {
                         // 使用統一圓角
@@ -3368,29 +3352,13 @@ export class CustomGraphics extends Component {
                     code += `    const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                     code += `    g.moveTo(x + rTL, y);\n`;
                     code += `    g.lineTo(x + w - rTR, y);\n`;
-                    code += `    if (rTR > 0) {\n`;
-                    code += `        g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
-                    code += `    } else {\n`;
-                    code += `        g.lineTo(x + w, y);\n`;
-                    code += `    }\n`;
+                    code += `    if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);\n`;
                     code += `    g.lineTo(x + w, y + h - rBR);\n`;
-                    code += `    if (rBR > 0) {\n`;
-                    code += `        g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
-                    code += `    } else {\n`;
-                    code += `        g.lineTo(x + w, y + h);\n`;
-                    code += `    }\n`;
+                    code += `    if (rBR > 0) g.quadraticCurveTo(x + w, y + h, x + w - rBR, y + h);\n`;
                     code += `    g.lineTo(x + rBL, y + h);\n`;
-                    code += `    if (rBL > 0) {\n`;
-                    code += `        g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
-                    code += `    } else {\n`;
-                    code += `        g.lineTo(x, y + h);\n`;
-                    code += `    }\n`;
+                    code += `    if (rBL > 0) g.quadraticCurveTo(x, y + h, x, y + h - rBL);\n`;
                     code += `    g.lineTo(x, y + rTL);\n`;
-                    code += `    if (rTL > 0) {\n`;
-                    code += `        g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
-                    code += `    } else {\n`;
-                    code += `        g.lineTo(x, y);\n`;
-                    code += `    }\n`;
+                    code += `    if (rTL > 0) g.quadraticCurveTo(x, y, x + rTL, y);\n`;
                     code += `    g.close();\n`;
                 } else if (shape.radius && shape.radius > 0) {
                     const r = Math.round(shape.radius);
