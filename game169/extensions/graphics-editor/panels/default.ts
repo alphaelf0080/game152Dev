@@ -817,7 +817,7 @@ class GraphicsEditorLogic {
                 return Math.round(this.canvasHeight - canvasY);
             case 'topLeft':
                 return Math.round(-canvasY);
-            default:
+            default: 
                 return Math.round(canvasY);
         }
     }

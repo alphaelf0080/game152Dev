@@ -4,7 +4,7 @@ const { ccclass, property, executeInEditMode } = _decorator;
 /**
  * 使用 Graphics Editor 生成的圖形代碼
  * 坐標系統: 中心 (0,0)
- * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色
+ * 颜色模式: 使用导出时的颜色
  * 
  * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽圖形
  */
@@ -15,11 +15,11 @@ export class CustomGraphics extends Component {
     graphics: Graphics = null;
 
     @property({ tooltip: '同步 Inspector 顏色（fillColor / strokeColor）' })
-    syncInspectorColors: boolean = true;
+    syncInspectorColors: boolean = false;
 
     private _lastStrokeKey: string = '';
     private _lastFillKey: string = '';
-    private _lastSync: boolean = true;
+    private _lastSync: boolean = false;
 
     onLoad() {
         // 在編輯器和運行時都執行繪製
@@ -67,15 +67,15 @@ export class CustomGraphics extends Component {
         // 形狀 1: 矩形
         g.lineWidth = 2;
         if (!this.syncInspectorColors) {
-            g.fillColor = new Color(255, 0, 0, 255);
-            g.strokeColor = new Color(0, 0, 0, 255);
+            g.fillColor = new Color(45, 45, 45, 255);
+            g.strokeColor = new Color(45, 45, 45, 255);
         } else {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
-        // 個別圓角矩形 (TL=30, TR=100, BR=0, BL=0)
-        const x = -195, y = 6;
-        const w = 403, h = 174;
-        const rTL = 30, rTR = 100, rBR = 0, rBL = 0;
+        // 個別圓角矩形 (Canvas TL=28, TR=28, BR=0, BL=0)
+        const x = -360, y = 483;
+        const w = 720, h = 59;
+        const rBL = 28, rBR = 28, rTR = 0, rTL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
         if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);
@@ -86,6 +86,30 @@ export class CustomGraphics extends Component {
         g.lineTo(x, y + rTL);
         if (rTL > 0) g.quadraticCurveTo(x, y, x + rTL, y);
         g.close();
+        g.fill();
+        g.stroke();
+
+        // 形狀 2: 矩形
+        g.lineWidth = 2;
+        if (!this.syncInspectorColors) {
+            g.fillColor = new Color(0, 0, 0, 240);
+            g.strokeColor = new Color(0, 0, 0, 240);
+        } else {
+            // 使用 Inspector 中的 fillColor / strokeColor
+        }
+        g.rect(340, -397, 0, 0);
+        g.fill();
+        g.stroke();
+
+        // 形狀 3: 矩形
+        g.lineWidth = 2;
+        if (!this.syncInspectorColors) {
+            g.fillColor = new Color(0, 0, 0, 240);
+            g.strokeColor = new Color(0, 0, 0, 240);
+        } else {
+            // 使用 Inspector 中的 fillColor / strokeColor
+        }
+        g.rect(-362, 482, 721, -1025);
         g.fill();
         g.stroke();
 
