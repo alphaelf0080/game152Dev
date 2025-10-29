@@ -3176,13 +3176,13 @@ export class CustomGraphics extends Component {
 
             switch(shape.tool) {
                 case 'rect':
-                    // 使用 Canvas 坐標，但需要對 Y 軸翻轉以適應 Cocos 坐標系（Y 向上）
-                    const canvasStartX = shape.startX;
-                    const canvasStartY = shape.startY;
-                    const canvasEndX = shape.endX;
-                    const canvasEndY = shape.endY;
-                    const width = canvasEndX - canvasStartX;
-                    const height = canvasEndY - canvasStartY;
+                    // 轉換為 Cocos 坐標系統
+                    const cocosStartX = this.canvasToCocosX(shape.startX);
+                    const cocosStartY = this.canvasToCocosY(shape.startY);
+                    const cocosEndX = this.canvasToCocosX(shape.endX);
+                    const cocosEndY = this.canvasToCocosY(shape.endY);
+                    const width = cocosEndX - cocosStartX;
+                    const height = cocosEndY - cocosStartY;
                     
                     // 🔧 檢查是否有個別圓角半徑
                     if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
@@ -3194,17 +3194,13 @@ export class CustomGraphics extends Component {
                         const rBL = Math.round(shape.radiusBL || 0);
                         
                         // 計算實際坐標（處理負寬高）
-                        const actualX = Math.min(canvasStartX, canvasEndX);
-                        const actualY = Math.min(canvasStartY, canvasEndY);
+                        const actualX = Math.min(cocosStartX, cocosEndX);
+                        const actualY = Math.min(cocosStartY, cocosEndY);
                         const actualW = Math.abs(width);
                         const actualH = Math.abs(height);
                         
-                        // Y 軸翻轉：在 Cocos 中，Y 軸向上，所以需要翻轉起點
-                        // 但保持高度為正值，從上到下繪製變成從下到上繪製
-                        const cocosY = -actualY - actualH;  // 起點在底部
-                        
                         code += `        // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
-                        code += `        const x = ${actualX}, y = ${cocosY};\n`;
+                        code += `        const x = ${actualX}, y = ${actualY};\n`;
                         code += `        const w = ${actualW}, h = ${actualH};\n`;
                         code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                         code += `        g.moveTo(x + rTL, y);\n`;
@@ -3220,51 +3216,52 @@ export class CustomGraphics extends Component {
                     } else if (shape.radius && shape.radius > 0) {
                         // 使用統一圓角
                         const radius = Math.round(shape.radius);
-                        const actualY = Math.min(canvasStartY, canvasEndY);
-                        const actualH = Math.abs(height);
-                        const cocosY = -actualY - actualH;
-                        code += `        g.roundRect(${canvasStartX}, ${cocosY}, ${width}, ${actualH}, ${radius});\n`;
+                        code += `        g.roundRect(${cocosStartX}, ${cocosStartY}, ${width}, ${height}, ${radius});\n`;
                     } else {
                         // 使用普通矩形
-                        const actualY = Math.min(canvasStartY, canvasEndY);
-                        const actualH = Math.abs(height);
-                        const cocosY = -actualY - actualH;
-                        code += `        g.rect(${canvasStartX}, ${cocosY}, ${width}, ${actualH});\n`;
+                        code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
                     }
                     
                     if (shape.fillMode) code += `        g.fill();\n`;
                     if (shape.strokeMode) code += `        g.stroke();\n`;
                     break;
                 case 'circle':
-                    const circleRadius = Math.round(Math.sqrt(Math.pow(shape.endX - shape.startX, 2) + Math.pow(shape.endY - shape.startY, 2)));
-                    const circleCocosY = -shape.startY;
-                    code += `        g.circle(${shape.startX}, ${circleCocosY}, ${circleRadius});\n`;
+                    const circleCocosX = this.canvasToCocosX(shape.startX);
+                    const circleCocosY = this.canvasToCocosY(shape.startY);
+                    const circleCocosEndX = this.canvasToCocosX(shape.endX);
+                    const circleCocosEndY = this.canvasToCocosY(shape.endY);
+                    const circleRadius = Math.round(Math.sqrt(Math.pow(circleCocosEndX - circleCocosX, 2) + Math.pow(circleCocosEndY - circleCocosY, 2)));
+                    code += `        g.circle(${circleCocosX}, ${circleCocosY}, ${circleRadius});\n`;
                     if (shape.fillMode) code += `        g.fill();\n`;
                     if (shape.strokeMode) code += `        g.stroke();\n`;
                     break;
                 case 'line':
-                    const lineStartCocosY = -shape.startY;
-                    const lineEndCocosY = -shape.endY;
-                    code += `        g.moveTo(${shape.startX}, ${lineStartCocosY});\n`;
-                    code += `        g.lineTo(${shape.endX}, ${lineEndCocosY});\n`;
+                    const lineStartCocosX = this.canvasToCocosX(shape.startX);
+                    const lineStartCocosY = this.canvasToCocosY(shape.startY);
+                    const lineEndCocosX = this.canvasToCocosX(shape.endX);
+                    const lineEndCocosY = this.canvasToCocosY(shape.endY);
+                    code += `        g.moveTo(${lineStartCocosX}, ${lineStartCocosY});\n`;
+                    code += `        g.lineTo(${lineEndCocosX}, ${lineEndCocosY});\n`;
                     code += `        g.stroke();\n`;
 
                     break;
                 case 'polyline':
                     if (shape.points && shape.points.length > 0) {
                         const firstPoint = shape.points[0];
-                        const firstCocosY = -firstPoint.y;
-                        code += `        g.moveTo(${firstPoint.x}, ${firstCocosY});\n`;
+                        const firstCocosX = this.canvasToCocosX(firstPoint.x);
+                        const firstCocosY = this.canvasToCocosY(firstPoint.y);
+                        code += `        g.moveTo(${firstCocosX}, ${firstCocosY});\n`;
                         
                         for (let j = 1; j < shape.points.length; j++) {
                             const point = shape.points[j];
-                            const ptCocosY = -point.y;
-                            code += `        g.lineTo(${point.x}, ${ptCocosY});\n`;
+                            const ptCocosX = this.canvasToCocosX(point.x);
+                            const ptCocosY = this.canvasToCocosY(point.y);
+                            code += `        g.lineTo(${ptCocosX}, ${ptCocosY});\n`;
                         }
                         
                         // 如果是閉合的折線，返回起點
                         if (shape.isClosed) {
-                            code += `        g.lineTo(${firstPoint.x}, ${firstCocosY});\n`;
+                            code += `        g.lineTo(${firstCocosX}, ${firstCocosY});\n`;
                         }
                         
                         if (shape.strokeMode) code += `        g.stroke();\n`;
@@ -3274,19 +3271,23 @@ export class CustomGraphics extends Component {
                 case 'bezier':
                     if (shape.segments && shape.segments.length > 0) {
                         const firstSeg = shape.segments[0];
-                        const firstStartCocosY = -firstSeg.start.y;
-                        code += `        g.moveTo(${firstSeg.start.x}, ${firstStartCocosY});\n`;
+                        const firstStartCocosX = this.canvasToCocosX(firstSeg.start.x);
+                        const firstStartCocosY = this.canvasToCocosY(firstSeg.start.y);
+                        code += `        g.moveTo(${firstStartCocosX}, ${firstStartCocosY});\n`;
                         
                         for (const segment of shape.segments) {
-                            const cp1CocosY = -segment.cp1.y;
-                            const cp2CocosY = -segment.cp2.y;
-                            const endCocosY = -segment.end.y;
-                            code += `        g.bezierCurveTo(${segment.cp1.x}, ${cp1CocosY}, ${segment.cp2.x}, ${cp2CocosY}, ${segment.end.x}, ${endCocosY});\n`;
+                            const cp1CocosX = this.canvasToCocosX(segment.cp1.x);
+                            const cp1CocosY = this.canvasToCocosY(segment.cp1.y);
+                            const cp2CocosX = this.canvasToCocosX(segment.cp2.x);
+                            const cp2CocosY = this.canvasToCocosY(segment.cp2.y);
+                            const endCocosX = this.canvasToCocosX(segment.end.x);
+                            const endCocosY = this.canvasToCocosY(segment.end.y);
+                            code += `        g.bezierCurveTo(${cp1CocosX}, ${cp1CocosY}, ${cp2CocosX}, ${cp2CocosY}, ${endCocosX}, ${endCocosY});\n`;
                         }
                         
                         // 如果是閉合的貝茲曲線，返回起點
                         if (shape.isClosed) {
-                            code += `        g.lineTo(${firstSeg.start.x}, ${firstStartCocosY});\n`;
+                            code += `        g.lineTo(${firstStartCocosX}, ${firstStartCocosY});\n`;
                         }
                         
                         if (shape.strokeMode) code += `        g.stroke();\n`;
