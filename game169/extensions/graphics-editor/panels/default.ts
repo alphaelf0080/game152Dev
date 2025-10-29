@@ -94,8 +94,21 @@ export const template = `
         <!-- 圓角設置（針對選中矩形） -->
         <div class="toolbar-section" id="cornerRadiusSection" style="display:none;">
             <label>矩形圓角:</label>
-            <ui-num-input id="cornerRadius" value="10" min="0" max="100"></ui-num-input>
-            <span style="font-size: 11px; color: #888;">px</span>
+            <ui-checkbox id="useUniformRadius" checked>統一圓角</ui-checkbox>
+            <div id="uniformRadiusInput" style="display: inline-flex; align-items: center; gap: 5px;">
+                <ui-num-input id="cornerRadius" value="10" min="0" max="100"></ui-num-input>
+                <span style="font-size: 11px; color: #888;">px</span>
+            </div>
+            <div id="individualRadiusInputs" style="display: none; margin-left: 10px;">
+                <span style="font-size: 10px; color: #aaa;">左上:</span>
+                <ui-num-input id="cornerRadiusTL" value="10" min="0" max="100" style="width: 60px;"></ui-num-input>
+                <span style="font-size: 10px; color: #aaa;">右上:</span>
+                <ui-num-input id="cornerRadiusTR" value="10" min="0" max="100" style="width: 60px;"></ui-num-input>
+                <span style="font-size: 10px; color: #aaa;">右下:</span>
+                <ui-num-input id="cornerRadiusBR" value="10" min="0" max="100" style="width: 60px;"></ui-num-input>
+                <span style="font-size: 10px; color: #aaa;">左下:</span>
+                <ui-num-input id="cornerRadiusBL" value="10" min="0" max="100" style="width: 60px;"></ui-num-input>
+            </div>
             <ui-button id="btnApplyCornerRadius" style="margin-left: 5px;">應用圓角</ui-button>
         </div>
 
@@ -412,7 +425,14 @@ export const $ = {
     syncInspectorColors: '#syncInspectorColors',
     syncColorHint: '#syncColorHint',
     cornerRadiusSection: '#cornerRadiusSection',
+    useUniformRadius: '#useUniformRadius',
+    uniformRadiusInput: '#uniformRadiusInput',
+    individualRadiusInputs: '#individualRadiusInputs',
     cornerRadius: '#cornerRadius',
+    cornerRadiusTL: '#cornerRadiusTL',
+    cornerRadiusTR: '#cornerRadiusTR',
+    cornerRadiusBR: '#cornerRadiusBR',
+    cornerRadiusBL: '#cornerRadiusBL',
     btnApplyCornerRadius: '#btnApplyCornerRadius',
     canvasWidth: '#canvasWidth',
     canvasHeight: '#canvasHeight',
@@ -500,7 +520,12 @@ class GraphicsEditorLogic {
 
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
-    private cornerRadius: number = 10; // 圓角半徑
+    private cornerRadius: number = 10; // 圓角半徑（統一模式）
+    private useUniformRadius: boolean = true; // 是否使用統一圓角
+    private cornerRadiusTL: number = 10; // 左上角半徑
+    private cornerRadiusTR: number = 10; // 右上角半徑
+    private cornerRadiusBR: number = 10; // 右下角半徑
+    private cornerRadiusBL: number = 10; // 左下角半徑
 
     // 圖形變換相關
     private isTransforming: boolean = false; // 是否正在變換
@@ -1172,9 +1197,35 @@ class GraphicsEditorLogic {
         this.panel.$.btnClearAll.addEventListener('click', () => this.clearAll());
 
         // 圓角化
+        this.panel.$.useUniformRadius.addEventListener('change', (e: any) => {
+            this.useUniformRadius = e.target.checked;
+            this.toggleRadiusInputMode();
+        });
+        
         this.panel.$.cornerRadius.addEventListener('change', (e: any) => {
             this.cornerRadius = parseInt(e.target.value);
+            if (this.useUniformRadius) {
+                // 統一模式下，同步所有角的值
+                this.cornerRadiusTL = this.cornerRadius;
+                this.cornerRadiusTR = this.cornerRadius;
+                this.cornerRadiusBR = this.cornerRadius;
+                this.cornerRadiusBL = this.cornerRadius;
+            }
         });
+        
+        this.panel.$.cornerRadiusTL.addEventListener('change', (e: any) => {
+            this.cornerRadiusTL = parseInt(e.target.value);
+        });
+        this.panel.$.cornerRadiusTR.addEventListener('change', (e: any) => {
+            this.cornerRadiusTR = parseInt(e.target.value);
+        });
+        this.panel.$.cornerRadiusBR.addEventListener('change', (e: any) => {
+            this.cornerRadiusBR = parseInt(e.target.value);
+        });
+        this.panel.$.cornerRadiusBL.addEventListener('change', (e: any) => {
+            this.cornerRadiusBL = parseInt(e.target.value);
+        });
+        
         this.panel.$.btnApplyCornerRadius.addEventListener('click', () => this.applyCornerRadius());
 
         // 同步 Inspector 颜色选项
@@ -1612,9 +1663,18 @@ class GraphicsEditorLogic {
                     const width = shape.endX - shape.startX;
                     const height = shape.endY - shape.startY;
                     
-                    // 檢查是否有圓角半徑
-                    if (shape.radius && shape.radius > 0) {
-                        // 繪製圓角矩形
+                    // 檢查是否有個別圓角半徑
+                    if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
+                        shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
+                        // 繪製個別圓角矩形
+                        const rTL = shape.radiusTL || 0;
+                        const rTR = shape.radiusTR || 0;
+                        const rBR = shape.radiusBR || 0;
+                        const rBL = shape.radiusBL || 0;
+                        this.drawIndividualRoundedRect(shape.startX, shape.startY, width, height, 
+                            rTL, rTR, rBR, rBL, shape.fillMode, shape.strokeMode);
+                    } else if (shape.radius && shape.radius > 0) {
+                        // 繪製統一圓角矩形
                         this.drawRoundedRect(shape.startX, shape.startY, width, height, shape.radius, shape.fillMode, shape.strokeMode);
                     } else {
                         // 繪製普通矩形
@@ -2348,11 +2408,30 @@ class GraphicsEditorLogic {
         const shape = this.shapes[index];
         if (shape && shape.tool === 'rect') {
             this.panel.$.cornerRadiusSection.style.display = 'block';
-            // 如果矩形已有圓角半徑，更新輸入框
-            if (shape.radius !== undefined && shape.radius > 0) {
-                this.panel.$.cornerRadius.value = String(shape.radius);
+            
+            // 檢查是統一圓角還是個別圓角
+            if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
+                shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
+                // 個別圓角模式
+                this.useUniformRadius = false;
+                this.panel.$.useUniformRadius.checked = false;
+                this.cornerRadiusTL = shape.radiusTL || 0;
+                this.cornerRadiusTR = shape.radiusTR || 0;
+                this.cornerRadiusBR = shape.radiusBR || 0;
+                this.cornerRadiusBL = shape.radiusBL || 0;
+                this.panel.$.cornerRadiusTL.value = String(this.cornerRadiusTL);
+                this.panel.$.cornerRadiusTR.value = String(this.cornerRadiusTR);
+                this.panel.$.cornerRadiusBR.value = String(this.cornerRadiusBR);
+                this.panel.$.cornerRadiusBL.value = String(this.cornerRadiusBL);
+            } else if (shape.radius !== undefined && shape.radius > 0) {
+                // 統一圓角模式
+                this.useUniformRadius = true;
+                this.panel.$.useUniformRadius.checked = true;
                 this.cornerRadius = shape.radius;
+                this.panel.$.cornerRadius.value = String(shape.radius);
             }
+            
+            this.toggleRadiusInputMode();
         } else {
             this.panel.$.cornerRadiusSection.style.display = 'none';
         }
@@ -2756,6 +2835,28 @@ class GraphicsEditorLogic {
     }
 
     /**
+     * 切換圓角輸入模式（統一 vs 個別）
+     */
+    toggleRadiusInputMode() {
+        if (this.useUniformRadius) {
+            this.panel.$.uniformRadiusInput.style.display = 'inline-flex';
+            this.panel.$.individualRadiusInputs.style.display = 'none';
+        } else {
+            this.panel.$.uniformRadiusInput.style.display = 'none';
+            this.panel.$.individualRadiusInputs.style.display = 'inline-flex';
+            // 初始化個別角的值為當前統一值
+            this.cornerRadiusTL = this.cornerRadius;
+            this.cornerRadiusTR = this.cornerRadius;
+            this.cornerRadiusBR = this.cornerRadius;
+            this.cornerRadiusBL = this.cornerRadius;
+            this.panel.$.cornerRadiusTL.value = String(this.cornerRadiusTL);
+            this.panel.$.cornerRadiusTR.value = String(this.cornerRadiusTR);
+            this.panel.$.cornerRadiusBR.value = String(this.cornerRadiusBR);
+            this.panel.$.cornerRadiusBL.value = String(this.cornerRadiusBL);
+        }
+    }
+
+    /**
      * 為選中的矩形應用圓角
      */
     applyCornerRadius() {
@@ -2769,10 +2870,24 @@ class GraphicsEditorLogic {
             return;
         }
 
-        // 設置圓角半徑
-        shape.radius = this.cornerRadius;
-
-        console.log('[Graphics Editor] 已為矩形應用圓角半徑:', this.cornerRadius);
+        if (this.useUniformRadius) {
+            // 統一圓角模式
+            shape.radius = this.cornerRadius;
+            shape.radiusTL = undefined;
+            shape.radiusTR = undefined;
+            shape.radiusBR = undefined;
+            shape.radiusBL = undefined;
+            console.log('[Graphics Editor] 已為矩形應用統一圓角半徑:', this.cornerRadius);
+        } else {
+            // 個別圓角模式
+            shape.radius = undefined; // 清除統一半徑
+            shape.radiusTL = this.cornerRadiusTL;
+            shape.radiusTR = this.cornerRadiusTR;
+            shape.radiusBR = this.cornerRadiusBR;
+            shape.radiusBL = this.cornerRadiusBL;
+            console.log('[Graphics Editor] 已為矩形應用個別圓角半徑:', 
+                `TL=${this.cornerRadiusTL}, TR=${this.cornerRadiusTR}, BR=${this.cornerRadiusBR}, BL=${this.cornerRadiusBL}`);
+        }
 
         // 重繪和更新
         this.redraw();
@@ -2781,7 +2896,7 @@ class GraphicsEditorLogic {
     }
 
     /**
-     * 繪製圓角矩形
+     * 繪製圓角矩形（支援統一圓角）
      */
     private drawRoundedRect(x: number, y: number, width: number, height: number, radius: number, fill: boolean, stroke: boolean) {
         // 確保 radius 不超過矩形尺寸的一半
@@ -2822,6 +2937,73 @@ class GraphicsEditorLogic {
         
         // 左上角圓弧
         this.drawCtx.arc(actualX + r, actualY + r, r, Math.PI, -Math.PI / 2, false);
+        
+        this.drawCtx.closePath();
+
+        if (fill) {
+            this.drawCtx.fill();
+        }
+        if (stroke) {
+            this.drawCtx.stroke();
+        }
+    }
+
+    /**
+     * 繪製個別圓角矩形
+     */
+    private drawIndividualRoundedRect(x: number, y: number, width: number, height: number, 
+        radiusTL: number, radiusTR: number, radiusBR: number, radiusBL: number, 
+        fill: boolean, stroke: boolean) {
+        
+        // 處理負寬度/高度的情況
+        const actualX = width < 0 ? x + width : x;
+        const actualY = height < 0 ? y + height : y;
+        const actualWidth = Math.abs(width);
+        const actualHeight = Math.abs(height);
+
+        // 確保每個角的半徑不超過矩形尺寸
+        const maxRadius = Math.min(actualWidth / 2, actualHeight / 2);
+        const rTL = Math.min(Math.abs(radiusTL), maxRadius);
+        const rTR = Math.min(Math.abs(radiusTR), maxRadius);
+        const rBR = Math.min(Math.abs(radiusBR), maxRadius);
+        const rBL = Math.min(Math.abs(radiusBL), maxRadius);
+
+        this.drawCtx.beginPath();
+        
+        // 從左上角圓弧起點開始
+        this.drawCtx.moveTo(actualX + rTL, actualY);
+        
+        // 上邊線到右上角
+        this.drawCtx.lineTo(actualX + actualWidth - rTR, actualY);
+        
+        // 右上角圓弧
+        if (rTR > 0) {
+            this.drawCtx.arc(actualX + actualWidth - rTR, actualY + rTR, rTR, -Math.PI / 2, 0, false);
+        }
+        
+        // 右邊線到右下角
+        this.drawCtx.lineTo(actualX + actualWidth, actualY + actualHeight - rBR);
+        
+        // 右下角圓弧
+        if (rBR > 0) {
+            this.drawCtx.arc(actualX + actualWidth - rBR, actualY + actualHeight - rBR, rBR, 0, Math.PI / 2, false);
+        }
+        
+        // 下邊線到左下角
+        this.drawCtx.lineTo(actualX + rBL, actualY + actualHeight);
+        
+        // 左下角圓弧
+        if (rBL > 0) {
+            this.drawCtx.arc(actualX + rBL, actualY + actualHeight - rBL, rBL, Math.PI / 2, Math.PI, false);
+        }
+        
+        // 左邊線到左上角
+        this.drawCtx.lineTo(actualX, actualY + rTL);
+        
+        // 左上角圓弧
+        if (rTL > 0) {
+            this.drawCtx.arc(actualX + rTL, actualY + rTL, rTL, Math.PI, -Math.PI / 2, false);
+        }
         
         this.drawCtx.closePath();
 
@@ -3002,13 +3184,43 @@ export class CustomGraphics extends Component {
                     const width = cocosEndX - cocosStartX;
                     const height = cocosEndY - cocosStartY;
                     
-                    // 🔧 检查是否有圆角半径
-                    if (shape.radius && shape.radius > 0) {
-                        // 使用 roundRect 绘制圆角矩形
+                    // 🔧 檢查是否有個別圓角半徑
+                    if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
+                        shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
+                        // 使用個別圓角 (Cocos 不支援，需要自己繪製)
+                        const rTL = Math.round(shape.radiusTL || 0);
+                        const rTR = Math.round(shape.radiusTR || 0);
+                        const rBR = Math.round(shape.radiusBR || 0);
+                        const rBL = Math.round(shape.radiusBL || 0);
+                        
+                        code += `        // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
+                        code += `        const x = ${cocosStartX}, y = ${cocosStartY};\n`;
+                        code += `        const w = ${width}, h = ${height};\n`;
+                        code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
+                        code += `        g.moveTo(x + rTL, y);\n`;
+                        code += `        g.lineTo(x + w - rTR, y);\n`;
+                        if (rTR > 0) {
+                            code += `        g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
+                        }
+                        code += `        g.lineTo(x + w, y + h - rBR);\n`;
+                        if (rBR > 0) {
+                            code += `        g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
+                        }
+                        code += `        g.lineTo(x + rBL, y + h);\n`;
+                        if (rBL > 0) {
+                            code += `        g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
+                        }
+                        code += `        g.lineTo(x, y + rTL);\n`;
+                        if (rTL > 0) {
+                            code += `        g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
+                        }
+                        code += `        g.close();\n`;
+                    } else if (shape.radius && shape.radius > 0) {
+                        // 使用統一圓角
                         const radius = Math.round(shape.radius);
                         code += `        g.roundRect(${cocosStartX}, ${cocosStartY}, ${width}, ${height}, ${radius});\n`;
                     } else {
-                        // 使用普通 rect 绘制矩形
+                        // 使用普通矩形
                         code += `        g.rect(${cocosStartX}, ${cocosStartY}, ${width}, ${height});\n`;
                     }
                     
@@ -3126,12 +3338,35 @@ export class CustomGraphics extends Component {
                 const w = ex - sx; const h = ey - sy;
                 const x0 = Math.min(sx, sx + w); const y0 = Math.min(sy, sy + h);
                 const x1 = Math.max(sx, sx + w); const y1 = Math.max(sy, sy + h);
-                if (shape.radius && shape.radius > 0) {
+                
+                if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
+                    shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
+                    // 個別圓角矩形
+                    const rTL = Math.round(shape.radiusTL || 0);
+                    const rTR = Math.round(shape.radiusTR || 0);
+                    const rBR = Math.round(shape.radiusBR || 0);
+                    const rBL = Math.round(shape.radiusBL || 0);
+                    
+                    code += `    // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
+                    code += `    const x = ${sx}, y = ${sy}, w = ${w}, h = ${h};\n`;
+                    code += `    const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
+                    code += `    g.moveTo(x + rTL, y);\n`;
+                    code += `    g.lineTo(x + w - rTR, y);\n`;
+                    if (rTR > 0) code += `    if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
+                    code += `    g.lineTo(x + w, y + h - rBR);\n`;
+                    if (rBR > 0) code += `    if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
+                    code += `    g.lineTo(x + rBL, y + h);\n`;
+                    if (rBL > 0) code += `    if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
+                    code += `    g.lineTo(x, y + rTL);\n`;
+                    if (rTL > 0) code += `    if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
+                    code += `    g.close();\n`;
+                } else if (shape.radius && shape.radius > 0) {
                     const r = Math.round(shape.radius);
                     code += `    g.roundRect(${sx}, ${sy}, ${w}, ${h}, ${r});\n`;
                 } else {
                     code += `    g.rect(${sx}, ${sy}, ${w}, ${h});\n`;
                 }
+                
                 if (shape.fillMode) code += `    g.fill();\n`;
                 if (shape.strokeMode) code += `    /* stroke overlay later */\n`;
                 code += `    minX = Math.min(minX, ${x0}); minY = Math.min(minY, ${y0}); maxX = Math.max(maxX, ${x1}); maxY = Math.max(maxY, ${y1});\n`;
