@@ -2838,23 +2838,36 @@ class GraphicsEditorLogic {
         const syncMode = this.syncInspectorColors;
         
         let code = `import { _decorator, Component, Graphics, Color } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, executeInEditMode } = _decorator;
 
 /**
  * 使用 Graphics Editor 生成的圖形代碼
  * 坐標系統: ${this.getOriginModeName()}
 ${syncMode ? ' * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色' : ' * 颜色模式: 使用导出时的颜色'}
+ * 
+ * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽圖形
  */
 @ccclass('CustomGraphics')
+@executeInEditMode(true)
 export class CustomGraphics extends Component {
     @property(Graphics)
     graphics: Graphics = null;
+
+    onLoad() {
+        // 在編輯器和運行時都執行繪製
+        this.drawShapes();
+    }
 
     start() {
         this.drawShapes();
     }
 
     private drawShapes() {
+        if (!this.graphics) {
+            console.warn('[CustomGraphics] Graphics component not found');
+            return;
+        }
+        
         const g = this.graphics;
         g.clear();
         
@@ -2983,7 +2996,7 @@ export class CustomGraphics extends Component {
         }
 
         let code = `import { _decorator, Component, Graphics, Mask } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass, property, executeInEditMode } = _decorator;
 
 /**
  * Graphics Editor 生成的 Mask（遮罩）代碼
@@ -2994,8 +3007,11 @@ const { ccclass, property } = _decorator;
  * 2. 添加 Graphics 組件
  * 3. 添加 Mask 組件（Type: GRAPHICS_STENCIL）
  * 4. 在 Mask 節點下添加子節點作為被遮罩的內容
+ * 
+ * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽遮罩形狀
  */
 @ccclass('CustomMask')
+@executeInEditMode(true)
 export class CustomMask extends Component {
     
     @property(Graphics)
@@ -3010,8 +3026,24 @@ export class CustomMask extends Component {
     })
     debugMode: boolean = false;
     
+    onLoad() {
+        // 在編輯器和運行時都執行初始化
+        this.initComponents();
+        this.drawMaskShape();
+    }
+    
     start() {
         // 自動獲取組件
+        this.initComponents();
+        
+        // 繪製遮罩
+        this.drawMaskShape();
+    }
+    
+    /**
+     * 初始化組件引用
+     */
+    private initComponents() {
         if (!this.graphics) {
             this.graphics = this.getComponent(Graphics);
         }
@@ -3019,9 +3051,6 @@ export class CustomMask extends Component {
         if (!this.mask) {
             this.mask = this.getComponent(Mask);
         }
-        
-        // 繪製遮罩
-        this.drawMaskShape();
     }
     
     /**
