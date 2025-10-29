@@ -2955,9 +2955,13 @@ class GraphicsEditorLogic {
         radiusTL: number, radiusTR: number, radiusBR: number, radiusBL: number, 
         fill: boolean, stroke: boolean) {
         
+        // 翻轉 Y 坐標以匹配 Cocos 座標系統（Y 軸向上）
+        const flippedY = this.canvasHeight - (y + height);
+        const flippedStartY = this.canvasHeight - y;
+        
         // 處理負寬度/高度的情況
         const actualX = width < 0 ? x + width : x;
-        const actualY = height < 0 ? y + height : y;
+        const actualY = flippedY;
         const actualWidth = Math.abs(width);
         const actualHeight = Math.abs(height);
 
@@ -2970,39 +2974,43 @@ class GraphicsEditorLogic {
 
         this.drawCtx.beginPath();
         
-        // 從左上角圓弧起點開始
-        this.drawCtx.moveTo(actualX + rTL, actualY);
+        // 由於 Y 軸翻轉，圓角位置也需要調整
+        // 原本：TL(左上) TR(右上) BR(右下) BL(左下)
+        // 翻轉後：BL(左上) BR(右上) TR(右下) TL(左下)
         
-        // 上邊線到右上角
-        this.drawCtx.lineTo(actualX + actualWidth - rTR, actualY);
+        // 從左上角（原 BL）圓弧起點開始
+        this.drawCtx.moveTo(actualX + rBL, actualY);
         
-        // 右上角圓弧
-        if (rTR > 0) {
-            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY, actualX + actualWidth, actualY + rTR);
-        }
+        // 上邊線到右上角（原 BR）
+        this.drawCtx.lineTo(actualX + actualWidth - rBR, actualY);
         
-        // 右邊線到右下角
-        this.drawCtx.lineTo(actualX + actualWidth, actualY + actualHeight - rBR);
-        
-        // 右下角圓弧
+        // 右上角圓弧（原 BR）
         if (rBR > 0) {
-            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY + actualHeight, actualX + actualWidth - rBR, actualY + actualHeight);
+            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY, actualX + actualWidth, actualY + rBR);
         }
         
-        // 下邊線到左下角
-        this.drawCtx.lineTo(actualX + rBL, actualY + actualHeight);
+        // 右邊線到右下角（原 TR）
+        this.drawCtx.lineTo(actualX + actualWidth, actualY + actualHeight - rTR);
         
-        // 左下角圓弧
-        if (rBL > 0) {
-            this.drawCtx.quadraticCurveTo(actualX, actualY + actualHeight, actualX, actualY + actualHeight - rBL);
+        // 右下角圓弧（原 TR）
+        if (rTR > 0) {
+            this.drawCtx.quadraticCurveTo(actualX + actualWidth, actualY + actualHeight, actualX + actualWidth - rTR, actualY + actualHeight);
         }
         
-        // 左邊線到左上角
-        this.drawCtx.lineTo(actualX, actualY + rTL);
+        // 下邊線到左下角（原 TL）
+        this.drawCtx.lineTo(actualX + rTL, actualY + actualHeight);
         
-        // 左上角圓弧
+        // 左下角圓弧（原 TL）
         if (rTL > 0) {
-            this.drawCtx.quadraticCurveTo(actualX, actualY, actualX + rTL, actualY);
+            this.drawCtx.quadraticCurveTo(actualX, actualY + actualHeight, actualX, actualY + actualHeight - rTL);
+        }
+        
+        // 左邊線到左上角（原 BL）
+        this.drawCtx.lineTo(actualX, actualY + rBL);
+        
+        // 左上角圓弧（原 BL）
+        if (rBL > 0) {
+            this.drawCtx.quadraticCurveTo(actualX, actualY, actualX + rBL, actualY);
         }
         
         this.drawCtx.closePath();
@@ -3176,7 +3184,7 @@ export class CustomGraphics extends Component {
 
             switch(shape.tool) {
                 case 'rect':
-                    // 直接使用 Canvas 坐標（Cocos Graphics 會自動處理座標系統）
+                    // 使用 Canvas 坐標直接生成，Cocos Graphics 會根據節點座標系統自動調整
                     const canvasStartX = shape.startX;
                     const canvasStartY = shape.startY;
                     const canvasEndX = shape.endX;
@@ -3187,7 +3195,7 @@ export class CustomGraphics extends Component {
                     // 🔧 檢查是否有個別圓角半徑
                     if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
                         shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
-                        // 使用個別圓角 (Cocos 不支援，需要自己繪製)
+                        // 使用個別圓角
                         const rTL = Math.round(shape.radiusTL || 0);
                         const rTR = Math.round(shape.radiusTR || 0);
                         const rBR = Math.round(shape.radiusBR || 0);
