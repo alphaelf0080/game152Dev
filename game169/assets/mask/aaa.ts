@@ -73,34 +73,18 @@ export class CustomGraphics extends Component {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
         // 個別圓角矩形 (TL=30, TR=30, BR=0, BL=0)
-        const x = 90, y = 160;
-        const w = 459, h = 171;
+        const x = 19, y = 159;
+        const w = 547, h = 166;
         const rTL = 30, rTR = 30, rBR = 0, rBL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
-        if (rTR > 0) {
-            g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);
-        } else {
-            g.lineTo(x + w, y);
-        }
+        if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);
         g.lineTo(x + w, y + h - rBR);
-        if (rBR > 0) {
-            g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);
-        } else {
-            g.lineTo(x + w, y + h);
-        }
+        if (rBR > 0) g.quadraticCurveTo(x + w, y + h, x + w - rBR, y + h);
         g.lineTo(x + rBL, y + h);
-        if (rBL > 0) {
-            g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);
-        } else {
-            g.lineTo(x, y + h);
-        }
+        if (rBL > 0) g.quadraticCurveTo(x, y + h, x, y + h - rBL);
         g.lineTo(x, y + rTL);
-        if (rTL > 0) {
-            g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);
-        } else {
-            g.lineTo(x, y);
-        }
+        if (rTL > 0) g.quadraticCurveTo(x, y, x + rTL, y);
         g.close();
         g.fill();
         g.stroke();
