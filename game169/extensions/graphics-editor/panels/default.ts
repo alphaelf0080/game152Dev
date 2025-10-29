@@ -809,7 +809,9 @@ class GraphicsEditorLogic {
     canvasToCocosY(canvasY: number): number {
         switch(this.originMode) {
             case 'center':
-                // Cocos Y 軸向上，Canvas Y 軸向下，需要翻轉
+                // Canvas: 原點左上角，Y 向下為正
+                // Cocos: 原點中心，Y 向上為正
+                // 公式：-(canvasY - canvasHeight/2) = canvasHeight/2 - canvasY
                 return Math.round(this.canvasHeight / 2 - canvasY);
             case 'bottomLeft':
                 return Math.round(this.canvasHeight - canvasY);
@@ -3189,10 +3191,11 @@ export class CustomGraphics extends Component {
                     if (shape.radiusTL !== undefined || shape.radiusTR !== undefined || 
                         shape.radiusBR !== undefined || shape.radiusBL !== undefined) {
                         // 使用個別圓角
-                        const rTL = Math.round(shape.radiusTL || 0);
-                        const rTR = Math.round(shape.radiusTR || 0);
-                        const rBR = Math.round(shape.radiusBR || 0);
-                        const rBL = Math.round(shape.radiusBL || 0);
+                        // ⚠️ 注意：Canvas Y 軸向下，Cocos Y 軸向上，所以需要交換上下圓角
+                        const rTL = Math.round(shape.radiusTL || 0); // Canvas 左上 → Cocos 左下
+                        const rTR = Math.round(shape.radiusTR || 0); // Canvas 右上 → Cocos 右下
+                        const rBR = Math.round(shape.radiusBR || 0); // Canvas 右下 → Cocos 右上
+                        const rBL = Math.round(shape.radiusBL || 0); // Canvas 左下 → Cocos 左上
                         
                         // 計算實際坐標（處理負寬高）
                         const actualX = Math.min(cocosStartX, cocosEndX);
@@ -3200,10 +3203,11 @@ export class CustomGraphics extends Component {
                         const actualW = Math.abs(width);
                         const actualH = Math.abs(height);
                         
-                        code += `        // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
+                        code += `        // 個別圓角矩形 (Canvas TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
                         code += `        const x = ${actualX}, y = ${actualY};\n`;
                         code += `        const w = ${actualW}, h = ${actualH};\n`;
-                        code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
+                        // 交換上下圓角：Canvas TL→Cocos BL, Canvas TR→Cocos BR, Canvas BR→Cocos TR, Canvas BL→Cocos TL
+                        code += `        const rBL = ${rTL}, rBR = ${rTR}, rTR = ${rBR}, rTL = ${rBL};\n`;
                         code += `        g.moveTo(x + rTL, y);\n`;
                         code += `        g.lineTo(x + w - rTR, y);\n`;
                         code += `        if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);\n`;
