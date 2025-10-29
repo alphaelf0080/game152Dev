@@ -148,12 +148,12 @@ export const template = `
                 <div style="margin-bottom: 10px; padding: 8px; background: #2d2d2d; border-radius: 4px;">
                     <label style="display: flex; align-items: center; margin-bottom: 5px;">
                         <ui-checkbox id="syncInspectorColors" checked></ui-checkbox>
-                        <span style="margin-left: 5px;">同步 Inspector 颜色</span>
-                        <span style="font-size: 10px; color: #888; margin-left: 5px;">（忽略导出时的颜色设置）</span>
+                        <span style="margin-left: 5px;">使用 Inspector 顏色</span>
+                        <span style="font-size: 10px; color: #888; margin-left: 5px;">（運行時讀取 Graphics 組件顏色）</span>
                     </label>
-                    <div style="font-size: 11px; color: #aaa; padding-left: 20px;">
-                        ✓ 启用：使用 Inspector 中 Graphics 组件的颜色<br>
-                        ✗ 禁用：使用导出时设置的颜色
+                    <div id="syncColorHint" style="font-size: 11px; color: #aaa; padding-left: 20px;">
+                        ✓ 勾選：運行時使用 Inspector 中 Graphics 組件的 fillColor / strokeColor<br>
+                        ✗ 不勾選：使用下方面板設定的顏色（固定寫入腳本）
                     </div>
                 </div>
                 
@@ -410,6 +410,7 @@ export const $ = {
     btnExportMask: '#btnExportMask',
     btnClearAll: '#btnClearAll',
     syncInspectorColors: '#syncInspectorColors',
+    syncColorHint: '#syncColorHint',
     cornerRadiusSection: '#cornerRadiusSection',
     cornerRadius: '#cornerRadius',
     btnApplyCornerRadius: '#btnApplyCornerRadius',
@@ -545,6 +546,7 @@ class GraphicsEditorLogic {
         this.applyCanvasSize();
         this.drawGrid();
         this.bindEvents();
+        this.updateSyncColorHint();
         this.updateCodePreview();
         this.updateViewTransform();
         this.centerCanvas();
@@ -933,6 +935,7 @@ class GraphicsEditorLogic {
         // 漸層填充
         this.panel.$.enableGradient.addEventListener('change', (e: any) => {
             this.enableGradient = e.target.checked;
+            this.updateSyncColorHint();
             this.updateCodePreview();
         });
         this.panel.$.gradientStartColor.addEventListener('change', (e: any) => {
@@ -2867,6 +2870,26 @@ class GraphicsEditorLogic {
     updateCodePreview() {
         const code = this.generateTypeScriptCode();
         this.panel.$.codePreview.value = code;
+    }
+
+    updateSyncColorHint() {
+        const hint = this.panel.$.syncColorHint;
+        if (!hint) return;
+        
+        if (this.enableGradient) {
+            // 漸層模式：填充色由漸層屬性控制，只有描邊色受此選項影響
+            hint.innerHTML = `
+                ✓ 勾選：描邊顏色使用 Inspector 中 Graphics 組件的 strokeColor（填充使用漸層屬性）<br>
+                ✗ 不勾選：描邊顏色使用面板設定的顏色（填充使用漸層屬性）<br>
+                <span style="color: #ff9800;">⚠ 漸層模式下，填充顏色由「漸層起始/結束顏色」屬性控制</span>
+            `;
+        } else {
+            // 一般模式：填充色和描邊色都受此選項影響
+            hint.innerHTML = `
+                ✓ 勾選：運行時使用 Inspector 中 Graphics 組件的 fillColor / strokeColor<br>
+                ✗ 不勾選：使用下方面板設定的顏色（固定寫入腳本）
+            `;
+        }
     }
 
     generateTypeScriptCode(): string {
