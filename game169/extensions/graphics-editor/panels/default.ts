@@ -44,6 +44,17 @@ export const template = `
             <ui-num-input id="fillAlpha" value="255" min="0" max="255" step="1"></ui-num-input>
         </div>
 
+        <!-- 漸層填充選項 -->
+        <div class="toolbar-section">
+            <ui-checkbox id="enableGradient">漸層填充</ui-checkbox>
+            <label>顏色1:</label>
+            <input type="color" id="gradientStartColor" value="#ff0000">
+            <label>顏色2:</label>
+            <input type="color" id="gradientEndColor" value="#0000ff">
+            <label>角度°:</label>
+            <ui-num-input id="gradientAngle" value="0" min="0" max="360" step="1"></ui-num-input>
+        </div>
+
         <!-- 描邊設置 -->
         <div class="toolbar-section">
             <label>描邊:</label>
@@ -378,6 +389,10 @@ export const $ = {
     lineWidth: '#lineWidth',
     fillMode: '#fillMode',
     strokeMode: '#strokeMode',
+    enableGradient: '#enableGradient',
+    gradientStartColor: '#gradientStartColor',
+    gradientEndColor: '#gradientEndColor',
+    gradientAngle: '#gradientAngle',
     snapToPixel: '#snapToPixel',
     btnZoomIn: '#btnZoomIn',
     btnZoomOut: '#btnZoomOut',
@@ -436,6 +451,12 @@ class GraphicsEditorLogic {
     private lineWidth: number = 2;
     private fillMode: boolean = true;
     private strokeMode: boolean = true;
+    // 漸層相關
+    private enableGradient: boolean = false;
+    private gradientStartColor: string = '#ff0000';
+    private gradientEndColor: string = '#0000ff';
+    private gradientAngle: number = 0; // 0-360 度
+    private gradientSteps: number = 64; // 內部繪製步數（生成代碼會用到）
 
     private bgImage: HTMLImageElement | null = null;
     private bgOffsetX: number = 0; // 背景圖 X 偏移
@@ -907,6 +928,24 @@ class GraphicsEditorLogic {
         });
         this.panel.$.strokeAlpha.addEventListener('change', (e: any) => {
             this.strokeAlpha = parseInt(e.target.value);
+        });
+
+        // 漸層填充
+        this.panel.$.enableGradient.addEventListener('change', (e: any) => {
+            this.enableGradient = e.target.checked;
+            this.updateCodePreview();
+        });
+        this.panel.$.gradientStartColor.addEventListener('change', (e: any) => {
+            this.gradientStartColor = e.target.value;
+            if (this.enableGradient) this.updateCodePreview();
+        });
+        this.panel.$.gradientEndColor.addEventListener('change', (e: any) => {
+            this.gradientEndColor = e.target.value;
+            if (this.enableGradient) this.updateCodePreview();
+        });
+        this.panel.$.gradientAngle.addEventListener('change', (e: any) => {
+            this.gradientAngle = parseInt(e.target.value);
+            if (this.enableGradient) this.updateCodePreview();
         });
 
         // 線寬
@@ -2835,6 +2874,11 @@ class GraphicsEditorLogic {
             return '// 請先繪製一些圖形';
         }
 
+        // 若啟用漸層填充，改用漸層版生成器
+        if (this.enableGradient) {
+            return this.generateGradientTypeScriptCode();
+        }
+
         const syncMode = this.syncInspectorColors;
         
         let code = `import { _decorator, Component, Graphics, Color } from 'cc';
@@ -3014,6 +3058,170 @@ export class CustomGraphics extends Component {
 
         code += `    }
 }\n`;
+        return code;
+    }
+
+    // 生成支援漸層填充的 TypeScript 腳本（使用 Mask + 子節點 Graphics 直條近似線性漸層）
+    generateGradientTypeScriptCode(): string {
+        const syncMode = this.syncInspectorColors;
+        const startRGB = this.hexToRgb(this.gradientStartColor);
+        const endRGB = this.hexToRgb(this.gradientEndColor);
+        const angle = this.gradientAngle;
+        const steps = this.gradientSteps;
+
+        let code = `import { _decorator, Component, Graphics, Color, Node, Mask } from 'cc';\n`;
+        code += `const { ccclass, property, executeInEditMode } = _decorator;\n\n`;
+        code += `/**\n * 使用 Graphics Editor 生成的圖形代碼（漸層填充版）\n * 坐標系統: ${this.getOriginModeName()}\n * 颜色模式: ${syncMode ? '同步 Inspector 顏色（僅描邊）' : '使用導出時顏色'}\n *\n * 原理：\n * - 本節點：Graphics 作為 Mask（GRAPHICS_STENCIL），繪製圖形輪廓並 fill() 形成遮罩\n * - 子節點：Graphics 畫多條直條矩形以近似線性漸層，並旋轉子節點配合角度，顏色取漸層\n * - 描邊：於父節點以另一個 Graphics 疊加描邊（避免與遮罩共用）\n */\n`;
+        code += `@ccclass('CustomGraphics')\n@executeInEditMode(true)\n`;
+        code += `export class CustomGraphics extends Component {\n`;
+        code += `  @property(Graphics) graphics: Graphics = null;\n`;
+        code += `  @property({ tooltip: '同步 Inspector 顏色（僅描邊適用）' }) syncInspectorColors: boolean = ${syncMode ? 'true' : 'false'};\n`;
+        code += `  @property({ tooltip: '（可選）用於描邊的 Graphics，避免與遮罩共用' }) strokeGraphics: Graphics = null;\n`;
+        code += `  @property({ tooltip: '漸層起始顏色' }) gradientStart: Color = new Color(${startRGB.r}, ${startRGB.g}, ${startRGB.b}, 255);\n`;
+        code += `  @property({ tooltip: '漸層結束顏色' }) gradientEnd: Color = new Color(${endRGB.r}, ${endRGB.g}, ${endRGB.b}, 255);\n`;
+        code += `  @property({ tooltip: '漸層角度（度數，0=左→右）' }) gradientAngle: number = ${angle};\n`;
+        code += `  @property({ tooltip: '漸層細分步數（越大越平滑）' }) gradientSteps: number = ${steps};\n`;
+        code += `\n  onLoad() { this.drawShapes(); }\n  start() { this.drawShapes(); }\n  update() { this.drawShapes(); }\n`;
+        code += `\n  private lerp(a: number, b: number, t: number): number { return a + (b - a) * t; }\n`;
+        code += `\n  private drawShapes() {\n`;
+        code += `    const g = this.graphics; if (!g) { console.warn('[CustomGraphics] Graphics not found'); return; }\n`;
+        code += `    g.clear();\n`;
+        code += `    let mask = this.node.getComponent(Mask); if (!mask) mask = this.node.addComponent(Mask); mask.type = Mask.Type.GRAPHICS_STENCIL;\n`;
+        code += `    // 先繪製遮罩形狀（填充為白色）\n`;
+        code += `    g.fillColor = new Color(255, 255, 255, 255);\n`;
+
+        // 生成圖形路徑並記錄邊界
+        code += `    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;\n`;
+        this.shapes.forEach((shape: any, i: number) => {
+            const sx = this.canvasToCocosX(shape.startX);
+            const sy = this.canvasToCocosY(shape.startY);
+            const ex = this.canvasToCocosX(shape.endX);
+            const ey = this.canvasToCocosY(shape.endY);
+            code += `    // 形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
+            code += `    g.lineWidth = ${shape.lineWidth};\n`;
+            if (shape.tool === 'rect') {
+                const w = ex - sx; const h = ey - sy;
+                const x0 = Math.min(sx, sx + w); const y0 = Math.min(sy, sy + h);
+                const x1 = Math.max(sx, sx + w); const y1 = Math.max(sy, sy + h);
+                if (shape.radius && shape.radius > 0) {
+                    const r = Math.round(shape.radius);
+                    code += `    g.roundRect(${sx}, ${sy}, ${w}, ${h}, ${r});\n`;
+                } else {
+                    code += `    g.rect(${sx}, ${sy}, ${w}, ${h});\n`;
+                }
+                if (shape.fillMode) code += `    g.fill();\n`;
+                if (shape.strokeMode) code += `    /* stroke overlay later */\n`;
+                code += `    minX = Math.min(minX, ${x0}); minY = Math.min(minY, ${y0}); maxX = Math.max(maxX, ${x1}); maxY = Math.max(maxY, ${y1});\n`;
+            } else if (shape.tool === 'circle') {
+                const r = Math.round(Math.hypot(ex - sx, ey - sy));
+                code += `    g.circle(${sx}, ${sy}, ${r}); if (${shape.fillMode ? 'true' : 'false'}) g.fill();\n`;
+                code += `    minX = Math.min(minX, ${sx} - ${r}); minY = Math.min(minY, ${sy} - ${r}); maxX = Math.max(maxX, ${sx} + ${r}); maxY = Math.max(maxY, ${sy} + ${r});\n`;
+            } else if (shape.tool === 'line') {
+                code += `    g.moveTo(${sx}, ${sy}); g.lineTo(${ex}, ${ey});\n`;
+                code += `    // 線條不參與填充邊界（仍計入描邊邊界）\n`;
+                code += `    minX = Math.min(minX, ${sx}, ${ex}); minY = Math.min(minY, ${sy}, ${ey}); maxX = Math.max(maxX, ${sx}, ${ex}); maxY = Math.max(maxY, ${sy}, ${ey});\n`;
+            } else if (shape.tool === 'polyline') {
+                if (shape.points && shape.points.length > 0) {
+                    const first = shape.points[0];
+                    const fx = this.canvasToCocosX(first.x); const fy = this.canvasToCocosY(first.y);
+                    code += `    g.moveTo(${fx}, ${fy});\n`;
+                    shape.points.slice(1).forEach((p: any) => {
+                        const px = this.canvasToCocosX(p.x); const py = this.canvasToCocosY(p.y);
+                        code += `    g.lineTo(${px}, ${py});\n`;
+                    });
+                    if (shape.isClosed && shape.fillMode) {
+                        code += `    g.lineTo(${fx}, ${fy}); g.fill();\n`;
+                    }
+                    // 更新邊界
+                    shape.points.forEach((p: any) => {
+                        const px = this.canvasToCocosX(p.x); const py = this.canvasToCocosY(p.y);
+                        code += `    minX = Math.min(minX, ${px}); minY = Math.min(minY, ${py}); maxX = Math.max(maxX, ${px}); maxY = Math.max(maxY, ${py});\n`;
+                    });
+                }
+            } else if (shape.tool === 'bezier') {
+                if (shape.segments && shape.segments.length > 0) {
+                    const firstSeg = shape.segments[0];
+                    const fx = this.canvasToCocosX(firstSeg.start.x); const fy = this.canvasToCocosY(firstSeg.start.y);
+                    code += `    g.moveTo(${fx}, ${fy});\n`;
+                    shape.segments.forEach((seg: any) => {
+                        const cp1x = this.canvasToCocosX(seg.cp1.x); const cp1y = this.canvasToCocosY(seg.cp1.y);
+                        const cp2x = this.canvasToCocosX(seg.cp2.x); const cp2y = this.canvasToCocosY(seg.cp2.y);
+                        const ex2 = this.canvasToCocosX(seg.end.x); const ey2 = this.canvasToCocosY(seg.end.y);
+                        code += `    g.bezierCurveTo(${cp1x}, ${cp1y}, ${cp2x}, ${cp2y}, ${ex2}, ${ey2});\n`;
+                        [seg.start, seg.cp1, seg.cp2, seg.end].forEach((pt: any) => {
+                            const px = this.canvasToCocosX(pt.x); const py = this.canvasToCocosY(pt.y);
+                            code += `    minX = Math.min(minX, ${px}); minY = Math.min(minY, ${py}); maxX = Math.max(maxX, ${px}); maxY = Math.max(maxY, ${py});\n`;
+                        });
+                    });
+                    // 若該貝茲曲線需要填充且閉合，補回起點並填充
+                    if (shape.isClosed && shape.fillMode) {
+                        code += `    g.lineTo(${fx}, ${fy}); g.fill();\n`;
+                    }
+                }
+            }
+        });
+
+        // 建立或更新漸層層
+        code += `    let gradientNode = this.node.getChildByName('GradientFill');\n`;
+        code += `    if (!gradientNode) { gradientNode = new Node('GradientFill'); this.node.addChild(gradientNode); }\n`;
+        code += `    let gradG = gradientNode.getComponent(Graphics); if (!gradG) gradG = gradientNode.addComponent(Graphics);\n`;
+        code += `    gradG.clear();\n`;
+        code += `    const cx = (minX + maxX) / 2; const cy = (minY + maxY) / 2;\n`;
+        code += `    gradientNode.setPosition(cx, cy); gradientNode.angle = this.gradientAngle;\n`;
+        code += `    const bw = Math.max(1, (maxX - minX)); const bh = Math.max(1, (maxY - minY));\n`;
+        code += `    const L = Math.sqrt(bw * bw + bh * bh) * 2; const n = Math.max(2, Math.floor(this.gradientSteps)); const stripW = L / n;\n`;
+        code += `    for (let i = 0; i < n; i++) { const t = i / (n - 1); const r = Math.round(this.lerp(this.gradientStart.r, this.gradientEnd.r, t)); const g2 = Math.round(this.lerp(this.gradientStart.g, this.gradientEnd.g, t)); const b = Math.round(this.lerp(this.gradientStart.b, this.gradientEnd.b, t)); gradG.fillColor = new Color(r, g2, b, 255); const x = -L / 2 + i * stripW; gradG.rect(x, -L / 2, stripW + 0.5, L); gradG.fill(); }\n`;
+
+        // 描邊覆蓋層
+        if (this.shapes.some((s: any) => s.strokeMode)) {
+            code += `    if (!this.strokeGraphics) this.strokeGraphics = this.node.addComponent(Graphics); const s = this.strokeGraphics; s.clear();\n`;
+            this.shapes.forEach((shape: any) => {
+                const sx = this.canvasToCocosX(shape.startX);
+                const sy = this.canvasToCocosY(shape.startY);
+                const ex = this.canvasToCocosX(shape.endX);
+                const ey = this.canvasToCocosY(shape.endY);
+                code += `    s.lineWidth = ${shape.lineWidth};\n`;
+                code += `    if (!this.syncInspectorColors) {\n`;
+                if (shape.strokeMode) {
+                    const sRGB = this.hexToRgb(shape.strokeColor);
+                    const sA = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
+                    code += `      s.strokeColor = new Color(${sRGB.r}, ${sRGB.g}, ${sRGB.b}, ${sA});\n`;
+                }
+                code += `    }\n`;
+                if (shape.tool === 'rect') {
+                    const w = ex - sx; const h = ey - sy;
+                    if (shape.strokeMode) {
+                        if (shape.radius && shape.radius > 0) {
+                            const r = Math.round(shape.radius);
+                            code += `    s.roundRect(${sx}, ${sy}, ${w}, ${h}, ${r}); s.stroke();\n`;
+                        } else {
+                            code += `    s.rect(${sx}, ${sy}, ${w}, ${h}); s.stroke();\n`;
+                        }
+                    }
+                } else if (shape.tool === 'circle') {
+                    const r = Math.round(Math.hypot(ex - sx, ey - sy)); if (shape.strokeMode) code += `    s.circle(${sx}, ${sy}, ${r}); s.stroke();\n`;
+                } else if (shape.tool === 'line') {
+                    code += `    s.moveTo(${sx}, ${sy}); s.lineTo(${ex}, ${ey}); s.stroke();\n`;
+                } else if (shape.tool === 'polyline') {
+                    if (shape.points && shape.points.length > 0 && shape.strokeMode) {
+                        const first = shape.points[0]; const fx = this.canvasToCocosX(first.x); const fy = this.canvasToCocosY(first.y);
+                        code += `    s.moveTo(${fx}, ${fy});\n`;
+                        shape.points.slice(1).forEach((p: any) => { const px = this.canvasToCocosX(p.x); const py = this.canvasToCocosY(p.y); code += `    s.lineTo(${px}, ${py});\n`; });
+                        code += `    s.stroke();\n`;
+                    }
+                } else if (shape.tool === 'bezier') {
+                    if (shape.segments && shape.segments.length > 0 && shape.strokeMode) {
+                        const firstSeg = shape.segments[0]; const fx = this.canvasToCocosX(firstSeg.start.x); const fy = this.canvasToCocosY(firstSeg.start.y);
+                        code += `    s.moveTo(${fx}, ${fy});\n`;
+                        shape.segments.forEach((seg: any) => { const cp1x = this.canvasToCocosX(seg.cp1.x); const cp1y = this.canvasToCocosY(seg.cp1.y); const cp2x = this.canvasToCocosX(seg.cp2.x); const cp2y = this.canvasToCocosY(seg.cp2.y); const ex2 = this.canvasToCocosX(seg.end.x); const ey2 = this.canvasToCocosY(seg.end.y); code += `    s.bezierCurveTo(${cp1x}, ${cp1y}, ${cp2x}, ${cp2y}, ${ex2}, ${ey2});\n`; });
+                        code += `    s.stroke();\n`;
+                    }
+                }
+            });
+        }
+
+        code += `  }\n}\n`;
+
         return code;
     }
 
