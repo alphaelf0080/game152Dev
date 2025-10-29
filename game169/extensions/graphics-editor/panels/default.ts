@@ -2843,7 +2843,7 @@ const { ccclass, property, executeInEditMode } = _decorator;
 /**
  * 使用 Graphics Editor 生成的圖形代碼
  * 坐標系統: ${this.getOriginModeName()}
-${syncMode ? ' * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色' : ' * 颜色模式: 使用导出时的颜色'}
+ * 颜色模式: ${syncMode ? '同步 Inspector 中的 Graphics 组件颜色' : '使用导出时的颜色'}
  * 
  * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽圖形
  */
@@ -2853,13 +2853,45 @@ export class CustomGraphics extends Component {
     @property(Graphics)
     graphics: Graphics = null;
 
+    @property({ tooltip: '同步 Inspector 顏色（fillColor / strokeColor）' })
+    syncInspectorColors: boolean = ${syncMode ? 'true' : 'false'};
+
+    private _lastStrokeKey: string = '';
+    private _lastFillKey: string = '';
+    private _lastSync: boolean = ${syncMode ? 'true' : 'false'};
+
     onLoad() {
         // 在編輯器和運行時都執行繪製
         this.drawShapes();
+        this.cacheColors();
     }
 
     start() {
         this.drawShapes();
+        this.cacheColors();
+    }
+
+    update() {
+        if (!this.graphics) return;
+        // 在編輯器中即時同步 Inspector 顏色或切換模式
+        const strokeKey = this.colorKey(this.graphics.strokeColor);
+        const fillKey = this.colorKey(this.graphics.fillColor);
+        if (this._lastStrokeKey !== strokeKey || this._lastFillKey !== fillKey || this._lastSync !== this.syncInspectorColors) {
+            this._lastStrokeKey = strokeKey;
+            this._lastFillKey = fillKey;
+            this._lastSync = this.syncInspectorColors;
+            this.drawShapes();
+        }
+    }
+
+    private cacheColors() {
+        if (!this.graphics) return;
+        this._lastStrokeKey = this.colorKey(this.graphics.strokeColor);
+        this._lastFillKey = this.colorKey(this.graphics.fillColor);
+    }
+
+    private colorKey(c: Color): string {
+        return c ? (c.r + ',' + c.g + ',' + c.b + ',' + c.a) : '';
     }
 
     private drawShapes() {
@@ -2882,26 +2914,21 @@ export class CustomGraphics extends Component {
             code += `        // 形狀 ${i + 1}: ${this.getShapeName(shape.tool)}\n`;
             code += `        g.lineWidth = ${shape.lineWidth};\n`;
             
-            // 🔧 根据 syncMode 决定是否输出颜色设置
-            if (!syncMode) {
-                // 禁用同步模式：输出硬编码的颜色
-                if (shape.fillMode) {
-                    const fillRGB = this.hexToRgb(shape.fillColor);
-                    const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
-                    code += `        g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, ${fillAlpha});\n`;
-                }
-                
-                if (shape.strokeMode) {
-                    const strokeRGB = this.hexToRgb(shape.strokeColor);
-                    const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
-                    code += `        g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, ${strokeAlpha});\n`;
-                }
-            } else {
-                // 启用同步模式：输出注释说明使用 Inspector 颜色
-                code += `        // 🎨 使用 Inspector 中设置的颜色\n`;
-                code += `        // g.fillColor = ... // 从 Inspector 继承\n`;
-                code += `        // g.strokeColor = ... // 从 Inspector 继承\n`;
+            // 🎨 根據屬性決定是否覆蓋 Inspector 顏色
+            code += `        if (!this.syncInspectorColors) {\n`;
+            if (shape.fillMode) {
+                const fillRGB = this.hexToRgb(shape.fillColor);
+                const fillAlpha = shape.fillAlpha !== undefined ? shape.fillAlpha : 255;
+                code += `            g.fillColor = new Color(${fillRGB.r}, ${fillRGB.g}, ${fillRGB.b}, ${fillAlpha});\n`;
             }
+            if (shape.strokeMode) {
+                const strokeRGB = this.hexToRgb(shape.strokeColor);
+                const strokeAlpha = shape.strokeAlpha !== undefined ? shape.strokeAlpha : 255;
+                code += `            g.strokeColor = new Color(${strokeRGB.r}, ${strokeRGB.g}, ${strokeRGB.b}, ${strokeAlpha});\n`;
+            }
+            code += `        } else {\n`;
+            code += `            // 使用 Inspector 中的 fillColor / strokeColor\n`;
+            code += `        }\n`;
 
             switch(shape.tool) {
                 case 'rect':
