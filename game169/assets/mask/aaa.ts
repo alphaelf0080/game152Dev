@@ -3,7 +3,7 @@ const { ccclass, property, executeInEditMode } = _decorator;
 
 /**
  * 使用 Graphics Editor 生成的圖形代碼
- * 坐標系統: 左下 - Cocos Creator 預設
+ * 坐標系統: 中心 (0,0)
  * 颜色模式: 同步 Inspector 中的 Graphics 组件颜色
  * 
  * @executeInEditMode - 在編輯器模式下也會執行，可以在 Scene 視窗中預覽圖形
@@ -73,8 +73,8 @@ export class CustomGraphics extends Component {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
         // 個別圓角矩形 (TL=30, TR=60, BR=0, BL=0)
-        const x = 31, y = 120;
-        const w = 550, h = 197;
+        const x = 28.5, y = 39.5;
+        const w = 528, h = 239;
         const rTL = 30, rTR = 60, rBR = 0, rBL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
