@@ -471,6 +471,10 @@ class GraphicsEditorLogic {
     private editingControlType: string = ''; // 'start', 'cp1', 'cp2', 'end'
     private bezierEditStartX: number = 0;
     private bezierEditStartY: number = 0;
+    
+    // 貝茲曲線繪製過程中的即時控制點編輯
+    private isEditingBezierDrawingCP: boolean = false;
+    private editingDrawingCP: 'cp1' | 'cp2' | null = null;
 
     // 選取相關
     private selectedShapeIndex: number = -1; // 選中的圖形索引
@@ -1168,11 +1172,10 @@ class GraphicsEditorLogic {
             return;
         }
         
-        // 檢查是否有圖形被選中
-        if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline) {
+        // 第一優先級：檢查選中的貝茲曲線是否有被點擊的控制點（隨時可調整）
+        if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline && !this.isDrawingBezier) {
             const shape = this.shapes[this.selectedShapeIndex];
             
-            // 優先檢查貝茲曲線的控制點
             if (shape.tool === 'bezier') {
                 const controlPoint = this.getBezierControlAtPosition(pos.x, pos.y);
                 if (controlPoint) {
@@ -1187,6 +1190,41 @@ class GraphicsEditorLogic {
                     return;
                 }
             }
+        }
+        
+        // 第二優先級：貝茲曲線繪製過程中，允許拖動控制點來即時調整
+        if (this.isDrawingBezier && !this.isEditingBezierDrawingCP) {
+            // 檢查是否點擊到 CP1 或 CP2
+            if (this.bezierCP1) {
+                const distCP1 = Math.sqrt(
+                    Math.pow(pos.x - this.bezierCP1.x, 2) + 
+                    Math.pow(pos.y - this.bezierCP1.y, 2)
+                );
+                if (distCP1 <= 8) {
+                    this.isEditingBezierDrawingCP = true;
+                    this.editingDrawingCP = 'cp1';
+                    e.preventDefault();
+                    return;
+                }
+            }
+            
+            if (this.bezierCP2) {
+                const distCP2 = Math.sqrt(
+                    Math.pow(pos.x - this.bezierCP2.x, 2) + 
+                    Math.pow(pos.y - this.bezierCP2.y, 2)
+                );
+                if (distCP2 <= 8) {
+                    this.isEditingBezierDrawingCP = true;
+                    this.editingDrawingCP = 'cp2';
+                    e.preventDefault();
+                    return;
+                }
+            }
+        }
+        
+        // 第三優先級：檢查其他圖形的變換句柄
+        if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline && !this.isDrawingBezier) {
+            const shape = this.shapes[this.selectedShapeIndex];
             
             // 檢查是否點擊到變換句柄
             const handleMode = this.getHandleAtPosition(pos.x, pos.y);
@@ -1265,7 +1303,25 @@ class GraphicsEditorLogic {
         let currentX = pos.x;
         let currentY = pos.y;
 
-        // 處理貝茲曲線控制點編輯
+        // 處理貝茲曲線繪製過程中的控制點拖動
+        if (this.isEditingBezierDrawingCP) {
+            const snapX = this.snapToPixel ? Math.round(currentX) : currentX;
+            const snapY = this.snapToPixel ? Math.round(currentY) : currentY;
+            
+            if (this.editingDrawingCP === 'cp1' && this.bezierCP1) {
+                this.bezierCP1.x = snapX;
+                this.bezierCP1.y = snapY;
+            } else if (this.editingDrawingCP === 'cp2' && this.bezierCP2) {
+                this.bezierCP2.x = snapX;
+                this.bezierCP2.y = snapY;
+            }
+            
+            this.redraw();
+            this.drawBezierPreview();
+            return;
+        }
+
+        // 處理貝茲曲線選中後的控制點編輯
         if (this.isEditingBezierControl) {
             const shape = this.shapes[this.selectedShapeIndex];
             if (shape && shape.segments && this.editingSegmentIndex >= 0) {
@@ -1321,10 +1377,10 @@ class GraphicsEditorLogic {
         }
 
         // 更新光標顯示當前句柄
-        if (this.selectedShapeIndex !== -1) {
+        if (this.selectedShapeIndex !== -1 && !this.isDrawingPolyline && !this.isDrawingBezier) {
             const shape = this.shapes[this.selectedShapeIndex];
             
-            // 檢查是否在貝茲曲線控制點上
+            // 第一優先級：檢查是否在貝茲曲線控制點上（隨時可調整）
             if (shape.tool === 'bezier') {
                 const controlPoint = this.getBezierControlAtPosition(currentX, currentY);
                 if (controlPoint) {
@@ -1333,6 +1389,7 @@ class GraphicsEditorLogic {
                 }
             }
             
+            // 第二優先級：檢查變換句柄
             const handleMode = this.getHandleAtPosition(currentX, currentY);
             if (handleMode) {
                 let cursor = 'move';
@@ -1378,6 +1435,15 @@ class GraphicsEditorLogic {
             this.drawPolylinePreview();
             return;
         }
+        
+        // 貝茲曲線繪製中：更新預覽點座標
+        if (this.isDrawingBezier) {
+            this.bezierPreviewX = currentX;
+            this.bezierPreviewY = currentY;
+            this.redraw();
+            this.drawBezierPreview();
+            return;
+        }
 
         // 更新坐標顯示
         const cocosX = this.canvasToCocosX(currentX);
@@ -1407,7 +1473,16 @@ class GraphicsEditorLogic {
     }
 
     onMouseUp(e: MouseEvent) {
-        // 完成貝茲曲線控制點編輯
+        // 完成貝茲曲線繪製過程中的控制點拖動
+        if (this.isEditingBezierDrawingCP) {
+            this.isEditingBezierDrawingCP = false;
+            this.editingDrawingCP = null;
+            this.redraw();
+            this.drawBezierPreview();
+            return;
+        }
+        
+        // 完成貝茲曲線選中後的控制點編輯
         if (this.isEditingBezierControl) {
             this.isEditingBezierControl = false;
             this.editingSegmentIndex = -1;
@@ -2131,6 +2206,40 @@ class GraphicsEditorLogic {
                     }
                 }
                 return false;
+                
+            case 'bezier':
+                // 貝茲曲線：檢查邊界框或任何段落
+                if (!shape.segments || shape.segments.length === 0) return false;
+                
+                // 首先檢查邊界框
+                const bezMinX = Math.min(shape.startX, shape.endX) - tolerance;
+                const bezMaxX = Math.max(shape.startX, shape.endX) + tolerance;
+                const bezMinY = Math.min(shape.startY, shape.endY) - tolerance;
+                const bezMaxY = Math.max(shape.startY, shape.endY) + tolerance;
+                
+                if (x < bezMinX || x > bezMaxX || y < bezMinY || y > bezMaxY) {
+                    return false;
+                }
+                
+                // 如果是閉合的且有填充，檢查是否在多邊形內
+                if (shape.isClosed && shape.fillMode) {
+                    // 對於貝茲曲線，使用近似的多邊形檢測
+                    // 這裡簡化處理，只返回邊界框檢測結果
+                    return true;
+                }
+                
+                // 否則檢查是否在曲線附近（近似）
+                // 簡化處理：如果在邊界框內且任何控制點附近，則認為在曲線上
+                for (const segment of shape.segments) {
+                    const points = [segment.start, segment.cp1, segment.cp2, segment.end];
+                    for (const p of points) {
+                        const dist = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2));
+                        if (dist <= tolerance * 2) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
         }
         return false;
     }
@@ -2224,8 +2333,15 @@ class GraphicsEditorLogic {
             }
         }
         
+        // 如果是貝茲曲線，確保有 startX/endX/startY/endY 屬性（用於變換）
+        if (shape && shape.tool === 'bezier' && shape.segments && shape.segments.length > 0) {
+            if (shape.startX === undefined || shape.endX === undefined) {
+                this.updateBezierBounds(shape);
+            }
+        }
+        
         this.redraw();
-        console.log('[Graphics Editor] 已選取圖形', index + 1);
+        console.log('[Graphics Editor] 已選取圖形', index + 1, '(' + shape.tool + ')');
     }
 
     /**
@@ -3449,9 +3565,17 @@ export class CustomMask extends Component {
         this.bezierCP1 = null;
         this.bezierCP2 = null;
         this.bezierClickCount = 0;
+        this.isEditingBezierDrawingCP = false;
+        this.editingDrawingCP = null;
         console.log('[Graphics Editor] 開始繪製貝茲曲線');
-        console.log('[提示] 點擊4次: 起點 -> 控制點1 -> 控制點2 -> 終點，然後繼續添加下一段');
-        console.log('[提示] 按 Enter 完成並閉合曲線');
+        console.log('[操作指南]');
+        console.log('  1. 第1次點擊：設置曲線起點');
+        console.log('  2. 第2次點擊：設置控制點1（可拖動調整）');
+        console.log('  3. 第3次點擊：設置控制點2（可拖動調整）');
+        console.log('  4. 第4次點擊：設置終點（自動成為下一段的起點）');
+        console.log('  5. 重複 2-4 步以添加更多段落');
+        console.log('  6. 按 Enter 鍵完成並閉合曲線');
+        console.log('  7. 按 Esc 鍵取消當前繪製');
     }
 
     addBezierPoint(x: number, y: number) {
@@ -3490,8 +3614,9 @@ export class CustomMask extends Component {
                 });
                 
                 console.log(`[貝茲曲線] 第 ${this.bezierSegments.length} 段完成`);
+                console.log('[提示] 可以繼續點擊 CP1、CP2、終點 來添加下一段曲線，或按 Enter 完成');
                 
-                // 重置為下一段的起點
+                // 自動為下一段設置起點為當前終點
                 this.bezierCurrentPoint = endPoint;
                 this.bezierCP1 = null;
                 this.bezierCP2 = null;
@@ -3562,7 +3687,7 @@ export class CustomMask extends Component {
             );
             this.drawCtx.stroke();
             
-            // 繪製控制點和控制線
+            // 繪製已完成段落的控制點和控制線
             this.drawCtx.setLineDash([2, 2]);
             this.drawCtx.strokeStyle = 'rgba(100, 100, 255, 0.5)';
             this.drawCtx.beginPath();
@@ -3572,38 +3697,104 @@ export class CustomMask extends Component {
             this.drawCtx.lineTo(segment.cp2.x, segment.cp2.y);
             this.drawCtx.stroke();
             
-            // 繪製控制點
+            // 繪製已完成段落的控制點
             this.drawCtx.fillStyle = 'rgba(100, 100, 255, 0.7)';
-            this.drawCtx.fillRect(segment.cp1.x - 3, segment.cp1.y - 3, 6, 6);
-            this.drawCtx.fillRect(segment.cp2.x - 3, segment.cp2.y - 3, 6, 6);
+            this.drawCtx.fillRect(segment.cp1.x - 4, segment.cp1.y - 4, 8, 8);
+            this.drawCtx.fillRect(segment.cp2.x - 4, segment.cp2.y - 4, 8, 8);
+            
+            // 繪製已完成段落的轉折點
+            this.drawCtx.fillStyle = 'rgba(0, 200, 0, 0.7)';
+            this.drawCtx.beginPath();
+            this.drawCtx.arc(segment.end.x, segment.end.y, 5, 0, Math.PI * 2);
+            this.drawCtx.fill();
             
             this.drawCtx.setLineDash([5, 5]);
             this.drawCtx.strokeStyle = 'rgba(255, 165, 0, 0.8)';
         });
 
-        // 繪製當前正在編輯的點
+        // 繪製當前正在編輯的段落
         if (this.bezierCurrentPoint) {
-            this.drawCtx.fillStyle = 'rgba(0, 255, 0, 0.7)';
-            this.drawCtx.fillRect(this.bezierCurrentPoint.x - 4, this.bezierCurrentPoint.y - 4, 8, 8);
+            // 繪製起點
+            this.drawCtx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+            this.drawCtx.fillRect(this.bezierCurrentPoint.x - 5, this.bezierCurrentPoint.y - 5, 10, 10);
+            this.drawCtx.strokeStyle = 'rgba(0, 150, 0, 1)';
+            this.drawCtx.lineWidth = 2;
+            this.drawCtx.strokeRect(this.bezierCurrentPoint.x - 5, this.bezierCurrentPoint.y - 5, 10, 10);
         }
         
         if (this.bezierCP1) {
-            this.drawCtx.fillStyle = 'rgba(100, 100, 255, 0.7)';
-            this.drawCtx.fillRect(this.bezierCP1.x - 3, this.bezierCP1.y - 3, 6, 6);
+            // 繪製 CP1
+            this.drawCtx.fillStyle = 'rgba(100, 100, 255, 0.8)';
+            this.drawCtx.fillRect(this.bezierCP1.x - 5, this.bezierCP1.y - 5, 10, 10);
             
-            // 繪製從起點到CP1的輔助線
-            this.drawCtx.setLineDash([2, 2]);
-            this.drawCtx.strokeStyle = 'rgba(100, 100, 255, 0.5)';
+            // 繪製从起点到 CP1 的控制线
+            this.drawCtx.setLineDash([3, 3]);
+            this.drawCtx.strokeStyle = 'rgba(100, 100, 255, 0.6)';
+            this.drawCtx.lineWidth = 1;
             this.drawCtx.beginPath();
             this.drawCtx.moveTo(this.bezierCurrentPoint!.x, this.bezierCurrentPoint!.y);
             this.drawCtx.lineTo(this.bezierCP1.x, this.bezierCP1.y);
             this.drawCtx.stroke();
+            
+            // 提示信息
+            this.drawCtx.fillStyle = 'rgba(255, 165, 0, 0.9)';
+            this.drawCtx.font = '11px monospace';
+            this.drawCtx.fillText('CP1 (可拖動)', this.bezierCP1.x + 8, this.bezierCP1.y);
+            
             this.drawCtx.setLineDash([5, 5]);
         }
         
         if (this.bezierCP2) {
-            this.drawCtx.fillStyle = 'rgba(100, 100, 255, 0.7)';
-            this.drawCtx.fillRect(this.bezierCP2.x - 3, this.bezierCP2.y - 3, 6, 6);
+            // 繪製 CP2
+            this.drawCtx.fillStyle = 'rgba(100, 100, 255, 0.8)';
+            this.drawCtx.fillRect(this.bezierCP2.x - 5, this.bezierCP2.y - 5, 10, 10);
+            
+            // 繪製到預覽終點的控制線
+            if (this.bezierClickCount === 3) {
+                this.drawCtx.setLineDash([3, 3]);
+                this.drawCtx.strokeStyle = 'rgba(100, 100, 255, 0.6)';
+                this.drawCtx.lineWidth = 1;
+                this.drawCtx.beginPath();
+                this.drawCtx.moveTo(this.bezierPreviewX, this.bezierPreviewY);
+                this.drawCtx.lineTo(this.bezierCP2.x, this.bezierCP2.y);
+                this.drawCtx.stroke();
+                this.drawCtx.setLineDash([5, 5]);
+            }
+            
+            // 提示信息
+            this.drawCtx.fillStyle = 'rgba(255, 165, 0, 0.9)';
+            this.drawCtx.font = '11px monospace';
+            this.drawCtx.fillText('CP2 (可拖動)', this.bezierCP2.x + 8, this.bezierCP2.y);
+        }
+        
+        // 繪製預覽曲線（從起點經過 CP1、CP2 到鼠標位置）
+        if (this.bezierCP1 && this.bezierCP2) {
+            this.drawCtx.setLineDash([4, 4]);
+            this.drawCtx.strokeStyle = 'rgba(255, 165, 0, 0.9)';
+            this.drawCtx.lineWidth = 2;
+            this.drawCtx.beginPath();
+            this.drawCtx.moveTo(this.bezierCurrentPoint!.x, this.bezierCurrentPoint!.y);
+            this.drawCtx.bezierCurveTo(
+                this.bezierCP1.x, this.bezierCP1.y,
+                this.bezierCP2.x, this.bezierCP2.y,
+                this.bezierPreviewX, this.bezierPreviewY
+            );
+            this.drawCtx.stroke();
+            
+            // 繪製預覽終點
+            this.drawCtx.fillStyle = 'rgba(255, 165, 0, 0.7)';
+            this.drawCtx.beginPath();
+            this.drawCtx.arc(this.bezierPreviewX, this.bezierPreviewY, 5, 0, Math.PI * 2);
+            this.drawCtx.fill();
+        } else if (this.bezierCP1) {
+            // 只有 CP1 時，繪製臨時預覽線
+            this.drawCtx.setLineDash([3, 3]);
+            this.drawCtx.strokeStyle = 'rgba(255, 165, 0, 0.6)';
+            this.drawCtx.lineWidth = 1;
+            this.drawCtx.beginPath();
+            this.drawCtx.moveTo(this.bezierCurrentPoint!.x, this.bezierCurrentPoint!.y);
+            this.drawCtx.lineTo(this.bezierPreviewX, this.bezierPreviewY);
+            this.drawCtx.stroke();
         }
 
         this.drawCtx.setLineDash([]);
