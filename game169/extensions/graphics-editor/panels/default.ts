@@ -3205,21 +3205,13 @@ export class CustomGraphics extends Component {
                         code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                         code += `        g.moveTo(x + rTL, y);\n`;
                         code += `        g.lineTo(x + w - rTR, y);\n`;
-                        if (rTR > 0) {
-                            code += `        if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
-                        }
+                        code += `        if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
                         code += `        g.lineTo(x + w, y + h - rBR);\n`;
-                        if (rBR > 0) {
-                            code += `        if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
-                        }
+                        code += `        if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
                         code += `        g.lineTo(x + rBL, y + h);\n`;
-                        if (rBL > 0) {
-                            code += `        if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
-                        }
+                        code += `        if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
                         code += `        g.lineTo(x, y + rTL);\n`;
-                        if (rTL > 0) {
-                            code += `        if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
-                        }
+                        code += `        if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
                         code += `        g.close();\n`;
                     } else if (shape.radius && shape.radius > 0) {
                         // 使用統一圓角
@@ -3360,13 +3352,13 @@ export class CustomGraphics extends Component {
                     code += `    const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                     code += `    g.moveTo(x + rTL, y);\n`;
                     code += `    g.lineTo(x + w - rTR, y);\n`;
-                    if (rTR > 0) code += `    if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
+                    code += `    if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);\n`;
                     code += `    g.lineTo(x + w, y + h - rBR);\n`;
-                    if (rBR > 0) code += `    if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
+                    code += `    if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);\n`;
                     code += `    g.lineTo(x + rBL, y + h);\n`;
-                    if (rBL > 0) code += `    if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
+                    code += `    if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);\n`;
                     code += `    g.lineTo(x, y + rTL);\n`;
-                    if (rTL > 0) code += `    if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
+                    code += `    if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);\n`;
                     code += `    g.close();\n`;
                 } else if (shape.radius && shape.radius > 0) {
                     const r = Math.round(shape.radius);

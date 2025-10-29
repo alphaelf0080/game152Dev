@@ -72,15 +72,17 @@ export class CustomGraphics extends Component {
         } else {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
-        // 個別圓角矩形 (TL=28, TR=28, BR=0, BL=0)
-        const x = -361, y = 336;
-        const w = 721, h = -61;
-        const rTL = 28, rTR = 28, rBR = 0, rBL = 0;
+        // 個別圓角矩形 (TL=30, TR=60, BR=0, BL=0)
+        const x = -328, y = -55;
+        const w = 622, h = 188;
+        const rTL = 30, rTR = 60, rBR = 0, rBL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
         if (rTR > 0) g.arc(x + w - rTR, y + rTR, rTR, -Math.PI / 2, 0, false);
         g.lineTo(x + w, y + h - rBR);
+        if (rBR > 0) g.arc(x + w - rBR, y + h - rBR, rBR, 0, Math.PI / 2, false);
         g.lineTo(x + rBL, y + h);
+        if (rBL > 0) g.arc(x + rBL, y + h - rBL, rBL, Math.PI / 2, Math.PI, false);
         g.lineTo(x, y + rTL);
         if (rTL > 0) g.arc(x + rTL, y + rTL, rTL, Math.PI, -Math.PI / 2, false);
         g.close();
