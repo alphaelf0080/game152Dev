@@ -809,11 +809,11 @@ class GraphicsEditorLogic {
     canvasToCocosY(canvasY: number): number {
         switch(this.originMode) {
             case 'center':
-                return Math.round(this.canvasHeight / 2 - canvasY);
+                return Math.round(canvasY - this.canvasHeight / 2);
             case 'bottomLeft':
-                return Math.round(this.canvasHeight - canvasY);
+                return Math.round(canvasY);
             case 'topLeft':
-                return Math.round(-canvasY);
+                return Math.round(canvasY);
             default:
                 return Math.round(canvasY);
         }
