@@ -3193,9 +3193,15 @@ export class CustomGraphics extends Component {
                         const rBR = Math.round(shape.radiusBR || 0);
                         const rBL = Math.round(shape.radiusBL || 0);
                         
+                        // 計算實際坐標（處理負寬高）
+                        const actualX = Math.min(cocosStartX, cocosStartX + width);
+                        const actualY = Math.min(cocosStartY, cocosStartY + height);
+                        const actualW = Math.abs(width);
+                        const actualH = Math.abs(height);
+                        
                         code += `        // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
-                        code += `        const x = ${cocosStartX}, y = ${cocosStartY};\n`;
-                        code += `        const w = ${width}, h = ${height};\n`;
+                        code += `        const x = ${actualX}, y = ${actualY};\n`;
+                        code += `        const w = ${actualW}, h = ${actualH};\n`;
                         code += `        const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                         code += `        g.moveTo(x + rTL, y);\n`;
                         code += `        g.lineTo(x + w - rTR, y);\n`;
@@ -3346,9 +3352,11 @@ export class CustomGraphics extends Component {
                     const rTR = Math.round(shape.radiusTR || 0);
                     const rBR = Math.round(shape.radiusBR || 0);
                     const rBL = Math.round(shape.radiusBL || 0);
+                    const actualW = Math.abs(w);
+                    const actualH = Math.abs(h);
                     
                     code += `    // 個別圓角矩形 (TL=${rTL}, TR=${rTR}, BR=${rBR}, BL=${rBL})\n`;
-                    code += `    const x = ${sx}, y = ${sy}, w = ${w}, h = ${h};\n`;
+                    code += `    const x = ${x0}, y = ${y0}, w = ${actualW}, h = ${actualH};\n`;
                     code += `    const rTL = ${rTL}, rTR = ${rTR}, rBR = ${rBR}, rBL = ${rBL};\n`;
                     code += `    g.moveTo(x + rTL, y);\n`;
                     code += `    g.lineTo(x + w - rTR, y);\n`;
