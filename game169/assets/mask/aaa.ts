@@ -72,10 +72,10 @@ export class CustomGraphics extends Component {
         } else {
             // 使用 Inspector 中的 fillColor / strokeColor
         }
-        // 個別圓角矩形 (TL=30, TR=60, BR=0, BL=0)
-        const x = 28.5, y = 39.5;
-        const w = 528, h = 239;
-        const rTL = 30, rTR = 60, rBR = 0, rBL = 0;
+        // 個別圓角矩形 (TL=30, TR=100, BR=0, BL=0)
+        const x = 18.5, y = 174.5;
+        const w = 557, h = 181;
+        const rTL = 30, rTR = 100, rBR = 0, rBL = 0;
         g.moveTo(x + rTL, y);
         g.lineTo(x + w - rTR, y);
         if (rTR > 0) g.quadraticCurveTo(x + w, y, x + w, y + rTR);
