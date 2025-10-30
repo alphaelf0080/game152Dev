@@ -281,7 +281,7 @@ let socket_call_back = {
 };
 
 let socket: WebSocket;
-let socketUrl = "ws://dev-gs.iplaystar.net:81/slot";
+let socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";  // 測試環境：連到 GS3
 let CreateSocket = function () {
     if (window["psapi"] !== undefined) {
         socketUrl = API.GameSocket[0];
@@ -360,6 +360,13 @@ let action_dispatch = function (msgid, evt) {
 
 let LoginCall = function () {
     gToken = Data.Library.CommonLibScript.GetURLParameter('access_token');
+    
+    // 檢查是否為代理商模式
+    const isAgentMode = window.location.search.includes('agent_mode=true') || 
+                       window.location.search.includes('agent_mode=1');
+    const agentAccount = Data.Library.CommonLibScript.GetURLParameter('agent_account') || 'DEVMODE';
+    const agentPassword = Data.Library.CommonLibScript.GetURLParameter('agent_password') || 'TEST';
+    
     let msg = {
         msgid: "eLoginCall",
         member_id: "brian",
@@ -367,7 +374,19 @@ let LoginCall = function () {
         machine_id: "LK00010",
         token: gToken
     };
-    if (find("APIConsole")) {
+    
+    if (isAgentMode) {
+        // 代理商模式：使用指定帳號
+        msg = {
+            msgid: "eLoginCall",
+            member_id: agentAccount,
+            password: agentPassword,
+            machine_id: "LK00010",
+            token: gToken
+        };
+        console.log(`[ProtoConsole] 🔐 代理商模式：${agentAccount} / ${agentPassword}`);
+    } else if (find("APIConsole")) {
+        // 正常模式：使用 guest 帳號
         msg = {
             msgid: "eLoginCall",
             member_id: "guest",
