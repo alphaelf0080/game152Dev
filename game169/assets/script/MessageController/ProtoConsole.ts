@@ -289,7 +289,7 @@ let socket_call_back = {
 };
 
 let socket: WebSocket;
-let socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";  // 預設測試環境
+let socketUrl = "ws://dev-gs3.iplaystar.net:1109";  // 預設測試環境
 let isDevModeActive = false;  // 用來記錄是否為開發模式
 
 let CreateSocket = function () {

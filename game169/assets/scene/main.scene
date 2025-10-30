@@ -15646,9 +15646,18 @@
       "__uuid__": "8c119dd2-10d6-4dba-8cb5-093ee9e8f8bb@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
-    "_hoverSprite": {},
-    "_pressedSprite": {},
-    "_disabledSprite": {},
+    "_hoverSprite": {
+      "__uuid__": "8c119dd2-10d6-4dba-8cb5-093ee9e8f8bb@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
+    "_pressedSprite": {
+      "__uuid__": "338f5c87-1a0b-4034-a060-6ceb069f56ca@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
+    "_disabledSprite": {
+      "__uuid__": "8c119dd2-10d6-4dba-8cb5-093ee9e8f8bb@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
     "_duration": 0.1,
     "_zoomScale": 1.2,
     "_target": {

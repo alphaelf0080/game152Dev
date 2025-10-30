@@ -122,7 +122,7 @@ ws.onerror = (e) => console.error('❌ /ws error:', e);
 1. **開發模式檢測**:
    ```typescript
    const isDevMode = urlParams.has('dev_mode') || urlParams.has('devmode');
-   socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";
+   socketUrl = "wss://dev-gs3.iplaystar.net:1109";
    ```
 
 2. **代理商認證**:
