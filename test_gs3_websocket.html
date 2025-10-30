@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GS3 WebSocket 測試</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.stop {
+            background-color: #f44336;
+        }
+        button.stop:hover {
+            background-color: #da190b;
+        }
+        .log {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .log-entry {
+            margin: 3px 0;
+            padding: 2px 0;
+        }
+        .log-success {
+            color: #4CAF50;
+        }
+        .log-error {
+            color: #f44336;
+        }
+        .log-warning {
+            color: #ff9800;
+        }
+        .log-info {
+            color: #2196F3;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-connected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .status-connecting {
+            background-color: #ff9800;
+            color: white;
+        }
+        .status-disconnected {
+            background-color: #f44336;
+            color: white;
+        }
+        .status-closed {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        .url-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 GS3 WebSocket 連接測試</h1>
+        <p>測試 GS3 開發服務器的 WebSocket 端點連接情況</p>
+    </div>
+
+    <div class="container">
+        <div class="test-section">
+            <h2>測試 1: ws://dev-gs3.iplaystar.net:1109/slot</h2>
+            <p>路徑: <code>/slot</code> (目前使用的路徑)</p>
+            <button onclick="testEndpoint1()">🚀 測試連接</button>
+            <button class="stop" onclick="closeEndpoint1()">⏹️ 關閉連接</button>
+            <span id="status1" class="status status-closed">未連接</span>
+            <div id="log1" class="log"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>測試 2: ws://dev-gs3.iplaystar.net:1109/</h2>
+            <p>路徑: <code>/</code> (根路徑)</p>
+            <button onclick="testEndpoint2()">🚀 測試連接</button>
+            <button class="stop" onclick="closeEndpoint2()">⏹️ 關閉連接</button>
+            <span id="status2" class="status status-closed">未連接</span>
+            <div id="log2" class="log"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>測試 3: 自訂路徑</h2>
+            <input type="text" id="customUrl" class="url-input" 
+                   placeholder="ws://dev-gs3.iplaystar.net:1109/your-path" 
+                   value="ws://dev-gs3.iplaystar.net:1109/ws">
+            <button onclick="testCustomEndpoint()">🚀 測試連接</button>
+            <button class="stop" onclick="closeCustomEndpoint()">⏹️ 關閉連接</button>
+            <span id="status3" class="status status-closed">未連接</span>
+            <div id="log3" class="log"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 測試建議路徑</h2>
+            <button onclick="testAllPaths()">🔄 測試所有常見路徑</button>
+            <div id="logAll" class="log" style="max-height: 300px;"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws1 = null;
+        let ws2 = null;
+        let ws3 = null;
+
+        function log(elementId, message, type = 'info') {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function updateStatus(statusId, text, className) {
+            const statusElement = document.getElementById(statusId);
+            statusElement.textContent = text;
+            statusElement.className = `status ${className}`;
+        }
+
+        function testEndpoint1() {
+            const url = 'ws://dev-gs3.iplaystar.net:1109/slot';
+            log('log1', `嘗試連接到: ${url}`, 'info');
+            updateStatus('status1', '連接中...', 'status-connecting');
+
+            try {
+                ws1 = new WebSocket(url);
+                
+                ws1.onopen = function(event) {
+                    log('log1', '✅ WebSocket 連接成功！', 'success');
+                    updateStatus('status1', '已連接', 'status-connected');
+                    log('log1', `ReadyState: ${ws1.readyState} (OPEN)`, 'success');
+                };
+
+                ws1.onerror = function(error) {
+                    log('log1', `❌ WebSocket 錯誤: ${error}`, 'error');
+                    log('log1', `錯誤詳情: ${JSON.stringify(error)}`, 'error');
+                    updateStatus('status1', '連接失敗', 'status-disconnected');
+                };
+
+                ws1.onclose = function(event) {
+                    log('log1', `🔌 WebSocket 關閉`, 'warning');
+                    log('log1', `關閉代碼: ${event.code}, 原因: ${event.reason || '無'}`, 'warning');
+                    log('log1', `Was Clean: ${event.wasClean}`, 'warning');
+                    updateStatus('status1', '已關閉', 'status-closed');
+                };
+
+                ws1.onmessage = function(event) {
+                    log('log1', `📨 收到訊息: ${event.data}`, 'info');
+                };
+
+            } catch (error) {
+                log('log1', `❌ 創建 WebSocket 失敗: ${error.message}`, 'error');
+                updateStatus('status1', '連接失敗', 'status-disconnected');
+            }
+        }
+
+        function closeEndpoint1() {
+            if (ws1) {
+                log('log1', '正在關閉連接...', 'warning');
+                ws1.close();
+                ws1 = null;
+            } else {
+                log('log1', '沒有活動的連接', 'warning');
+            }
+        }
+
+        function testEndpoint2() {
+            const url = 'ws://dev-gs3.iplaystar.net:1109/';
+            log('log2', `嘗試連接到: ${url}`, 'info');
+            updateStatus('status2', '連接中...', 'status-connecting');
+
+            try {
+                ws2 = new WebSocket(url);
+                
+                ws2.onopen = function(event) {
+                    log('log2', '✅ WebSocket 連接成功！', 'success');
+                    updateStatus('status2', '已連接', 'status-connected');
+                    log('log2', `ReadyState: ${ws2.readyState} (OPEN)`, 'success');
+                };
+
+                ws2.onerror = function(error) {
+                    log('log2', `❌ WebSocket 錯誤: ${error}`, 'error');
+                    log('log2', `錯誤詳情: ${JSON.stringify(error)}`, 'error');
+                    updateStatus('status2', '連接失敗', 'status-disconnected');
+                };
+
+                ws2.onclose = function(event) {
+                    log('log2', `🔌 WebSocket 關閉`, 'warning');
+                    log('log2', `關閉代碼: ${event.code}, 原因: ${event.reason || '無'}`, 'warning');
+                    log('log2', `Was Clean: ${event.wasClean}`, 'warning');
+                    updateStatus('status2', '已關閉', 'status-closed');
+                };
+
+                ws2.onmessage = function(event) {
+                    log('log2', `📨 收到訊息: ${event.data}`, 'info');
+                };
+
+            } catch (error) {
+                log('log2', `❌ 創建 WebSocket 失敗: ${error.message}`, 'error');
+                updateStatus('status2', '連接失敗', 'status-disconnected');
+            }
+        }
+
+        function closeEndpoint2() {
+            if (ws2) {
+                log('log2', '正在關閉連接...', 'warning');
+                ws2.close();
+                ws2 = null;
+            } else {
+                log('log2', '沒有活動的連接', 'warning');
+            }
+        }
+
+        function testCustomEndpoint() {
+            const url = document.getElementById('customUrl').value;
+            if (!url) {
+                log('log3', '❌ 請輸入 WebSocket URL', 'error');
+                return;
+            }
+
+            log('log3', `嘗試連接到: ${url}`, 'info');
+            updateStatus('status3', '連接中...', 'status-connecting');
+
+            try {
+                ws3 = new WebSocket(url);
+                
+                ws3.onopen = function(event) {
+                    log('log3', '✅ WebSocket 連接成功！', 'success');
+                    updateStatus('status3', '已連接', 'status-connected');
+                    log('log3', `ReadyState: ${ws3.readyState} (OPEN)`, 'success');
+                };
+
+                ws3.onerror = function(error) {
+                    log('log3', `❌ WebSocket 錯誤: ${error}`, 'error');
+                    log('log3', `錯誤詳情: ${JSON.stringify(error)}`, 'error');
+                    updateStatus('status3', '連接失敗', 'status-disconnected');
+                };
+
+                ws3.onclose = function(event) {
+                    log('log3', `🔌 WebSocket 關閉`, 'warning');
+                    log('log3', `關閉代碼: ${event.code}, 原因: ${event.reason || '無'}`, 'warning');
+                    log('log3', `Was Clean: ${event.wasClean}`, 'warning');
+                    updateStatus('status3', '已關閉', 'status-closed');
+                };
+
+                ws3.onmessage = function(event) {
+                    log('log3', `📨 收到訊息: ${event.data}`, 'info');
+                };
+
+            } catch (error) {
+                log('log3', `❌ 創建 WebSocket 失敗: ${error.message}`, 'error');
+                updateStatus('status3', '連接失敗', 'status-disconnected');
+            }
+        }
+
+        function closeCustomEndpoint() {
+            if (ws3) {
+                log('log3', '正在關閉連接...', 'warning');
+                ws3.close();
+                ws3 = null;
+            } else {
+                log('log3', '沒有活動的連接', 'warning');
+            }
+        }
+
+        function testAllPaths() {
+            const logElement = document.getElementById('logAll');
+            logElement.innerHTML = ''; // 清空日誌
+            
+            const basePath = 'ws://dev-gs3.iplaystar.net:1109';
+            const paths = ['/', '/slot', '/ws', '/game', '/socket', '/api', '/connect'];
+            
+            log('logAll', '🔄 開始測試所有常見路徑...', 'info');
+            log('logAll', '─'.repeat(60), 'info');
+            
+            let completedTests = 0;
+            const totalTests = paths.length;
+            
+            paths.forEach((path, index) => {
+                setTimeout(() => {
+                    const url = basePath + path;
+                    log('logAll', `\n[${index + 1}/${totalTests}] 測試: ${url}`, 'info');
+                    
+                    const testWs = new WebSocket(url);
+                    
+                    const timeout = setTimeout(() => {
+                        if (testWs.readyState === WebSocket.CONNECTING) {
+                            log('logAll', `    ⏱️ ${path} - 連接超時`, 'warning');
+                            testWs.close();
+                            completedTests++;
+                            checkAllComplete();
+                        }
+                    }, 3000);
+                    
+                    testWs.onopen = function() {
+                        clearTimeout(timeout);
+                        log('logAll', `    ✅ ${path} - 連接成功！`, 'success');
+                        testWs.close();
+                        completedTests++;
+                        checkAllComplete();
+                    };
+                    
+                    testWs.onerror = function() {
+                        clearTimeout(timeout);
+                        log('logAll', `    ❌ ${path} - 連接失敗`, 'error');
+                        completedTests++;
+                        checkAllComplete();
+                    };
+                    
+                    testWs.onclose = function(event) {
+                        if (event.wasClean && event.code !== 1000) {
+                            log('logAll', `    🔌 ${path} - 關閉 (代碼: ${event.code})`, 'warning');
+                        }
+                    };
+                    
+                }, index * 500); // 每個測試間隔 500ms
+            });
+            
+            function checkAllComplete() {
+                if (completedTests === totalTests) {
+                    log('logAll', '\n' + '─'.repeat(60), 'info');
+                    log('logAll', '✅ 所有路徑測試完成！', 'success');
+                }
+            }
+        }
+
+        // 頁面載入時的提示
+        window.onload = function() {
+            console.log('GS3 WebSocket 測試頁面已載入');
+            console.log('可以開始測試連接了！');
+        };
+    </script>
+</body>
+</html>

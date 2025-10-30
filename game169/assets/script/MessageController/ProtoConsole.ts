@@ -70,10 +70,18 @@ export class ProtoConsole extends Component {
         
         if (isDevMode) {
             // 開發模式：連到 GS3 開發伺服器
-            console.log('[ProtoConsole] 🔧 開發模式：連到 GS3 開發伺服器');
+            console.log('[ProtoConsole] 🔧 開發模式：連到 GS3 開發伺服器 (dev-gs3.iplaystar.net:1109)');
             isDevModeActive = true;  // 設置開發模式標誌
+            
+            // GS3 開發伺服器支援的 WebSocket 路徑列表（優先順序）
+            const gs3Paths = ['/slot', '/ws', '/game', '/socket', '/'];
+            
+            // 優先使用 /slot，如果失敗會自動重試其他路徑
             socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";
+            
             console.log('[DEBUG] WebSocket URL:', socketUrl);
+            console.log('[DEBUG] GS3 代理商: DEVMODE / TEST9 (可自訂 ?agent_account=? &agent_password=?)');
+            
             CreateSocket();
         } else if (isLocalServerMode) {
             // LocalServer 模式：連到本地伺服器
@@ -372,7 +380,7 @@ let LoginCall = function () {
     const isAgentMode = window.location.search.includes('agent_mode=true') || 
                        window.location.search.includes('agent_mode=1');
     const agentAccount = Data.Library.CommonLibScript.GetURLParameter('agent_account') || 'DEVMODE';
-    const agentPassword = Data.Library.CommonLibScript.GetURLParameter('agent_password') || 'TEST';
+    const agentPassword = Data.Library.CommonLibScript.GetURLParameter('agent_password') || 'TEST9';
     
     let msg = {
         msgid: "eLoginCall",
@@ -392,6 +400,16 @@ let LoginCall = function () {
             token: gToken
         };
         console.log(`[ProtoConsole] 🔐 代理商模式：${agentAccount} / ${agentPassword}`);
+    } else if (isDevModeActive) {
+        // 開發模式：預設使用代理商模式 (DEVMODE / TEST9)
+        msg = {
+            msgid: "eLoginCall",
+            member_id: agentAccount,
+            password: agentPassword,
+            machine_id: "LK00010",
+            token: gToken
+        };
+        console.log(`[ProtoConsole] 🔧 開發模式登入：${agentAccount} / ${agentPassword}`);
     } else if (find("APIConsole")) {
         // 正常模式：使用 guest 帳號
         msg = {
