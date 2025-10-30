@@ -95,7 +95,7 @@ export class ProtoConsole extends Component {
             Data.Library.ProtoData = this;
         }
         else {
-            this.node.destroy();
+            (this as any).node.destroy();
         }
     }
 
@@ -242,15 +242,6 @@ export class ProtoConsole extends Component {
         } catch (error) {
             console.error('[ProtoConsole] ❌ LocalServer 初始化失敗:', error);
             Mode.ErrorInLoading('LocalServer 初始化失敗: ' + error.message);
-        }
-    }
-
-    protected onLoad(): void {
-        if (Data.Library.ProtoData === null) {
-            Data.Library.ProtoData = this;
-        }
-        else {
-            this.node.destroy();
         }
     }
 
@@ -558,8 +549,8 @@ let ConfigRecall = function (evt) {
             UcoinConsole.initData(message.ups_data);
         }
         else {
-            UcoinConsole.enabled = false;
-            UcoinConsole.node.active = false;
+            (UcoinConsole as any).enabled = false;
+            (UcoinConsole as any).node.active = false;
         }
 
         send_msg(Proto.encodeEMSGID.eStripsCall);
@@ -1001,7 +992,7 @@ let GetJackpotInfo = function (evt) {
                         let jpmode = typeof window["psapi"] !== 'undefined' ?window["psapi"].hostInfo.host_resource.jp_mode :0;
                         let mode = g_getJackpotmode();
                         JackPotNode.jackpotFrameInit(message.pool_list, jpmode, mode);
-                        JackPotNode.node.active = true;
+                        (JackPotNode as any).node.active = true;
                     })
                 })
             } else {
