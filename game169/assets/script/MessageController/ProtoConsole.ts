@@ -71,6 +71,7 @@ export class ProtoConsole extends Component {
         if (isDevMode) {
             // 開發模式：連到 GS3 開發伺服器
             console.log('[ProtoConsole] 🔧 開發模式：連到 GS3 開發伺服器');
+            isDevModeActive = true;  // 設置開發模式標誌
             socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";
             console.log('[DEBUG] WebSocket URL:', socketUrl);
             CreateSocket();
@@ -280,11 +281,18 @@ let socket_call_back = {
 };
 
 let socket: WebSocket;
-let socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";  // 測試環境：連到 GS3
+let socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";  // 預設測試環境
+let isDevModeActive = false;  // 用來記錄是否為開發模式
+
 let CreateSocket = function () {
-    if (window["psapi"] !== undefined) {
+    // 開發模式：不使用 psapi 的 GameSocket
+    // 正常模式：如果 psapi 存在，使用 API.GameSocket
+    if (!isDevModeActive && window["psapi"] !== undefined) {
         socketUrl = API.GameSocket[0];
     }
+    
+    console.log('[CreateSocket] 🔌 Creating WebSocket connection to:', socketUrl);
+    
     socket = new WebSocket(socketUrl);
     socket.binaryType = "arraybuffer"; // We are talking binary
     for (let key in socket_call_back) {
