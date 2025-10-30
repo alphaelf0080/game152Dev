@@ -1,0 +1,16 @@
+{
+  "name": "MajhongWay",
+  "uuid": "c8f64218-3fc8-4585-9de8-aa4ccd72fee6",
+  "version": "3.6.2",
+  "creator": {
+    "version": "3.8.4"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "bytebuffer": "^5.0.1",
+    "long": "^5.2.1",
+    "protobufjs": "^7.2.3",
+    "protobufjs-cli": "^1.1.1"
+  },
+  "description": ""
+}

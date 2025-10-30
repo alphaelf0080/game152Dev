@@ -1,0 +1,125 @@
+
+symbol_m.png
+size: 1172,160
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+close_sh
+  rotate: true
+  xy: 368, 13
+  size: 145, 157
+  orig: 147, 159
+  offset: 1, 1
+  index: -1
+coin
+  rotate: false
+  xy: 912, 76
+  size: 82, 82
+  orig: 84, 84
+  offset: 1, 1
+  index: -1
+coin_t
+  rotate: true
+  xy: 1036, 13
+  size: 82, 60
+  orig: 84, 84
+  offset: 1, 23
+  index: -1
+glow_close
+  rotate: true
+  xy: 199, 2
+  size: 156, 167
+  orig: 158, 169
+  offset: 1, 1
+  index: -1
+glow_open
+  rotate: true
+  xy: 2, 2
+  size: 156, 195
+  orig: 158, 197
+  offset: 1, 1
+  index: -1
+goodluck_en
+  rotate: false
+  xy: 996, 97
+  size: 173, 61
+  orig: 175, 63
+  offset: 1, 1
+  index: -1
+light
+  rotate: false
+  xy: 974, 9
+  size: 60, 65
+  orig: 76, 76
+  offset: 8, 7
+  index: -1
+open_sh
+  rotate: true
+  xy: 878, 23
+  size: 135, 32
+  orig: 137, 34
+  offset: 1, 1
+  index: -1
+red
+  rotate: false
+  xy: 527, 15
+  size: 141, 143
+  orig: 143, 145
+  offset: 1, 1
+  index: -1
+red_close
+  rotate: true
+  xy: 670, 17
+  size: 141, 55
+  orig: 143, 65
+  offset: 1, 1
+  index: -1
+red_close_b
+  rotate: false
+  xy: 368, 2
+  size: 141, 9
+  orig: 143, 13
+  offset: 1, 3
+  index: -1
+red_close_sh
+  rotate: true
+  xy: 727, 18
+  size: 140, 64
+  orig: 142, 66
+  offset: 1, 1
+  index: -1
+red_open
+  rotate: true
+  xy: 793, 18
+  size: 140, 41
+  orig: 142, 82
+  offset: 1, 1
+  index: -1
+red_open_b
+  rotate: true
+  xy: 836, 18
+  size: 140, 40
+  orig: 142, 82
+  offset: 1, 41
+  index: -1
+red_sticker
+  rotate: true
+  xy: 912, 3
+  size: 71, 60
+  orig: 73, 62
+  offset: 1, 1
+  index: -1
+sh_l
+  rotate: true
+  xy: 1098, 52
+  size: 43, 55
+  orig: 45, 57
+  offset: 1, 1
+  index: -1
+sh_r
+  rotate: true
+  xy: 1098, 13
+  size: 37, 55
+  orig: 39, 57
+  offset: 1, 1
+  index: -1

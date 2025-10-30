@@ -1,0 +1,294 @@
+{
+    "HelpTextConfig": [
+      {
+        "lineText": {
+            "sch": "<WILD>可以取代任何符号，除了 <BONUS>.",
+            "eng": "<WILD> SUBSTITUES FOR ALL SYMBOLS EXCEPT <BONUS>.",
+            "tai": "<WILD>สามารถแทนที่สัญลักษณ์ทั้งหมดยกเว้น<BONUS>",
+            "ind": "<WILD>dapat mengganti semua simbol kecuali <BONUS>.",
+            "kor": "<WILD> <BONUS>를 제외한 모든 기호 대체물.",
+            "vie": "<WILD>có thể thay thế toàn bộ các ký hiệu ngoại trừ <BONUS>.",
+            "tch": "<WILD>可以取代任何符號，除了 <BONUS>。",
+            "mys": "<WILD> liar akan menggantikan semua simbol kecuali <BONUS>.",
+            "jp": "<WILD> <BONUS>以外のすべてのシンボルの代替物.",
+            "ru": "<WILD> ЗАМЕНЯЕТ ВСЕ СИМВОЛЫ КРОМЕ <BONUS>.",
+            "por": "<WILD>substitui todos os símbolos exceto <BONUS>.",
+            "esp": "<WILD> sustituye todos los símbolos excepto <BONUS>.",
+            "tur": "<WILD>, <BONUS> hariç tüm sembollerin yerine geçer.",
+			"xeng":"<WILD> SUBSTITUES FOR ALL SYMBOLS EXCEPT <BONUS>."
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 360,
+          "y": 580
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 1
+      },
+      {
+        "lineText": {
+          "eng": "FREE SPINS BONUS",
+          "esp": "Bono de giros gratis",
+          "ind": "Hadiah permainan gratis",
+          "jp": "フリースピンボーナス",
+          "kor": "프리 게임 보너스",
+          "mys": "Bonus putaran percuma",
+          "por": "Bônus de jogos grátis",
+          "ru": "Бонусбесплатныевращения",
+          "sch": "免费游戏奖励",
+          "tai": "รางวัล ฟรีสปิน",
+          "tch": "免費遊戲獎勵",
+          "tur": "Ücretsiz dönüş bonusu",
+          "vie": "Thưởng trò chơi miễn phí",
+		  "xeng":"FREE SPINS BONUS"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 36,
+        "color": "#ffc258",
+        "position": {
+          "x": 360,
+          "y": 933
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 4
+      },
+      {
+        "lineText": {            
+            "ru": "3 <BONUS> ГДЕ УГОДНО НА БОБИНАХ 1, 2 И 3 ЗАПУСКАЕТ 7 БЕСПЛАТНЫХ ВРАЩЕНИЙ. ВО ВРЕМЯ БЕСПЛАТНЫХ ВРАЩЕНИЙ ВЫИГРЫШИ С СОКРОВИЩА НАЧИНАЮТСЯ С ЛЕВОЙ КАТУШКИ И ПЛАТЯТСЯ СЛЕВА НАПРАВО, ИЛИ НАЧИНАЮТСЯ С ПРАВОЙ КАТУШКИ И ПЛАТЯТСЯ СПРАВА НАЛЕВО ТОЛЬКО НА СОСЕДНИХ КАТУШКАХ. ПЯТИКРАТНЫЕ ВЫИГРЫШИ БУДУТ УДВОЕНЫ И УЧИТЫВАЮТСЯ ТОЛЬКО ОДИН РАЗ. ВО ВРЕМЯ БЕСПЛАТНЫХ ВРАЩЕНИЙ, ДОПОЛНИТЕЛЬНЫЕ 7 БЕСПЛАТНЫХ ВРАЩЕНИЙ МОГУТ БЫТЬ ПРИСУДЖЕНЫ С 3 <BONUS> ГДЕ УГОДНО НА БОБИНАХ 1, 2 И 3 ДО МАКСИМУМА В 70 БЕСПЛАТНЫХ ВРАЩЕНИЙ. ВО ВРЕМЯ БЕСПЛАТНЫХ ВРАЩЕНИЙ ПОЯВЛЯЕТСЯ СЛУЧАЙНОЕ СОКРОВИЩЕ, И ВСЕ СОКРОВИЩА НА БОБИНАХ СТАНОВЯТСЯ ТЕМ ЖЕ СОКРОВИЩЕМ, ЧТО И СЛУЧАЙНОЕ СОКРОВИЩЕ. СЛУЧАЙНЫЙ МНОЖИТЕЛЬ МОЖЕТ БЫТЬ ПРИМЕНЕН К ЛЮБОМУ ВЫИГРЫШУ СЛУЧАЙНЫМ ОБРАЗОМ. МАКСИМАЛЬНЫЙ МНОЖИТЕЛЬ - 10X."
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 355,
+          "y": 165
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0
+        },
+        "page": 4
+      },
+      {
+        "lineText": {
+            "ind": "Saat <BONUS> muncul pada posisi roda putar 1,2, 3, saat terkumpul 3 <BONUS>, akan menyalakan hadiah penghargaan permainan gratis, memperoleh 7 kali permainan gratis. Saat dalam hadiah permainan gratis, harta bisa bisa dikoneksi dari paling kiri ke kanan atau dari kanan ke kiri terhubungkan untuk memperoleh poin.Skor lima tautan digandakan tetapi hanya dihitung sekali. Saat dalam hadiah permainan gratis, saat muncul 3 <BONUS>, akan dapat memperoleh 7 kali bonus permainan gratis, paling banyak memperoleh 70 kali bonus permainan gratis.Saat dalam hadiah permainan gratis, akan muncul satu harta secara acak, dan semua harta pada roda putaran akan berubah menjadi sama dengan harta yang akan muncul secara acak.Setiap kemenangan memiliki peluang untuk mendapatkan perkalian acak, Kelipatan bonus acak maksimal hingga 10X",
+            "vie": "<BONUS> sẽ xuất hiện tại vị trí của guồng 1, 2, 3, khi thu thập 3 <BONUS>, sẽ khởi động phần thưởng trò chơi miễn phí, giành được 7 phần thưởng trò chơi miễn phí. Trong phần thưởng trò chơi miễn phí, báu vật có thể nối kết từ ngoài cùng bên trái sang phải hoặc từ ngoài cùng bên phải sang trái. được điểm 5 nối kết là hai lần nhưng chỉ tính làm một lần. Trong phần thưởng trò chơi miễn phí, khi xuất hiện 3 <BONUS>, có thể giành được thêm 7 phần thưởng trò chơi miễn phí, nhiều nhất có thể giành được 70 phần thưởng trò chơi miễn phí. Trong phần thưởng trò chơi miễn phí, sẽ xuất hiện ngẫu nhiên một báu vật, toàn bộ các báu vật trên guồng quay sẽ giống với báu vật xuất hiện ngẫu nhiên. Bất kỳ điểm chiến thắng nào cũng có cơ hội nhận được hệ số nhân ngẫu nhiên. Số nhân ngẫu nhiên tối đa là gấp 10 lần.",
+            "mys": "3 <BONUS>di mana sahaja pada gelendung 1, 2 dan 3 memulakan 7 bonus putaran percuma. Ketika putaran percuma, memenangi harta akan mula dari gelendung paling kiri dan dimainkan dari kiri ke kanan, atau mula dari gelendung paling kanan dan dimainkan dari kanan ke kiri, hanya pada gelendung yang bersebelahan. Lima yang sama akan menang berganda dan dikira sebagai satu kali sahaja. Ketika putaran percuma, 7 putaran percuma tambahan akan diberikan dengan 3 <BONUS> di mana sahaja pada gelendung 1, 2 dan 3 sehingga maksimum 70 putaran percuma. Ketika putaran percuma, harta akan muncul secara rawak dan semua harta pada gelendung akan menjadi harta yang sama seperti harta yang rawak. Pemalar rawak boleh dilakukan ke atas sebarang kemenangan secara rawak. Pengali maksimum adalah 10x.",
+            "por": "<BONUS> aparecerá nas posições dos rolos 1, 2 e 3. Quando coletar 3 <BONUS>, você ativará uma recompensa de jogo grátis, obtendo 7 jogos gratuitos como recompensa. Durante as rodadas grátis, as vitórias com tesouros podem ser obtidas da esquerda para a direita ou da direita para a esquerda. Vitórias de cinco do mesmo tipo serão duplicadas e contam apenas uma vez. Nos prémios de jogos gratuitos, quando 3 símbolos <BONUS> aparecem, você receberá 7 jogos gratuitos adicionais, com um máximo de 70 jogos gratuitos como prémio. No prémio de jogos gratuitos, um tesouro aleatório aparecerá, e todos os tesouros nos rolos se transformarão no mesmo tesouro que apareceu aleatoriamente. Qualquer vitória tem a chance de receber um multiplicador aleatório. O multiplicador de bônus máximo é de 10 vezes e é aplicado de forma aleatória",
+            "esp": "3 <BONUS> en cualquier lugar en los rodillos 1, 2 y 3 inicia 7 giros gratuitos. Durante los giros gratuitos, las ganancias del tesoro comienzan desde el rodillo más a la izquierda y se pagan de izquierda a derecha, o comienzan desde el rodillo más a la derecha y se pagan de derecha a izquierda, solo en los rodillos adyacentes. Las ganancias de cinco iguales se duplicarán y se contarán solo una vez. Durante los giros gratuitos, se pueden otorgar 7 giros gratuitos adicionales con 3 <BONUS> en cualquier lugar en los rodillos 1, 2 y 3, hasta un máximo de 70 giros gratuitos. Durante los giros gratuitos, aparece un tesoro aleatorio y todos los tesoros en los rodillos se convertirán en el mismo tesoro que el tesoro aleatorio. Se puede aplicar un multiplicador aleatorio a cualquier ganancia de manera aleatoria. El multiplicador máximo es de 10x."
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 355,
+          "y": 273
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0
+        },
+        "page": 4
+      },
+      {
+        "lineText": {
+            "eng": "3 <BONUS> ANYWHERE ON REELS 1, 2, AND 3 INITIALTES 7 FREE SPINS.DURING FREE SPINS, TREASURE WINS BEGINS FROM THE LEFTMOST REEL AND PAYS FROM LEFT TO RIGHT OR BEGINS FROM THE RIGHTMOST REEL AND PAYS FROM RIGHT TO LEFT ONLY ON ADJACENT REELS. FIVE OF A KIND WINS WILL DOUBLED AND COUNTS ONLY ONE TIME.DURING FREE SPINS, ADDITIONAL 7 FREE SPINS MAY BE AWARDED WITH 3 <BONUS> ANYWHERE ON REELS 1, 2, AND 3 TO A MAXIMUM OF 70 FREE SPINS.DURING FREE SPINS, A RANDOM TREASURE APPEARS AND ALL THE TREASURE ON REELS WILL BECOME THE SAME TREASURE AS THE RANDOM TREASURE.A RANDOM MULTIPLIER MAY BE APPLIED TO ANY WIN RANDOMLY.MAX MULTIPLIER  IS 10X",
+            "tur": "3 <BONUS> sembolü, 1, 2 ve 3 numaralı makaralarda herhangi bir yerde görüldüğünde, 7 ücretsiz döndürmesi başlatilir. Ücretsiz döndürme ödülünde, özellik sol'dan sağa ya da sağ'dan sol'a doğru puan alabilir. Beşli bağlantı puanları iki katına çıkacak, ancak sadece bir kez hesaplanacaktır. Ücretsiz döndürme ödülünde, 3 <BONUS> sembolü göründüğünde, 7 ücretsiz döndürme kazanilir. Toplamda 70 ücretsiz döndürme kazanma imkâni vardir. Ücretsiz döndürme ödülünde, özellikler rastgele görünür. Tüm reel lerde görülen özellikler rastgele özellik olur. Herhangi bir kazanç için rastgele çarpa alma imkâni vardir. En yüksek rastgele çarpa değeri 10 katinadir.",
+			"xeng": "3 <BONUS> ANYWHERE ON REELS 1, 2, AND 3 INITIALTES 7 FREE SPINS.DURING FREE SPINS, TREASURE WINS BEGINS FROM THE LEFTMOST REEL AND PAYS FROM LEFT TO RIGHT OR BEGINS FROM THE RIGHTMOST REEL AND PAYS FROM RIGHT TO LEFT ONLY ON ADJACENT REELS. FIVE OF A KIND WINS WILL DOUBLED AND COUNTS ONLY ONE TIME.DURING FREE SPINS, ADDITIONAL 7 FREE SPINS MAY BE AWARDED WITH 3 <BONUS> ANYWHERE ON REELS 1, 2, AND 3 TO A MAXIMUM OF 70 FREE SPINS.DURING FREE SPINS, A RANDOM TREASURE APPEARS AND ALL THE TREASURE ON REELS WILL BECOME THE SAME TREASURE AS THE RANDOM TREASURE.A RANDOM MULTIPLIER MAY BE APPLIED TO ANY WIN RANDOMLY.MAX MULTIPLIER  IS 10X"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 355,
+          "y": 343
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0
+        },
+        "page": 4
+      },
+      {
+        "lineText": {
+            "sch": "<BONUS> 会出现在滚轮 1、2、3 的位置，当搜集 3 个 <BONUS> 时，会启动免费游戏奖赏，获得 7 场的免费游戏奖励。在免费游戏奖赏中，宝物可从最左到右连线或最右到左连线得分。五连线得分为两倍但只计算一次。在免费游戏奖赏中，当 3 个 <BONUS> 出现，将可获得 7 场额外的免费游戏奖励，最多可获得 70 场免费游戏奖励。在免费游戏奖励中，会随机出现一个宝物，在滚轮上的所有宝物会变成跟随机出现的宝物一样。任何赢分有机会获得随机倍数，随机倍数最高10倍",
+            "tai": "<BONUS> จะปรากฏที่ตำแหน่งของรีลที่ 1, 2 และ 3  เมื่อรวบรวม 3 <BONUS>จะเปิดใช้งานรางวัลเกมฟรี  รับ 7 รางวัลเกมฟรี ในรางวัลเกมฟรี  สมบัติสามารถรับคะแนนของสมบัติจากซ้ายสุดไปขวาหรือจากขวาสุดไปซ้าย คะแนนของห้าเชื่อมต่อเป็นสองเท่า แต่คำนวณเพียงครั้งเดียว ในรางวัลเกมฟรี  เมื่อ 3 <BONUS> ปรากฏขึ้น  จะได้รับ 7 รางวัลเกมฟรีเพิ่มเติม  สามารถรับรางวัลเกมฟรีมากถึง 70 เกม ในรางวัลเกมฟรี  สมบัติจะปรากฏขึ้นแบบสุ่ม  สมบัติทั้งหมดบนรีลจะกลายเป็นเหมือนกับสมบัติที่ปรากฏขึ้นแบบสุ่ม โอกาสที่จะได้รับตัวคูณแบบสุ่มสำหรับการชนะใดๆ ตัวคูณสุ่มสูงสุดถึง 10 เท่า",
+            "tch": "<BONUS> 會出現在滾輪 1、2、3 的位置，當蒐集 3 個 <BONUS> 時，會啟動免費遊戲獎賞，獲得 7 場的免費遊戲獎勵。在免費遊戲獎賞中，寶物可從最左到右連線或最右到左連線得分。五連線得分為兩倍但只計算一次。在免費遊戲獎賞中，當 3 個 <BONUS> 出現，將可獲得 7 場額外的免費遊戲獎勵，最多可獲得 70 場免費遊戲獎勵。在免費遊戲獎勵中，會隨機出現一個寶物，在滾輪上的所有寶物會變成跟隨機出現的寶物一樣。任何贏分有機會獲得隨機倍數。隨機倍數最高10倍。"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 355,
+          "y": 555
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0
+        },
+        "page": 4
+      },
+      {
+        "lineText": {
+            "kor": "<BONUS>은 릴1、2、3 위치에 나탄납니다.  3개의 <BONUS>을 수집할 경우, 프리 게임 보너스가 작동되며 7회의 프리 게임을 획득할 수 있습니다. 프리 게임중, 보물은 왼쪽에서 오른쪽 또는 오른쪽에서 왼쪽으로 연결하여 득점됩니다. 5라인 연결 득점은 2배, 1회만 가산됩니다. 프리 게임 중, 3개의 <BONUS>을 수집할 경우, 추가로 7회의 프리 게임을 획득할 수 있습니다. 초다 70회의 프리 게임을 획득할 수 있습니다. 프리 게임중, 보물은 랜덤으로 나타나며, 릴 위에 모든 보물은 랜덤으로 나타나는 보물과 동일하게 변합니다.임의의 배수는 무작위로 어떤 승리에도 적용될 수 있습니다.최대 배수는 10배입니다.",
+            "jp": "<BONUS>がリールの1、2、3の位置に出現、<BONUS>を3個集めると無料ボーナスゲームが起動し、無料ボーナスゲームを7回獲得できる。無料ボーナスゲームで、宝の絵柄がいちばん左から右へつながるか、いちばん右から左へつながるとポイント獲得。5個つながった場合は獲得ポイントが2倍になる（ただし1回だけ）。無料ボーナスゲームで<BONUS>が3個出現すると、追加の無料ボーナスゲームを7回獲得できる。無料ゲームの回数は最大70回。無料ボーナスゲームでは宝の絵柄がランダムに1個出現し、リール上のすべての宝の絵柄が、ランダムに出現したものと同じ絵柄に変わる。ランダムな乗数はランダムに任意の勝利に適用されるかもしれません。最大の乗数は10倍です。"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 355,
+          "y": 472
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0
+        },
+        "page": 4
+      },
+      {
+        "lineText": {
+          "sch": "243 路线 游戏玩法",
+          "eng": "243 WAYS GAME PLAY",
+          "tai": "วิธีการเล่นเกมของเส้น 243",
+          "ind": "Cara Bermain Jalur 243",
+          "kor": "243라인 게임 플레이법",
+          "vie": "Cách chơi trò chơi tuyến đường 243",
+          "tch": "243 路線 遊戲玩法",
+          "mys": "243 Ways (kombinasi)",
+          "jp": "243の方法ゲームプレイ",
+          "ru": "243 способаиграть",
+          "por": "243 formas de conexão",
+          "esp": "Juego de 243 formas de ganar",
+          "tur": "243 YOLLU OYUN OYNAMI",
+		  "xeng": "243 WAYS GAME PLAY"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 36,
+        "color": "#ffc258",
+        "position": {
+          "x": 356,
+          "y": 950
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 5
+      },
+      {
+        "lineText": {
+          "sch": "转轮数 = 5",
+          "eng": "REELS = 5",
+          "tai": "จำนวนรีล = 5",
+          "ind": "Jumlah Roda Putaran=5",
+          "kor": "릴수 = 5",
+          "vie": "Số guồng quay = 5",
+          "tch": "轉輪數 = 5",
+          "mys": "Gelendung = 5",
+          "jp": "リール = 5",
+          "ru": "Барабаны = 5",
+          "por": "Número de rolos = 5",
+          "esp": "Carretes = 5",
+          "tur": "Makara Sayisi = 5",
+		  "xeng": "REELS = 5"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 360,
+          "y": 740
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 5
+      },
+      {
+        "lineText": {
+          "sch": "需 50 彩分",
+          "eng": "NEED 50 CREDITS",
+          "tai": "ต้องการ 50คะแนน",
+          "ind": "Butuh 50 Nilai Lottery",
+          "kor": "50 채점 필요",
+          "vie": "Cần 50 điểm thưởng",          
+          "mys": "Perlukan 50 kredit",
+          "jp": "50クレジットが必要",
+          "ru": "Нужно 50 кредитов",
+          "por": "Necessário 50 créditos.",
+          "esp": "Requiere 50 créditos",
+          "tur": "50 kredi gerekli",
+		  "xeng": "NEED 50 CREDITS"
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 360,
+          "y": 712
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 5
+      },
+	{
+        "lineText": {          
+          "tai": "จำนวนรีลคูณด้วยคะแนนเดิมพันเท่ากับคะแนนเดิมพันโดยรวม\nสัญลักษณ์ทั้งหมดจะต้องเชื่อมต่อจากซ้ายสุดไปทางขวา\nจะได้รับคะแนน"          
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 23,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 360,
+          "y": 600
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 5
+      },
+      {
+        "lineText": {
+          "sch": "转轮数乘以转轮押注等于总投注。所有符号须由最左到右连线，方能获得得分。",
+          "eng": "THE REELS TIME THE REEL BET EQUALS THE TOTAL BET.ALL WINS PAID FROM LEFTMOST TO RIGHT.",          
+          "ind": "Jumlah Roda Putar Dikalikan Dengan Taruhan Roda Putar Sama Dengan Total Taruhan.Semua Simbol Harus Terhubung Dari Paling Kiri Ke Kanan, Untuk Mendapatkan Skor.",
+          "kor": "릴수 곱하기 릴 베팅은 총베팅수 모든 부호가 왼쪽에서 오른쪽으로 연속으로 나타날 경우 즉 득점이 됩니다",
+          "vie": "Số guồng quay nhân với đặt cược guồng quay bằng tổng đặt cược.Toàn bộ ký hiệu đều nối kết từ ngoài cùng bên trái sang phải, mới có thể giành được điểm thắng.",
+          "tch": "除了<BONUS>外，所有符號須由最左到右連線，方能獲得得分。",
+          "mys": "Gegelung dikalikan dengan taruhan gegelum bersamaan dengan jumlah taruhan.Semua kemenangan dibayar dari kiri sekali ke kanan.",
+          "jp": "リールタイムとリールベットは合計ベットに等しくなります。すべての賞金は左から右の順に支払われます。",
+          "ru": "Время вращения барабанов, ставка на барабанах равна общей ставке.Все выигрыши выплачиваются слева направо.",
+          "por": "O número de rolos multiplicado pela aposta por rolo é igual à aposta total Todos os símbolos devem estar alinhados da esquerda para a direita para receber um prêmio.",
+          "esp": "El tiempo de los rodillos por la apuesta de los rodillos es igual a la apuesta total.Todas las ganancias se pagan desde el más izquierdo hacia el más derecho.",
+          "tur": "Dönen makara sayısı, makara bahsiyle toplam bahsi çarpar.Tüm semboller soldan sağa doğru bağlandığında puan alınır.",
+		  "eng": "THE REELS TIME THE REEL BET EQUALS THE TOTAL BET.ALL WINS PAID FROM LEFTMOST TO RIGHT."
+        },
+        "fontName": "Tahoma Bold",
+        "fontSize": 24,
+        "color": "#f1f1f1",
+        "position": {
+          "x": 360,
+          "y": 600
+        },
+        "Anchor": {
+          "x": 0.5,
+          "y": 0.5
+        },
+        "page": 5
+      }
+    ],
+    "maxSegmentLength": 40
+  }

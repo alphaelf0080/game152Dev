@@ -1,0 +1,27 @@
+
+loading_btn.png
+size: 472,160
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+point_w
+  rotate: false
+  xy: 367, 55
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+shine_star
+  rotate: true
+  xy: 211, 2
+  size: 153, 154
+  orig: 153, 154
+  offset: 0, 0
+  index: -1
+shine_star_a
+  rotate: false
+  xy: 2, 13
+  size: 207, 142
+  orig: 207, 142
+  offset: 0, 0
+  index: -1

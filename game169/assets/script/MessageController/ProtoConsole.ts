@@ -53,28 +53,36 @@ export class ProtoConsole extends Component {
             UcoinConsole = find("Canvas/Ucoin").getComponent(UCoin);
         }
 
-        // ========== 檢查 LocalServer 模式 ==========
+        // ========== 檢查模式 ==========
         const urlParams = new URLSearchParams(window.location.search);
         console.log('[DEBUG] URL Search Params:', window.location.search);
-        console.log('[DEBUG] Has localServer:', urlParams.has('localServer'));
-        console.log('[DEBUG] Has localserver:', urlParams.has('localserver'));
-        console.log('[DEBUG] Has local:', urlParams.has('local'));
         
+        // 檢查開發模式
+        const isDevMode = urlParams.has('dev_mode') || urlParams.has('devmode');
+        
+        // 檢查 LocalServer 模式
         const isLocalServerMode = urlParams.has('localServer') || 
                                    urlParams.has('localserver') || 
                                    urlParams.has('local');
         
+        console.log('[DEBUG] isDevMode:', isDevMode);
         console.log('[DEBUG] isLocalServerMode:', isLocalServerMode);
         
-        if (isLocalServerMode) {
+        if (isDevMode) {
+            // 開發模式：連到 GS3 開發伺服器
+            console.log('[ProtoConsole] 🔧 開發模式：連到 GS3 開發伺服器');
+            socketUrl = "ws://dev-gs3.iplaystar.net:1109/slot";
+            console.log('[DEBUG] WebSocket URL:', socketUrl);
+            CreateSocket();
+        } else if (isLocalServerMode) {
+            // LocalServer 模式：連到本地伺服器
             console.log('[ProtoConsole] 🌐 LocalServer 模式：初始化開始');
             (Data.Library as any).localServerMode = true;
             socketUrl = "ws://localhost:8000/ws";
             console.log('[DEBUG] WebSocket URL:', socketUrl);
-            
-            // 👇 使用 async/await 替代 setTimeout
             this.initializeLocalServer();
         } else {
+            // 正常模式
             console.log('[ProtoConsole] 🌐 正常模式：使用 WebSocket');
             (Data.Library as any).localServerMode = false;
             CreateSocket();

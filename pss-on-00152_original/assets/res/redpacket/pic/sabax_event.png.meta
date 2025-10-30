@@ -1,0 +1,46 @@
+{
+  "ver": "1.0.27",
+  "importer": "image",
+  "imported": true,
+  "uuid": "ad4fa08a-affb-4c29-83c3-243623be8bad",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "ad4fa08a-affb-4c29-83c3-243623be8bad@6c48a",
+      "displayName": "sabax_event",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "ad4fa08a-affb-4c29-83c3-243623be8bad",
+        "visible": false
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "fixAlphaTransparencyArtifacts": false,
+    "hasAlpha": true,
+    "type": "texture",
+    "redirect": "ad4fa08a-affb-4c29-83c3-243623be8bad@6c48a",
+    "compressSettings": {
+      "useCompressTexture": true,
+      "presetId": "69Jb0bOnVIsbv9KvKNUcBi"
+    }
+  }
+}

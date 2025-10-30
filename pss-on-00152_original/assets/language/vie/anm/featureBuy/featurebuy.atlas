@@ -1,0 +1,804 @@
+
+featurebuy.png
+size: 492,524
+format: RGBA4444
+filter: Linear,Linear
+repeat: none
+btn
+  rotate: false
+  xy: 2, 223
+  size: 374, 97
+  orig: 376, 139
+  offset: 1, 14
+  index: -1
+btn2_vie
+  rotate: true
+  xy: 404, 158
+  size: 364, 86
+  orig: 364, 86
+  offset: 0, 0
+  index: -1
+btn_light
+  rotate: false
+  xy: 2, 137
+  size: 356, 84
+  orig: 356, 84
+  offset: 0, 0
+  index: -1
+featurebuy_btnl
+  rotate: false
+  xy: 2, 5
+  size: 59, 82
+  orig: 72, 100
+  offset: 3, 7
+  index: -1
+featurebuy_btnr
+  rotate: false
+  xy: 63, 5
+  size: 59, 82
+  orig: 72, 100
+  offset: 10, 7
+  index: -1
+featurebuy_light/featurebuy_light_00
+  rotate: false
+  xy: 316, 126
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+featurebuy_light/featurebuy_light_01
+  rotate: false
+  xy: 316, 126
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+featurebuy_light/featurebuy_light_45
+  rotate: false
+  xy: 316, 126
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+featurebuy_money/featurebuy_money_00
+  rotate: false
+  xy: 316, 126
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+featurebuy_money/featurebuy_money_60
+  rotate: false
+  xy: 316, 126
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+featurebuy_light/featurebuy_light_02
+  rotate: false
+  xy: 2, 2
+  size: 2, 1
+  orig: 336, 21
+  offset: 19, 10
+  index: -1
+featurebuy_light/featurebuy_light_03
+  rotate: true
+  xy: 248, 74
+  size: 5, 2
+  orig: 336, 21
+  offset: 19, 9
+  index: -1
+featurebuy_light/featurebuy_light_04
+  rotate: true
+  xy: 399, 256
+  size: 9, 3
+  orig: 336, 21
+  offset: 19, 9
+  index: -1
+featurebuy_light/featurebuy_light_05
+  rotate: true
+  xy: 399, 283
+  size: 15, 3
+  orig: 336, 21
+  offset: 19, 9
+  index: -1
+featurebuy_light/featurebuy_light_06
+  rotate: true
+  xy: 367, 130
+  size: 23, 4
+  orig: 336, 21
+  offset: 19, 8
+  index: -1
+featurebuy_light/featurebuy_light_07
+  rotate: false
+  xy: 124, 2
+  size: 34, 4
+  orig: 336, 21
+  offset: 19, 8
+  index: -1
+featurebuy_light/featurebuy_light_08
+  rotate: false
+  xy: 124, 8
+  size: 46, 5
+  orig: 336, 21
+  offset: 19, 8
+  index: -1
+featurebuy_light/featurebuy_light_09
+  rotate: true
+  xy: 392, 259
+  size: 61, 5
+  orig: 336, 21
+  offset: 19, 8
+  index: -1
+featurebuy_light/featurebuy_light_10
+  rotate: true
+  xy: 385, 243
+  size: 77, 5
+  orig: 336, 21
+  offset: 20, 8
+  index: -1
+featurebuy_light/featurebuy_light_11
+  rotate: true
+  xy: 378, 226
+  size: 94, 5
+  orig: 336, 21
+  offset: 22, 8
+  index: -1
+featurebuy_light/featurebuy_light_12
+  rotate: false
+  xy: 124, 51
+  size: 108, 5
+  orig: 336, 21
+  offset: 26, 8
+  index: -1
+featurebuy_light/featurebuy_light_13
+  rotate: false
+  xy: 124, 74
+  size: 122, 5
+  orig: 336, 21
+  offset: 30, 8
+  index: -1
+featurebuy_light/featurebuy_light_14
+  rotate: false
+  xy: 149, 97
+  size: 133, 6
+  orig: 336, 21
+  offset: 36, 7
+  index: -1
+featurebuy_light/featurebuy_light_15
+  rotate: false
+  xy: 154, 105
+  size: 143, 6
+  orig: 336, 21
+  offset: 42, 7
+  index: -1
+featurebuy_light/featurebuy_light_16
+  rotate: false
+  xy: 158, 113
+  size: 149, 6
+  orig: 336, 21
+  offset: 50, 7
+  index: -1
+featurebuy_light/featurebuy_light_17
+  rotate: false
+  xy: 2, 113
+  size: 154, 6
+  orig: 336, 21
+  offset: 58, 7
+  index: -1
+featurebuy_light/featurebuy_light_18
+  rotate: false
+  xy: 2, 129
+  size: 157, 6
+  orig: 336, 21
+  offset: 67, 7
+  index: -1
+featurebuy_light/featurebuy_light_19
+  rotate: false
+  xy: 2, 121
+  size: 157, 6
+  orig: 336, 21
+  offset: 77, 7
+  index: -1
+featurebuy_light/featurebuy_light_20
+  rotate: false
+  xy: 161, 129
+  size: 156, 6
+  orig: 336, 21
+  offset: 88, 7
+  index: -1
+featurebuy_light/featurebuy_light_21
+  rotate: false
+  xy: 161, 121
+  size: 153, 6
+  orig: 336, 21
+  offset: 99, 7
+  index: -1
+featurebuy_light/featurebuy_light_22
+  rotate: false
+  xy: 2, 105
+  size: 150, 6
+  orig: 336, 21
+  offset: 110, 7
+  index: -1
+featurebuy_light/featurebuy_light_23
+  rotate: false
+  xy: 2, 97
+  size: 145, 6
+  orig: 336, 21
+  offset: 122, 7
+  index: -1
+featurebuy_light/featurebuy_light_24
+  rotate: false
+  xy: 2, 89
+  size: 140, 6
+  orig: 336, 21
+  offset: 134, 7
+  index: -1
+featurebuy_light/featurebuy_light_25
+  rotate: false
+  xy: 144, 89
+  size: 133, 6
+  orig: 336, 21
+  offset: 147, 7
+  index: -1
+featurebuy_light/featurebuy_light_26
+  rotate: false
+  xy: 124, 81
+  size: 126, 6
+  orig: 336, 21
+  offset: 159, 7
+  index: -1
+featurebuy_light/featurebuy_light_27
+  rotate: false
+  xy: 124, 66
+  size: 118, 6
+  orig: 336, 21
+  offset: 172, 7
+  index: -1
+featurebuy_light/featurebuy_light_28
+  rotate: false
+  xy: 124, 58
+  size: 109, 6
+  orig: 336, 21
+  offset: 185, 7
+  index: -1
+featurebuy_light/featurebuy_light_29
+  rotate: false
+  xy: 124, 43
+  size: 101, 6
+  orig: 336, 21
+  offset: 197, 7
+  index: -1
+featurebuy_light/featurebuy_light_30
+  rotate: false
+  xy: 124, 36
+  size: 92, 5
+  orig: 336, 21
+  offset: 210, 8
+  index: -1
+featurebuy_light/featurebuy_light_31
+  rotate: true
+  xy: 360, 138
+  size: 83, 5
+  orig: 336, 21
+  offset: 222, 8
+  index: -1
+featurebuy_light/featurebuy_light_32
+  rotate: false
+  xy: 124, 29
+  size: 75, 5
+  orig: 336, 21
+  offset: 233, 8
+  index: -1
+featurebuy_light/featurebuy_light_33
+  rotate: true
+  xy: 367, 155
+  size: 66, 5
+  orig: 336, 21
+  offset: 245, 8
+  index: -1
+featurebuy_light/featurebuy_light_34
+  rotate: false
+  xy: 124, 22
+  size: 57, 5
+  orig: 336, 21
+  offset: 256, 8
+  index: -1
+featurebuy_light/featurebuy_light_35
+  rotate: false
+  xy: 124, 15
+  size: 49, 5
+  orig: 336, 21
+  offset: 266, 8
+  index: -1
+featurebuy_light/featurebuy_light_36
+  rotate: false
+  xy: 319, 130
+  size: 41, 5
+  orig: 336, 21
+  offset: 276, 8
+  index: -1
+featurebuy_light/featurebuy_light_37
+  rotate: false
+  xy: 160, 2
+  size: 33, 4
+  orig: 336, 21
+  offset: 285, 8
+  index: -1
+featurebuy_light/featurebuy_light_38
+  rotate: false
+  xy: 183, 23
+  size: 26, 4
+  orig: 336, 21
+  offset: 294, 8
+  index: -1
+featurebuy_light/featurebuy_light_39
+  rotate: true
+  xy: 399, 300
+  size: 20, 3
+  orig: 336, 21
+  offset: 301, 9
+  index: -1
+featurebuy_light/featurebuy_light_40
+  rotate: true
+  xy: 399, 267
+  size: 14, 3
+  orig: 336, 21
+  offset: 308, 9
+  index: -1
+featurebuy_light/featurebuy_light_41
+  rotate: true
+  xy: 347, 87
+  size: 9, 2
+  orig: 336, 21
+  offset: 313, 9
+  index: -1
+featurebuy_light/featurebuy_light_42
+  rotate: true
+  xy: 347, 79
+  size: 6, 2
+  orig: 336, 21
+  offset: 317, 9
+  index: -1
+featurebuy_light/featurebuy_light_43
+  rotate: false
+  xy: 378, 223
+  size: 2, 1
+  orig: 336, 21
+  offset: 321, 10
+  index: -1
+featurebuy_light/featurebuy_light_44
+  rotate: false
+  xy: 6, 2
+  size: 1, 1
+  orig: 336, 21
+  offset: 323, 10
+  index: -1
+featurebuy_money/featurebuy_money_01
+  rotate: false
+  xy: 252, 67
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_02
+  rotate: true
+  xy: 374, 194
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_03
+  rotate: true
+  xy: 374, 165
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_04
+  rotate: true
+  xy: 351, 101
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_05
+  rotate: false
+  xy: 374, 143
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_06
+  rotate: false
+  xy: 403, 136
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_07
+  rotate: false
+  xy: 432, 136
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_08
+  rotate: false
+  xy: 461, 136
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_09
+  rotate: false
+  xy: 373, 121
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_10
+  rotate: false
+  xy: 373, 99
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_11
+  rotate: false
+  xy: 402, 114
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_12
+  rotate: false
+  xy: 431, 114
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_13
+  rotate: false
+  xy: 460, 114
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_14
+  rotate: false
+  xy: 402, 92
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_15
+  rotate: false
+  xy: 431, 92
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_16
+  rotate: false
+  xy: 460, 92
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_17
+  rotate: true
+  xy: 351, 72
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_18
+  rotate: false
+  xy: 373, 77
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_19
+  rotate: false
+  xy: 402, 70
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_20
+  rotate: false
+  xy: 431, 70
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_21
+  rotate: false
+  xy: 460, 70
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_22
+  rotate: false
+  xy: 373, 55
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_23
+  rotate: false
+  xy: 402, 48
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_24
+  rotate: false
+  xy: 431, 48
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_25
+  rotate: false
+  xy: 460, 48
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_26
+  rotate: true
+  xy: 281, 67
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_27
+  rotate: true
+  xy: 303, 67
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_28
+  rotate: true
+  xy: 325, 69
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_29
+  rotate: false
+  xy: 325, 47
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_30
+  rotate: false
+  xy: 371, 33
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_31
+  rotate: false
+  xy: 400, 26
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_32
+  rotate: false
+  xy: 429, 26
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_33
+  rotate: false
+  xy: 458, 26
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_34
+  rotate: false
+  xy: 244, 45
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_35
+  rotate: false
+  xy: 273, 45
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_36
+  rotate: true
+  xy: 302, 38
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_37
+  rotate: false
+  xy: 324, 25
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_38
+  rotate: false
+  xy: 370, 11
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_39
+  rotate: false
+  xy: 399, 4
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_40
+  rotate: false
+  xy: 428, 4
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_41
+  rotate: false
+  xy: 457, 4
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_42
+  rotate: false
+  xy: 244, 23
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_43
+  rotate: false
+  xy: 273, 23
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_44
+  rotate: true
+  xy: 302, 9
+  size: 27, 20
+  orig: 34, 28
+  offset: 4, 4
+  index: -1
+featurebuy_money/featurebuy_money_45
+  rotate: true
+  xy: 309, 104
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_46
+  rotate: true
+  xy: 299, 96
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_47
+  rotate: true
+  xy: 385, 226
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_48
+  rotate: false
+  xy: 354, 62
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_49
+  rotate: false
+  xy: 354, 52
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_50
+  rotate: false
+  xy: 354, 42
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_51
+  rotate: false
+  xy: 353, 32
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_52
+  rotate: false
+  xy: 353, 22
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_53
+  rotate: true
+  xy: 234, 41
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_54
+  rotate: false
+  xy: 324, 15
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_55
+  rotate: false
+  xy: 324, 5
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_56
+  rotate: true
+  xy: 341, 8
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_57
+  rotate: false
+  xy: 351, 12
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_58
+  rotate: false
+  xy: 351, 2
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+featurebuy_money/featurebuy_money_59
+  rotate: false
+  xy: 183, 13
+  size: 15, 8
+  orig: 34, 28
+  offset: 10, 16
+  index: -1
+flash
+  rotate: false
+  xy: 319, 98
+  size: 30, 30
+  orig: 50, 50
+  offset: 10, 10
+  index: -1
+frame_grow
+  rotate: false
+  xy: 2, 322
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,104 @@
+{
+  "HelpTextConfig": [
+    {
+      "lineText": "1. 红包活动游戏列表",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 521 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 1
+    },
+    {
+      "lineText": "2. 最大奖金",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 484 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 1
+    },
+    {
+      "lineText": "100",
+      "fontName": "Arial Bold",
+      "fontSize": 20,
+      "color": "#ffea00",
+      "position": { "x": 291, "y": 484 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 1
+    },
+    {
+      "lineText": "3. 触发抽1次红包，随机",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 448 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 1
+    },
+    {
+      "lineText": "200 场",
+      "fontName": "Arial Bold",
+      "fontSize": 20,
+      "color": "#ffea00",
+      "position": { "x": 451, "y": 448 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 1
+    },
+    {
+      "lineText": "4. 游戏场次各自累计",
+      "fontName": "Arial Bold",
+      "fontSize": 20,
+      "color": "#ffea00",
+      "position": { "x": 71, "y": 411 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    },
+    {
+      "lineText": "5. 游戏旋转1次 = 1场",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 374 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    },
+    {
+      "lineText": "6. 购买<LUCKY STRIKE>有更多机会赢取红包。",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 340 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    },
+    {
+      "lineText": "7. 中奖率非100%",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 305 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    },
+    {
+      "lineText": "8. 如遇特殊状况，PS保有修改、变更或暂停本活动之权利",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 268 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    },
+    {
+      "lineText": "9. 本活动所产生的任何相关异议及问题，PS将保有最终解释权",
+      "fontName": "Arial",
+      "fontSize": 20,
+      "color": "#eaeaea",
+      "position": { "x": 71, "y": 233 },
+      "Anchor": { "x": 0, "y": 0.5 },
+      "page": 2
+    }
+  ],
+  "maxSegmentLength": 70
+}
